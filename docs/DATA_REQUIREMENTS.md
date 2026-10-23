@@ -46,7 +46,7 @@ meteorological fields, and several ancillary vector/tabular datasets to produce:
 - FAO-56 water-balance depth estimates in mm (F6); “mm/ha” appears in source documents but is not a depth unit
 - Canal-command-level advisory tables (F7, O3)
 
-The source proposes Streamlit delivery (F8). The project owner prefers a responsive browser dashboard; framework and API choices remain subject to DEC-01 approval.
+The source proposes Streamlit delivery (F8). The project owner selected a responsive React + TypeScript browser frontend with a FastAPI API; team technical confirmation remains open under DEC-01.
 
 The datasets fall into two tiers:
 
@@ -331,6 +331,8 @@ The datasets fall into two tiers:
 > [!CAUTION]
 > **Critical gap:** Neither reference PDF identifies a ground-truth data source. Without appropriate labels, supervised model fitting and credible independent accuracy evaluation cannot be claimed. Software tests with synthetic fixtures do not resolve this scientific evidence gap.
 
+> **Punjab/Tamil Nadu screening note (2026-10-23):** Public government portals list district/season/crop area and production statistics for Punjab and crop area/production and land-use statistics for Tamil Nadu. These may guide candidate crop/season selection, but aggregate statistics are not georeferenced field labels and do not satisfy DS-04. Verify the underlying downloadable resource, spatial support, reference dates, license, and independent-test suitability before using any product.
+
 **Potential Sources to Investigate:**
 
 - State agriculture department crop survey records
@@ -419,7 +421,7 @@ The datasets fall into two tiers:
 |-----------|--------|
 | **Purpose** | Define the geographic extent for all data queries, processing, and output products |
 | **Provider / Source** | ❓ **UNKNOWN** — must be defined by the project team |
-| **Requirements** | A single polygon (or multipolygon) delineating the study area, in a standard geospatial format |
+| **Requirements** | One sourced polygon (or multipolygon) per selected AOI, in a standard geospatial format; multiple AOIs may be configured independently |
 | **Spatial Format** | GeoJSON or Shapefile |
 | **CRS** | EPSG:4326 (WGS84) or the project's chosen UTM zone |
 | **Preprocessing** | None — this is a primary input that gates all other data acquisition |
@@ -429,7 +431,7 @@ The datasets fall into two tiers:
 | **Status** | 🔴 **BLOCKER** — no study area is specified in either reference PDF; this must be the first decision made |
 
 > [!CAUTION]
-> **Foundational dependency:** The study area boundary determines which
+> **Foundational dependency:** Each AOI boundary determines which
 > Sentinel-2 tiles, Sentinel-1 orbits, and ERA5-Land grid cells to query. It
 > also determines the UTM zone, the relevant canal command boundaries, crop
 > types, and cropping seasons. **No data acquisition or pipeline development can
@@ -515,7 +517,7 @@ For pilot selection, maintain a candidate-by-candidate evidence record covering 
 | DS-06 | Crop Calendar | ❌ UNCONFIRMED | Identify target crops → obtain regional phenology guides from FAO, state agriculture dept, or ICAR |
 | DS-07 | Crop Coefficients (Kc) | 🟡 PARTIAL | Generic FAO-56 values available → confirm target crop list → check for locally calibrated values |
 | DS-08 | Soil Parameters | ❌ UNCONFIRMED | Evaluate SoilGrids coverage over study area → download and validate AWC estimates → compare with local soil surveys if available |
-| DS-09 | Study Area Boundary | ❌ UNCONFIRMED | **Team decision required** → create GeoJSON polygon → commit to repository |
+| DS-09 | Study Area Boundaries | ❌ UNCONFIRMED | Compare specific AOIs in Punjab and Tamil Nadu using data evidence → select AOI(s) → source and verify each boundary before configuration |
 
 > [!IMPORTANT]
 > **Key scientific/operational dependencies** include DS-04 (labels), DS-05 (canal boundaries, if canal summaries remain in scope), and DS-09 (study area). DS-09 is foundational for regional data-access checks. Synthetic software work may proceed after contract approval, but it is not scientific validation.

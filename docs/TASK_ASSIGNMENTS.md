@@ -47,6 +47,8 @@ To prevent merge conflicts, strict file boundaries govern ownership. Work procee
 | `config/kc_coefficients.yaml`| Member A (Peter) | Member B (Rishav) | PR required; source and method approval required. |
 | `docs/STATUS.md` | Member C (Ashwanth C; coordinator) | Member A & B | Any member may update their checkpoint by PR; gate state requires evidence and approval. |
 | `docs/DECISIONS.md` | All Members | Guide / Lead | PR required for any new decision entry. |
+| `docs/data_audit/region_sources.md` | Member A (Peter Livins) | Member B & C | Separate source-inventory file; do not edit the crop-label audit file. |
+| `docs/data_audit/crop_catalogue_and_labels.md` | Member B (Rishav Raj) | Member A & C | Separate crop/label source-inventory file; do not edit the regional weather/boundary audit file. |
 | `AGENTS.md`, `README.md` | All Members | All Members | Unanimous review required for changes. |
 
 ---
@@ -90,9 +92,9 @@ To prevent merge conflicts, strict file boundaries govern ownership. Work procee
 - **File Ownership:** Proposed API boundary section in `docs/ARCHITECTURE.md`; if it changes a shared contract, follow unanimous approval and edit `docs/API_CONTRACTS.md` only after approval.
 - **Inputs:** Approved DEC-01 choice and `CON-01` through `CON-09`.
 - **Outputs:** Reviewed API boundary specification for `T-P2-AP-002` and `T-P2-AP-003`.
-- **Dependencies:** Gate 0; unanimous team and guide approval of DEC-01 before implementation choices are recorded.
+- **Dependencies:** Gate 0; team technical confirmation of owner-selected DEC-01 before framework-specific implementation choices are recorded. The project owner has stated that guide sign-off is unavailable; no guide approval is recorded or assumed.
 - **Acceptance Criteria:** Request/response shapes, error/loading/empty/data-quality semantics, provenance, and mapping to approved output contracts are documented; reviewers approve; shared-contract changes have explicit unanimous approval.
-- **Blockers:** DEC-01 remains proposed.
+- **Blockers:** Team technical confirmation of DEC-01 remains open.
 
 #### `T-P1-DE-001`: Google Earth Engine Authentication & Project Initializer
 - **Objective:** Set up GEE authentication flow, project binding, and connection verification helper.
@@ -106,6 +108,15 @@ To prevent merge conflicts, strict file boundaries govern ownership. Work procee
 - **Acceptance Criteria:** `verify_gee.py` connects and retrieves a test Earth Engine metadata object.
 - **Testing Requirements:** Mocked auth unit test when offline; live smoke test when online.
 - **Blockers:** Team members must have registered GEE developer accounts.
+
+#### `T-P1-DE-002`: Punjab/Tamil Nadu Weather, Boundary, and Irrigation Data Inventory
+- **Objective:** Identify and compare publicly documented candidate-area sources for administrative/AOI boundaries, weather, soil, crop calendars, and irrigation/canal context in Punjab and Tamil Nadu.
+- **Primary Owner:** Member A (Peter Livins).
+- **Reviewers:** Member B (Rishav Raj) and Member C (Ashwanth C).
+- **File Ownership:** `docs/data_audit/region_sources.md`.
+- **Dependencies:** None; this is source research and does not require final AOIs.
+- **Acceptance Criteria:** Each source records responsible agency, geographic/temporal coverage, spatial support, access status, license/terms, attribution, candidate district/area relevance, and evidence gaps. Administrative boundaries and canal-command boundaries are distinguished. Unknowns remain explicit.
+- **Blockers:** None for the inventory; obtaining restricted or missing source data is out of scope until documented.
 
 #### `T-P1-SC-001`: Synthetic Benchmark Fixtures & Baseline Verification
 - **Objective:** Build synthetic raster arrays and mock time-series data conforming to `CON-03` for testing models without GEE dependency.
@@ -121,6 +132,15 @@ To prevent merge conflicts, strict file boundaries govern ownership. Work procee
 - **Blockers:** None.
 
 **Start condition:** May start after the shared schemas in `T-P1-SH-002` are accepted. Fixtures are software-only and must not be described as region-specific observations or validation.
+
+#### `T-P1-SC-002`: Punjab/Tamil Nadu Crop Catalogue and Label Feasibility Inventory
+- **Objective:** Build an extensible crop catalogue from traceable public crop sources and assess whether any candidate products provide georeferenced labels suitable for training and independent evaluation in Punjab and Tamil Nadu.
+- **Primary Owner:** Member B (Rishav Raj).
+- **Reviewers:** Member A (Peter Livins) and Member C (Ashwanth C).
+- **File Ownership:** `docs/data_audit/crop_catalogue_and_labels.md`.
+- **Dependencies:** None; use public source research and do not assume a final AOI.
+- **Acceptance Criteria:** Record dataset/source, crop names and aliases, spatial and temporal support, reference dates/seasons, label meaning, provenance, access/license/attribution, independence limitations, and whether each product is (a) aggregate crop statistics, (b) mapped crop product, or (c) field-level ground truth. Do not label aggregate statistics as model labels; identify viable gaps.
+- **Blockers:** None for research; supervised training remains blocked until suitable verified labels and AOIs are selected.
 
 #### `T-P1-SH-004`: Regional Profile and Provenance Specification
 - **Status:** Proposed addition; team confirmation required before work begins.
@@ -140,6 +160,21 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 2. `T-P2-DE-003`: inspect Sentinel-1 GRD VV/VH units, orbit metadata, and filtering assumptions; record unresolved orbit/filter choices before committing to a method.
 3. `T-P2-DE-005`: build satellite-only feature/time-series assembly and a handoff manifest that reports grid, temporal support, missingness, and source provenance. Software examples are explicitly synthetic; they are not scientific evidence.
 4. After Peter accepts the complete `CON-03` assembly handoff, start `T-P2-SC-002` classifier software, then phenology and stress tasks in dependency order. Fit/evaluation claims remain blocked on sourced labels and approved methods.
+
+### Rishav's Build Session Readiness
+
+**Can begin now:** `T-P1-SC-002` crop-catalogue/label feasibility research and Sentinel-1/2 learning notes. This requires no AOI-specific downloads and does not claim any candidate dataset is suitable ground truth.
+
+**First tracked software build task:** `T-P1-SC-001` after Ashwanth completes and hands off `T-P1-SH-002`; use only labelled synthetic fixtures for software behavior.
+
+**Before real satellite processing (`T-P2-DE-002`, `003`, `005`):**
+1. Accepted P1 handoffs and approved shared observation contracts.
+2. At least one sourced AOI in each selected candidate state (Punjab and Tamil Nadu), with geometry source, license, CRS, boundary vintage, and specific date ranges/seasons.
+3. Crop/season inventory with source citations; candidate DS-04 labels with geometry/coordinates, label semantics, observation date/season, license, provenance, and an independent spatial/temporal holdout plan. District aggregate tables are insufficient by themselves.
+4. Team confirmation of the selected provider (GEE or a documented alternative), working account/access if GEE is selected, and confirmation of data export/storage limits.
+5. Reviewed decisions for optical collection/quality masking, SAR orbit/polarization/filtering, temporal compositing, analysis grid/CRS, index definitions, missing-observation handling, and feature-stack metadata. Keep source acquisition times, native resolution, masks and resampling explicit.
+
+**Before supervised Random Forest fitting (`T-P2-SC-002`):** accepted `CON-03` handoff, supported crop-class map backed by verified labels, spatially/temporally isolated training-validation-test design, and approved feature/model configuration. If labels are not available for a candidate state, it cannot contribute supervised training or accuracy claims; report it as a data gap.
 
 ### Phase P2: Sequential Module Implementation and Handoffs
 
@@ -228,6 +263,7 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Dependencies:** `T-P1-SC-001`, complete data handoff `T-P2-DE-006`.
 - **Contract Dependencies:** `CON-03`, `CON-04`.
 - **Acceptance Criteria:** Train/val/test splits strictly segregated by spatial blocks; produces per-pixel class ID and entropy/confidence score.
+- **Class scope:** The crop catalogue may be broad, but this classifier supports only classes with verified, traceable labels for its AOIs and seasons; unavailable classes are not emitted as predictions.
 - **Testing Requirements:** Unit test on synthetic arrays; verify model persistence (`joblib`) and inference reproducibility.
 - **Blockers:** Sourcing ground-truth labels (`DS-04`) for study area.
 
@@ -337,7 +373,7 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 ### Phase P4: Real-Data Campaign Execution
 
 #### `T-P4-DE-006`: Seasonal Observation Acquisition for Study Area
-- **Objective:** Ingest and cache complete seasonal Sentinel-1, Sentinel-2, and ERA5-Land records for the designated study area.
+- **Objective:** Ingest and cache seasonal Sentinel-1, Sentinel-2, and ERA5-Land records for the accepted candidate AOIs in Punjab and Tamil Nadu where data access and evidence support the study design; identify coverage gaps by AOI/source.
 - **Primary Owner:** Member B (Rishav)
 - **Reviewer:** Member A (Peter)
 - **File Ownership:** `data/cache/` (Gitignored), `scripts/download_season.py`
@@ -345,7 +381,7 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Outputs:** Cached composite rasters ready for model inference.
 - **Dependencies:** `T-P3-IN-001`.
 - **Contract Dependencies:** `CON-03`.
-- **Acceptance Criteria:** Complete temporal coverage with all cloud masking applied and SAR ratio calculated.
+- **Acceptance Criteria:** Report actual coverage and gaps separately for each AOI/source; apply approved cloud masking and SAR feature definitions; do not describe incomplete coverage as complete.
 - **Testing Requirements:** Integrity check on cached GeoTIFF bounds, CRS, and non-null pixel ratios.
 - **Blockers:** GEE export task limits or network timeouts.
 

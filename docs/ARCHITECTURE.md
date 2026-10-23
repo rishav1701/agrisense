@@ -4,7 +4,7 @@
 
 ## 1. Architecture Overview
 
-AgriSense is provisionally a Python scientific backend with a separate, responsive browser dashboard. The project owner prefers a professional dashboard that adapts to phone, tablet, and desktop screens and does not prefer Streamlit. React + TypeScript and a Python FastAPI API are candidate technologies, not an approved stack. If GEE is approved, supported raster operations may run server-side; the Python backend handles model fitting, phenology analysis, water-balance calculations, and API responses. This proposed division depends on approved data and interface contracts.
+AgriSense is provisionally a Python scientific backend with a separate, responsive browser dashboard. The project owner selected a professional dashboard that adapts to phone, tablet, and desktop screens, using React + TypeScript with a FastAPI Python API as the preferred stack direction. Team technical confirmation is open; guide approval is unavailable and is not recorded. If GEE is selected, supported raster operations may run server-side; the Python backend handles model fitting, phenology analysis, water-balance calculations, and API responses. This proposed division depends on approved data and interface contracts.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -59,9 +59,11 @@ AgriSense is provisionally a Python scientific backend with a separate, responsi
 
 ### Multi-Region Design Direction
 
-The project-owner-approved scope direction is India-first and multi-region. The first AOI remains unselected. Separate shared processing logic from versioned regional profiles. A profile references sourced AOI/boundary data, supported crops and seasons, crop-calendar references, CRS/grid choices, and applicable local scientific parameters. Shared modules must not embed state-specific defaults. Derived products identify their region/profile version, source provenance, and limitations. A profile does not make an unvalidated model transferable; each region and season requires appropriate evaluation.
+The project-owner-approved scope direction is India-first and multi-region, with Punjab and Tamil Nadu selected for candidate data-evidence review. Specific AOIs remain unselected. Separate shared processing logic from versioned regional profiles. A profile references sourced AOI/boundary data, supported crops and seasons, crop-calendar references, CRS/grid choices, and applicable local scientific parameters. Shared modules must not embed state-specific defaults. Derived products identify their region/profile version, source provenance, and limitations. A profile does not make an unvalidated model transferable; each region and season requires appropriate evaluation.
 
 Regional profile fields that affect `CON-01`–`CON-09` require a proposed schema change and unanimous approval from all three members before implementation.
+
+Maintain an extensible crop catalogue independently from the model's supported class list. The initial classifier includes only classes with verified, traceable labels for its selected AOIs and seasons. Canal-command aggregation is conditional on a sourced command boundary and suitable estimates; otherwise omit/defer that layer. The dashboard direction selected by the owner is React + TypeScript with a FastAPI API, subject to team technical confirmation.
 
 The regional configuration boundary is a configuration/provenance layer consumed by shared acquisition, feature, modelling, water-balance, aggregation, and presentation modules. It selects region-specific references and supported domains; it must not silently tune models, substitute missing labels, or supply unsourced agronomic defaults.
 
@@ -87,11 +89,11 @@ The regional configuration boundary is a configuration/provenance layer consumed
 | **Interactivity** | Supports a custom responsive layout and tailored map, chart, and table interactions |
 | **Deployment** | Frontend and API hosting must be planned; exact deployment remains undecided |
 | **Limitations** | Higher setup and maintenance cost for a three-member academic project |
-| **Suitability** | Better fit for the owner's stated professional and responsive dashboard preference, subject to team and guide approval |
+| **Suitability** | Better fit for the owner's professional and responsive dashboard preference, subject to team technical confirmation |
 
 ### Decision
 
-> **DEC-01: Proposed — responsive web frontend with Python API/backend; React + TypeScript and FastAPI are candidates.** The owner prefers a professional responsive dashboard and does not prefer Streamlit. The source documents propose Streamlit, so this is a deliberate departure from their implementation proposal while preserving the requested dashboard outcome. Framework, mapping/chart libraries, and deployment remain subject to team and guide review. Status: PROPOSED — not approved for implementation.
+> **DEC-01: Owner-selected direction — responsive React + TypeScript frontend with a FastAPI Python API.** The source documents propose Streamlit; this is a deliberate departure from that implementation proposal while preserving the dashboard objective. Team technical confirmation, mapping/chart libraries, and deployment remain open. No guide approval is recorded or assumed.
 
 ## 3. Module Responsibilities
 
@@ -257,7 +259,7 @@ The regional configuration boundary is a configuration/provenance layer consumed
 
 ## 7. Deployment *(Provisional)*
 
-For academic demonstration, local development will run a browser frontend and Python API as selected in DEC-01. Commands, hosting, and service topology remain undecided until the stack is approved.
+For academic demonstration, local development will run the owner-selected browser frontend and Python API after team technical confirmation of DEC-01. Commands, hosting, and service topology remain undecided.
 
 - GEE authenticated per-user
 
@@ -272,8 +274,8 @@ Deployment and containerisation remain provisional; evaluate only after the team
 | Phenology | SciPy signal processing | IDP PDF specifies SciPy; mava F3 |
 | Water balance | NumPy / Pandas | FAO-56 vectorised computation |
 | Geospatial | GeoPandas, Rasterio | Both PDFs specify; canal aggregation |
-| Dashboard | Responsive web frontend; React + TypeScript candidate | Owner preference; DEC-01 remains proposed; source documents propose Streamlit |
-| API/backend | Python API; FastAPI candidate | Keeps scientific modules in Python; DEC-01 remains proposed |
+| Dashboard | Responsive React + TypeScript frontend | Owner-selected direction; team technical confirmation open; source documents propose Streamlit |
+| API/backend | FastAPI Python API | Owner-selected direction; team technical confirmation open |
 | Map visualisation | Library TBD | Source proposes Folium via Streamlit; select after framework and integration review |
 | Charts | Library TBD | Source proposes Plotly; confirm compatibility with DEC-01 |
 | Testing | pytest | Standard Python testing |

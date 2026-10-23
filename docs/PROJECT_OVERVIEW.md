@@ -27,9 +27,9 @@
 
 ### Geographic Scope
 
-AgriSense is intended to use a shared, region-parameterized pipeline for an India-first multi-region platform. The first pilot Area of Interest (AOI) is not selected. Punjab, Haryana, Rajasthan, and Uttar Pradesh are candidate regions only; a specific AOI will be selected only after comparing satellite coverage, traceable crop labels, boundary data, crop/season references, weather and soil inputs, irrigation context, licensing, and independent validation feasibility. No region-level performance or transferability is implied until evaluated.
+AgriSense is intended to use a shared, region-parameterized pipeline for an India-first multi-region platform. Punjab and Tamil Nadu are the initial states for evidence-based candidate-AOI review; specific AOIs are not selected. Public crop/area statistics are useful for candidate screening but are not georeferenced field labels by themselves. Compare satellite coverage, traceable labels, boundary data, crop/season references, weather and soil inputs, irrigation context, licensing, and independent validation feasibility. No region-level performance or transferability is implied until evaluated.
 
-The initial scientific baseline remains the proposed Random Forest classifier. Multi-region readiness requires region/season-aware profiles and separate spatial, temporal, and cross-region evaluation. A single region's results do not establish performance elsewhere.
+The initial scientific baseline remains the proposed Random Forest classifier. Maintain an extensible crop catalogue, but model only classes with verified labels in selected AOIs/seasons. Multi-region readiness requires region/season-aware profiles and separate spatial, temporal, and cross-region evaluation. A single region's results do not establish performance elsewhere.
 
 Canal irrigation systems across India's agricultural belts rely on **district-level averages and fixed schedules** to allocate water. This coarse, one-size-fits-all approach leads to systematic over- and under-watering of individual fields, with cascading consequences:
 
@@ -65,7 +65,7 @@ Canal irrigation systems across India's agricultural belts rely on **district-le
 |----|---------------|-------------|
 | **O1** | SAR–Optical Crop Classification | Source asks for Sentinel-1/2 + ERA5-Land ingestion and Random Forest mapping at a 10 m output grid; effective resolution depends on the source bands and processing. |
 | **O2** | Stage-Aware Stress Detection | Source asks for a SciPy phenology tracker and dynamic VCI thresholds to address senescence-related false alarms; this proposed effect requires validation. |
-| **O3** | Canal-Level Irrigation Advisory | Source asks for FAO-56-based deficits, canal-command aggregation, and Streamlit delivery. The project owner prefers a responsive browser dashboard; implementation framework is pending DEC-01. Treat “mm/ha” as source terminology; the scientific output unit for depth is mm, and volume requires area and explicit assumptions. |
+| **O3** | Irrigation-Relevant Decision Support | Source asks for FAO-56-based deficits and canal-command aggregation. Canal summaries are conditional on sourced command boundaries and suitable estimates; operational control is out of scope. The project owner selected React + TypeScript and FastAPI as the dashboard/API direction, pending team technical confirmation. Depth is in mm; volume requires area and explicit assumptions. |
 
 > **Source:** IDP PDF, page 23 — Objectives O1, O2, O3.
 
@@ -75,7 +75,7 @@ Canal irrigation systems across India's agricultural belts rely on **district-le
 - **Growth stage map** showing vegetative, flowering/heading, and senescence phases
 - **Candidate vegetation/stress indicator map** using a documented method; stage-aware rules and their value over static baselines require independent validation
 - Canal-boundary summary of estimated depth (mm); any area-derived volume (m³) must document valid area and assumptions and is not a gate-release prescription
-- Outputs presented in an interactive, responsive browser dashboard; the owner prefers this over Streamlit, with framework choice pending DEC-01 approval
+- Outputs presented in an interactive, responsive React + TypeScript dashboard with a FastAPI API as owner-selected direction, pending team technical confirmation
 
 ### 2.4 Intended Users (source-proposed; operational suitability unvalidated)
 
@@ -111,7 +111,7 @@ The project intends to address source features **F1–F8** and objectives **O1�
 - **F5:** Sentinel-1 radar features. The source's “all-weather” framing is an aspiration; SAR does not provide optical-equivalent observations or guarantee continuous stress detection.
 - **F6:** Mava-proposed FAO-56 water-balance estimate (ETc = Kc × ET₀ against rainfall; method and inputs require definition; source uses “mm/ha”)
 - **F7:** Canal Command Boundary Aggregator (pixel → canal polygon summaries)
-- **F8:** The 3-Click Field Dashboard (source proposal: Streamlit with map, charts, tables; owner preference: responsive web dashboard, framework pending DEC-01)
+- **F8:** Responsive browser dashboard (source proposal: Streamlit; owner-selected direction: React + TypeScript with FastAPI, pending team technical confirmation)
 
 ### 3.2 Exclusions
 
@@ -223,7 +223,7 @@ The proposed AgriSense pipeline transforms satellite and meteorological inputs i
 **Objectives & Deliverables (REQUIREMENT):**
 - **O1:** SAR–Optical crop classification on the source-requested 10 m grid using Random Forest; source resolutions and effective detail must be documented
 - **O2:** Source asks for a SciPy phenology tracker with dynamic VCI thresholds; these remain candidate rules until defined and validated.
-- **O3:** Canal-Level Irrigation Advisory using FAO-56 deficits aggregated to canal boundaries; the source proposes Streamlit delivery, while the owner prefers a responsive web dashboard (DEC-01 pending)
+- **O3:** Irrigation-relevant summaries using sourced FAO-56 estimates; canal-command aggregation is conditional on valid command boundaries. The source proposes Streamlit delivery; the owner selected a responsive React + TypeScript dashboard with FastAPI, pending team technical confirmation.
 
 **Techniques Specified (REQUIREMENT):**
 1. SAR-Optical Data Fusion — the source proposes Sentinel-2 indices with Sentinel-1 VH/VV; neither continuous optical coverage nor equivalent stress observations are guaranteed
@@ -275,7 +275,7 @@ The proposed AgriSense pipeline transforms satellite and meteorological inputs i
 |-------|-------------|
 | Cloud Data & Infrastructure | Source-proposed Google Earth Engine, Sentinel-2, Sentinel-1, and ERA5-Land; nominal grid spacing and effective resolution are distinct |
 | ML & Processing | Scikit-Learn (Random Forest candidate; Mava's 100-tree setting is a proposal to evaluate), NumPy & Pandas, SciPy (signal processing) |
-| Geospatial & Frontend | Source proposal: GeoPandas/Rasterio, Streamlit, Streamlit-Folium, Plotly. Owner prefers a responsive browser frontend with Python API; framework and libraries pending DEC-01. |
+| Geospatial & Frontend | Source proposal: GeoPandas/Rasterio, Streamlit, Streamlit-Folium, Plotly. Owner-selected direction: responsive React + TypeScript frontend and FastAPI API; mapping/chart libraries remain open pending team review. |
 
 **USP Statement (source claim, not independently verified):**
 > Mava presents this combination as its unique selling proposition. This is an unverified source claim and is not repeated as a comparative finding.
@@ -291,15 +291,15 @@ The proposed AgriSense pipeline transforms satellite and meteorological inputs i
 
 ### RECOMMENDATION 1: Prefer a Responsive Browser Dashboard
 
-**Rationale:** The project owner prefers a highly responsive, professional dashboard and does not prefer Streamlit. A separate browser frontend with a Python API is the current owner-preferred direction; React + TypeScript and FastAPI are candidates only. The source PDFs propose Streamlit, and the three-member team's frontend/API capacity is not yet confirmed. DEC-01 requires team and guide review before implementation; preserve a tight scope and avoid adding an unrequested spatial server or database.
+**Rationale:** The project owner selected a highly responsive, professional dashboard using React + TypeScript and a FastAPI Python API. The source PDFs propose Streamlit. The three-member team should confirm implementation scope; guide sign-off is unavailable. Preserve a tight scope and avoid adding an unrequested spatial server or database.
 
 ### RECOMMENDATION 2: Use GEE for Server-Side Processing to Minimize Local Compute
 
 **Rationale:** Google Earth Engine performs raster processing (compositing, cloud masking, index computation, SAR calibration) on Google's infrastructure. This avoids downloading terabytes of raw Sentinel imagery to local machines. The team should design the pipeline to push as much computation as possible to GEE and only export derived products (feature cubes, classified maps) for local ML training and dashboard serving.
 
-### RECOMMENDATION 3: Start with a Well-Defined Study Area Before Scaling
+### RECOMMENDATION 3: Select Evidence-Supported AOIs Before Processing
 
-**Rationale:** Neither PDF specifies a study area. Before writing any code, the team should select a single canal command area (e.g., a minor canal in a known irrigation project) with:
+**Rationale:** Neither PDF specifies an AOI. The owner selected Punjab and Tamil Nadu as candidate states for evidence review. Before AOI-specific processing, the team should identify concrete AOIs in the selected states with:
 - Known cropping patterns (for ground truth validation)
 - Available canal boundary shapefiles
 - Reasonable size (a few hundred km²) for initial development and testing
@@ -403,4 +403,4 @@ This allows rapid iteration on all pipeline stages before scaling to larger regi
 
 ---
 
-> **Status:** Phase 0 baseline approved by the three-member team per project-owner confirmation; guide sign-off waived for P0. Before implementation, resolve the P1 entry prerequisites in `docs/STATUS.md`, including the AOI, ground-truth strategy, and required decision approvals.
+> **Status:** Phase 0 baseline approved by the three-member team per project-owner confirmation; guide sign-off waived for P0. P1 foundation tasks may start when their own dependencies are satisfied. Resolve the AOI and ground-truth prerequisites in `docs/STATUS.md` before AOI-specific acquisition, supervised training, or scientific validation.

@@ -73,7 +73,7 @@ Architecture  & Contracts   Development   & Contracts   End-to-End    Validation
 Independent foundation tasks may start when their own inputs are satisfied; pilot AOI and data prerequisites gate AOI-specific acquisition and scientific modelling, not environment setup. Add `T-P1-SH-004` to specify regional profile/provenance handling. Any shared-contract changes still require unanimous approval.
 
 ### Objectives
-1. Configure local virtual environments, Python dependency definitions (`requirements.txt`), and developer linting/formatting hooks (`black`, `ruff`, `isort`, `pytest`); add frontend tooling only after DEC-01 approves the stack. This setup may begin independently of pilot AOI selection.
+1. Configure local virtual environments, Python dependency definitions (`requirements.txt`), and developer linting/formatting hooks (`black`, `ruff`, `isort`, `pytest`); add frontend tooling after the team confirms the owner-selected DEC-01 stack. This Python setup may begin independently of pilot AOI selection.
 2. Implement contract schemas in Python (`src/contracts/schemas.py`) using Pydantic or dataclasses to enforce inter-module interfaces.
 3. Establish directory structure and mock data fixtures for unit and interface testing.
 4. Set up GEE project credentials and verify cloud connectivity.
@@ -81,7 +81,7 @@ Independent foundation tasks may start when their own inputs are satisfied; pilo
 ### Deliverables
 - `requirements.txt` with pinned stable dependencies.
 - `pyproject.toml` or configuration files for `black`, `ruff`, and `isort`.
-- Provisional directory skeleton for approved backend/scientific modules and tests; frontend/API directories are created only after DEC-01 approval.
+- Provisional directory skeleton for approved backend/scientific modules and tests; frontend/API directories are created after team confirmation of DEC-01.
 - Python implementation of data contracts in `src/contracts/schemas.py`.
 - Reviewed browser/API boundary specification (`T-P1-SH-003`) after DEC-01 selection.
 - Mock fixture generator in `tests/fixtures/` producing synthetic data adhering strictly to `CON-01` through `CON-09`.
@@ -90,10 +90,11 @@ Independent foundation tasks may start when their own inputs are satisfied; pilo
 ### Ordered P1 Handoffs
 1. Ashwanth C: `T-P1-SH-001` environment/tooling.
 2. Ashwanth C: `T-P1-SH-002` schemas, with Peter and Rishav sign-off.
-3. Ashwanth C: `T-P1-SH-003` browser/API boundary after DEC-01 approval.
+3. Ashwanth C: `T-P1-SH-003` browser/API boundary after team confirmation of DEC-01.
 4. Peter: `T-P1-DE-001` GEE setup.
 5. Rishav: `T-P1-SC-001` explicitly synthetic software fixtures.
 6. Proposed: `T-P1-SH-004` regional profile/provenance specification after team confirms the task and its owner.
+7. Peter and Rishav may independently complete `T-P1-DE-002` and `T-P1-SC-002` source inventories in their separate files; these inform but do not finalize AOIs or prove label suitability.
 
 This order is sequential for implementation ownership. A task can be complete while P1 remains open; P2 starts only after the complete P1 deliverables and Gate 1.
 
@@ -119,7 +120,7 @@ This order is sequential for implementation ownership. A task can be complete wh
 - Any member cannot run the agreed software checks.
 - Required P1 task handoffs, including the DEC-01/API boundary, are incomplete or unreviewed.
 - Shared contracts have not been unanimously approved.
-- DEC-01 and the frontend/API toolchain have not been approved by the three members and guide.
+- DEC-01 and the frontend/API toolchain have not yet received team technical confirmation. Guide sign-off is unavailable per project-owner statement and is not recorded as obtained.
 - Study area and target crop classes remain undefined.
 - Ground-truth and canal-boundary acquisition strategies remain unassessed. Coding against synthetic fixtures may proceed only for software behavior, not scientific performance.
 
