@@ -1,0 +1,131 @@
+# ==============================================================================
+# AgriSense Repository .gitignore
+# ==============================================================================
+
+# ------------------------------------------------------------------------------
+# MANDATORY PROJECT EXCLUSIONS (Do Not Commit)
+# ------------------------------------------------------------------------------
+# Reference PDFs must remain outside Git tracking per project instructions
+/*.pdf
+IDP_Review_1_AgriSense (1).pdf
+mava.pdf
+
+# ------------------------------------------------------------------------------
+# Environment Variables & Secrets
+# ------------------------------------------------------------------------------
+.env
+.env.local
+*.pem
+*.key
+credentials.json
+service_account.json
+
+# ------------------------------------------------------------------------------
+# Local Data, Rasters & Model Artifacts
+# ------------------------------------------------------------------------------
+data/
+data/cache/
+data/outputs/
+data/raw/
+data/ground_truth/
+data/canals/*.shp
+data/canals/*.shx
+data/canals/*.dbf
+data/canals/*.prj
+
+# Raster & Large Binary Data Formats
+*.tif
+*.tiff
+*.geotiff
+*.nc
+*.nc4
+*.hdf
+*.hdf5
+*.h5
+*.zip
+*.tar.gz
+*.7z
+
+# Machine Learning Models & Checkpoints
+*.joblib
+*.pkl
+*.pickle
+*.onnx
+*.pt
+*.pth
+*.bin
+
+# ------------------------------------------------------------------------------
+# Python & Bytecode
+# ------------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual Environments
+venv/
+.venv/
+env/
+.env/
+ENV/
+env.bak/
+venv.bak/
+
+# ------------------------------------------------------------------------------
+# Jupyter Notebooks & Scratch Data
+# ------------------------------------------------------------------------------
+.ipynb_checkpoints
+notebooks/.ipynb_checkpoints
+scratch/
+tmp/
+temp/
+
+# ------------------------------------------------------------------------------
+# Testing, Coverage & Quality Tools
+# ------------------------------------------------------------------------------
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.ruff_cache/
+.mypy_cache/
+
+# ------------------------------------------------------------------------------
+# IDE & Operating System Files
+# ------------------------------------------------------------------------------
+.vscode/
+!.vscode/settings.json
+!.vscode/launch.json
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~

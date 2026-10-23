@@ -1,0 +1,318 @@
+# AgriSense Execution Plan (Phases P0 – P6)
+
+> **Status: PROVISIONAL — Subject to team review and guide approval**  
+> **Academic Context:** BACSE291 — Innovative Design Project, VIT Vellore (Fall Semester 2026).  
+> **Team Structure:** Exactly three student members (Member A, Member B, Member C).  
+> **Mandatory Rule:** Do not advance between phases without formal gate approval recorded in `docs/STATUS.md`.
+
+---
+
+## 1. Roadmap Overview
+
+```
+┌───────┐     ┌───────┐     ┌───────┐     ┌───────┐     ┌───────┐     ┌───────┐     ┌───────┐
+│  P0   │ ──► │  P1   │ ──► │  P2   │ ──► │  P3   │ ──► │  P4   │ ──► │  P5   │ ──► │  P6   │
+└───────┘     └───────┘     └───────┘     └───────┘     └───────┘     └───────┘     └───────┘
+Planning &    Repo Setup    Independent   Integration   Real-Data     Scientific    Demo, Doc
+Architecture  & Contracts   Development   & Contracts   End-to-End    Validation    & Review
+```
+
+---
+
+## Phase P0: Requirements, Architecture, Risks, and Planning
+
+### Objectives
+1. Extract and reconcile all scientific and software requirements from reference materials (`IDP_Review_1_AgriSense (1).pdf` and `mava.pdf`).
+2. Establish system architecture, module boundaries, and inter-module contracts.
+3. Formulate a realistic task allocation for exactly three members with one primary owner per task and explicit shared-file governance.
+4. Document scientific uncertainties, dataset requirements, and collaboration workflows.
+
+### Deliverables
+- `AGENTS.md`: Agent behavior rules and scientific integrity constraints.
+- `README.md`: Project summary, phase status, navigation.
+- `docs/PROJECT_OVERVIEW.md`: Grounded problem statement, objectives (O1–O3), features (F1–F8), gaps (G1–G5).
+- `docs/ARCHITECTURE.md`: Proposed scientific backend and responsive browser dashboard architecture, tradeoffs, and pending DEC-01 review.
+- `docs/EXECUTION_PLAN.md`: Complete phased roadmap (P0–P6).
+- `docs/TASK_ASSIGNMENTS.md`: Work breakdown structure for Members A, B, and C.
+- `docs/DATA_REQUIREMENTS.md`: Dataset inventory (S1, S2, ERA5-Land, ground-truth, canal vectors).
+- `docs/API_CONTRACTS.md`: Formal data models and schemas (CON-01 to CON-09).
+- `docs/TEAM_WORKFLOW.md`: Git branching, PR review, and dispute protocol.
+- `docs/DECISIONS.md`: Initial architectural decision records (ADRs).
+- `docs/STATUS.md`: Initial checkpoint and blocker inventory.
+- `docs/references/README.md`: Documentation of external PDF sources.
+- `docs/risks/SCIENTIFIC_RISKS.md`: Comprehensive risk register (RISK-01 to RISK-17).
+- `.gitignore` and `.env.example`.
+
+### Roles & Responsibilities
+- **Primary Owner:** All members (co-designed with AI architect).
+- **Reviewer:** Project Guide (Dr. Muthuraja S) & Team Lead (Member A/B/C consensus).
+
+### Dependencies
+- Access to reference documents and repository setup.
+
+### Acceptance Criteria
+- All required Phase 0 documents are present; audit remediation updated their cross-references and recorded unresolved decisions and blockers.
+- No application or scientific code has been implemented.
+- Neither reference PDF is committed to the Git repository.
+- Decisions are labeled `PROPOSED` until approved by team consensus.
+
+### Gate Conditions (Preventing Progression to P1)
+- The Phase 0 baseline has not been reviewed and approved by all three members and the guide.
+- Role-to-name mapping and task ownership are not recorded.
+- The API contract amendment has unanimous approval from all three members (2026-10-23); guide review and Gate 0 approval remain pending before implementation.
+- The study-area selection and data acquisition strategy are not recorded. GEE access is required only if GEE is selected.
+
+---
+
+## Phase P1: Repository Foundation, Shared Contracts, Environments, and Quality Gates
+
+### Objectives
+1. Configure local virtual environments, Python dependency definitions (`requirements.txt`), and developer linting/formatting hooks (`black`, `ruff`, `isort`, `pytest`); add frontend tooling only after DEC-01 approves the stack.
+2. Implement contract schemas in Python (`src/contracts/schemas.py`) using Pydantic or dataclasses to enforce inter-module interfaces.
+3. Establish directory structure and mock data fixtures for unit and interface testing.
+4. Set up GEE project credentials and verify cloud connectivity.
+
+### Deliverables
+- `requirements.txt` with pinned stable dependencies.
+- `pyproject.toml` or configuration files for `black`, `ruff`, and `isort`.
+- Provisional directory skeleton for approved backend/scientific modules and tests; frontend/API directories are created only after DEC-01 approval.
+- Python implementation of data contracts in `src/contracts/schemas.py`.
+- Mock fixture generator in `tests/fixtures/` producing synthetic data adhering strictly to `CON-01` through `CON-09`.
+- Verified GEE connection script (`scripts/verify_gee.py`).
+
+### Roles & Responsibilities
+- **Lead Owner:** Member C (Application, Environment & Contracts Coordinator).
+- **Contributors:** Member A (GEE authentication setup), Member B (Model contract review).
+- **Reviewers:** All members must review and sign off on `src/contracts/schemas.py`.
+
+### Dependencies
+- Approval of Phase P0 deliverables.
+
+### Testing and Validation Requirements
+- CI / test command `pytest tests/` runs and validates mock data against Pydantic contract schemas.
+- Linting checks (`ruff check .`, `black --check .`) pass with zero errors.
+- Test fixtures verified as purely synthetic (no fabricated scientific data).
+
+### Definition of Done
+- Complete repository scaffold exists.
+- All three members can successfully clone, install requirements, and execute `pytest` locally.
+- GEE authentication verified for members executing data pipelines.
+
+### Gate Conditions (Preventing Progression to P2)
+- Any member cannot run the agreed software checks.
+- Shared contracts have not been unanimously approved.
+- DEC-01 and the frontend/API toolchain have not been approved by the three members and guide.
+- Study area and target crop classes remain undefined.
+- Ground-truth and canal-boundary acquisition strategies remain unassessed. Coding against synthetic fixtures may proceed only for software behavior, not scientific performance.
+
+---
+
+## Phase P2: Independent Implementation Workstreams
+
+### Objectives
+1. Develop isolated modules concurrently without mutual file edits or branch collisions.
+2. Member A builds GEE ingestion, cloud masking, S1/S2 preprocessing, and ERA5-Land extraction.
+3. Member B owns candidate scientific model implementations using approved contracts and clearly synthetic software fixtures; claims and calibration remain gated on suitable source data and validation.
+4. Member C builds the owner-preferred responsive browser dashboard and integrates it with the Python API using contract-mocked outputs after DEC-01 approves the frameworks and libraries.
+
+### Deliverables
+- **Member A (Data Engineering):**
+  - `src/data/gee_auth.py`, `sentinel2.py`, `sentinel1.py`, `era5land.py`, `preprocessing.py`, `cache.py`.
+  - Comprehensive unit tests in `tests/data/`.
+- **Member B (Scientific Modeling):**
+  - `src/models/classifier.py`, `phenology.py`, `stress.py`, `water_balance.py`.
+  - Comprehensive unit tests in `tests/models/` using synthetic raster arrays.
+- **Member C (Backend/API, Responsive Frontend & Integration):**
+  - `src/spatial/canal_aggregator.py`.
+  - Approved frontend and API modules (exact paths/framework follow DEC-01).
+  - Browser/component and API integration checks in the approved test layout.
+
+### Roles & Responsibilities
+- **Workstream A:** Member A (Data Engineering). Reviewer: Member B.
+- **Workstream B:** Member B (Scientific Models). Reviewer: Member C.
+- **Workstream C:** Member C (Dashboard & UI). Reviewer: Member A.
+
+### Dependencies
+- Successful completion of Phase P1 and frozen `src/contracts/schemas.py`.
+
+### Testing and Validation Requirements
+- Every non-trivial module needs unit tests for its defined behavior; software coverage is not scientific validation.
+- No cross-module imports during P2 except through `src/contracts/schemas.py`.
+- No live network or GEE access required to run Member B or Member C unit test suites.
+
+### Definition of Done
+- Each member's feature branch builds cleanly, passes all unit tests, and satisfies all linters.
+- Each module consumes and produces valid contract objects.
+
+### Gate Conditions (Preventing Progression to P3)
+- Unit tests failing on any individual workstream.
+- Unapproved alterations made to shared contract files.
+- Persistent blocker on ground-truth label acquisition or study area definition.
+
+---
+
+## Phase P3: Integration and Contract Verification
+
+### Objectives
+1. Connect module outputs to downstream module inputs on feature integration branches.
+2. Verify that live data outputs from Member A feed seamlessly into Member B's models.
+3. Verify that Member B's scientific outputs feed into Member C's spatial aggregator, Python API, and responsive browser dashboard.
+4. Resolve edge cases, coordinate transformations, missing pixel handling, and NaN propagation.
+
+### Deliverables
+- Integration test suite in `tests/integration/` validating end-to-end data pipelines on sample AOIs.
+- Integrated `src/` modules functioning together on local runtime.
+- Working prototype dashboard displaying sample/cached pipeline runs.
+- Integration verification report in `docs/STATUS.md`.
+
+### Roles & Responsibilities
+- **Lead Owner:** Member C (Application & Integration).
+- **Contributors:** Member A and Member B.
+- **Reviewers:** Full team joint review.
+
+### Dependencies
+- Completion of all P2 workstreams.
+
+### Testing and Validation Requirements
+- End-to-end pipeline execution from cached sample input rasters to final canal-aggregated tables and Folium map layers.
+- Contract validation on every inter-module data exchange.
+- Zero silent failure or uncaught NaN / divide-by-zero errors in scientific calculations.
+
+### Definition of Done
+- All individual workstreams merged into `main` via approved PRs.
+- `pytest tests/integration/` passes consistently across all three member environments.
+
+### Gate Conditions (Preventing Progression to P4)
+- Schema mismatch between module interfaces.
+- Memory overflow or timeout when processing multi-temporal sample tiles.
+
+---
+
+## Phase P4: Real-Data End-to-End Processing
+
+### Objectives
+1. Execute the integrated pipeline on actual satellite and weather observations for the designated study area.
+2. Ingest real Sentinel-1, Sentinel-2, and ERA5-Land observations across an active crop season.
+3. Execute Random Forest classification and generate a map on the approved analysis grid, documenting effective sensor resolution and validation limits.
+4. Execute temporal phenology extraction, candidate stage-aware indicator analysis, and FAO-56 ETc / water-balance estimates under the approved method.
+5. Ingest official or digitized canal boundaries if available and produce zonal summaries of estimated depth; report area-derived volume only with explicit assumptions, never as an unsupported gate-release prescription.
+
+### Deliverables
+- Preprocessed real-data composites stored in local cache or GEE assets.
+- Real-data crop classification map GeoTIFF with analysis-grid spacing and effective-resolution caveats.
+- Multi-temporal phenological inflection rasters and growth stage classifications.
+- Candidate vegetation/stress indicator maps with quality states and documented senescence handling.
+- Canal-boundary summaries of estimated depth (mm) and, if approved and supported, area-derived volume with assumptions; no gate-release prescription.
+- Responsive browser dashboard displaying available observations, estimates, candidate indicators, and their limitations; framework selection remains gated by DEC-01.
+
+### Roles & Responsibilities
+- **Satellite & Met Processing:** Member A.
+- **Scientific Model Execution:** Member B.
+- **Dashboard Data Binding & Display:** Member C.
+- **Reviewers:** All members.
+
+### Dependencies
+- Confirmed study area boundary (`config/study_area.geojson`).
+- Confirmed ground-truth training set for target crops.
+- Acquired canal boundary shapefile (`data/canals/`).
+
+### Testing and Validation Requirements
+- Verification of spatial alignment (CRS, pixel grid, bounds) across S1, S2, and ERA5-Land.
+- Verification that cloud masking correctly flags invalid optical pixels.
+- Verification of available Sentinel-1 acquisitions and quality flags across the study interval; report SAR gaps separately from optical cloud gaps.
+
+### Definition of Done
+- Complete end-to-end pipeline run executed without crashes on real seasonal data.
+- Outputs rendered in the approved browser dashboard with functional map layer toggling and clear data-quality states.
+
+### Gate Conditions (Preventing Progression to P5)
+- Complete failure of GEE export quotas or inability to acquire imagery for target season.
+- Inability to acquire ground-truth training data (triggering RISK-01 mitigation protocols).
+
+---
+
+## Phase P5: Scientific Validation, Uncertainty Analysis, and Evaluation
+
+### Objectives
+1. Rigorously evaluate model outputs against empirical ground data and scientific benchmarks.
+2. Compute classification metrics: Overall Accuracy, Cohen's Kappa, Macro-F1, and per-class Confusion Matrices with spatial cross-validation.
+3. Compare the stage-aware candidate indicator with a documented static baseline where independent evidence supports evaluation; report whether false alarms decrease, increase, or remain uncertain.
+4. Perform sensitivity and uncertainty analysis on FAO-56 irrigation deficit estimates ($ET_c = K_c \times ET_0$).
+5. Document all assumptions, biases, and methodological limitations.
+
+### Deliverables
+- `docs/VALIDATION_REPORT.md`: Comprehensive evaluation findings.
+- Confusion matrices, error tables, and metric summaries.
+- Comparative analysis of static and stage-aware indicators, including false-alarm results only when the evaluation labels and design support them.
+- Uncertainty bounds report documenting ERA5-Land downscaling limitations and $K_c$ parameter sensitivity.
+- Evaluator scripts in `src/evaluation/metrics.py`.
+
+### Roles & Responsibilities
+- **Lead Owner:** Member B (Scientific Models & Validation).
+- **Contributors:** Member A (Spatial data integrity), Member C (Visualization of evaluation charts).
+- **Reviewers:** Project Guide (Dr. Muthuraja S).
+
+### Dependencies
+- Successful completion of Phase P4 real-data execution.
+- Independent ground-truth test partition (spatially segregated).
+
+### Testing and Validation Requirements
+- Quantitative validation must use held-out test data strictly isolated from training folds (no spatial data leakage).
+- All scientific claims must cite source data and methodology.
+- Software tests must remain strictly separated from scientific validation analyses.
+
+### Definition of Done
+- All performance metrics calculated honestly from verified data without fabrication.
+- Comprehensive validation report finalized and reviewed by the project guide.
+
+### Gate Conditions (Preventing Progression to P6)
+- Scientific claims contradicted by evaluation data.
+- Unsubstantiated claims of high accuracy or "measured soil moisture" present in project text.
+
+---
+
+## Phase P6: Deployment, Documentation, Demonstration, and Academic Presentation
+
+### Objectives
+1. Finalize the responsive browser dashboard for academic presentation and guide review, using the framework approved in DEC-01.
+2. Complete all technical documentation, user guides, and reproducibility instructions.
+3. Prepare presentation slide deck and demonstration script highlighting the 3-in-1 pipeline USP.
+4. Conduct final code audit, dependency cleanup, and repository archiving.
+
+### Deliverables
+- Polished responsive web dashboard with intuitive UI controls, field-level drilldown, and canal summary exports.
+- `docs/USER_GUIDE.md`: Step-by-step instructions for operating the dashboard.
+- Final academic presentation slide deck (PDF/PPT) covering IDP Review requirements.
+- Final project report linking literature gaps (G1–G5) to implemented features (F1–F8).
+- Demonstration video or walkthrough script.
+- Clean Git history on `main` with all release tags applied.
+
+### Roles & Responsibilities
+- **Lead Owner:** Member C (Dashboard, Presentation & Demonstration).
+- **Contributors:** Member A (Data engineering documentation), Member B (Scientific methodology documentation).
+- **Reviewers:** Project Guide & External Review Panel.
+
+### Dependencies
+- Completion of Phase P5 scientific validation.
+
+### Testing and Validation Requirements
+- Clean-clone check: A fresh clone can run the dashboard using the documented setup steps; record setup issues without imposing an unsupported time target.
+- All dashboard interactive widgets (date sliders, layer selectors, export buttons) function without unhandled exceptions.
+
+### Definition of Done
+- System successfully demonstrated to Project Guide (Dr. Muthuraja S).
+- Final review deliverables submitted and approved on university portal (VTOP).
+
+---
+
+## Phase Gate Summary Matrix
+
+| Gate | Target Milestone | Approvers | Blocker Criteria |
+|:---|:---|:---|:---|
+| **Gate 0** | Phase P0 -> P1 | All 3 Members | Unresolved task ownership, missing PDF requirements, lack of team consensus |
+| **Gate 1** | Phase P1 -> P2 | All 3 Members | Unstable environment, broken tests, unapproved contract schemas |
+| **Gate 2** | Phase P2 -> P3 | Member A, B, C | Unit test failures, contract violations, unmerged rogue code |
+| **Gate 3** | Phase P3 -> P4 | All 3 Members | Broken pipeline integration, coordinate misalignment, memory exhaustion |
+| **Gate 4** | Phase P4 -> P5 | Project Guide & Team | Inability to run on real data, missing study area or ground-truth |
+| **Gate 5** | Phase P5 -> P6 | Project Guide & Team | Unsupported claims, missing independent validation, unresolved uncertainty, or unaddressed false alarms |
+| **Gate 6** | Final Submission | Guide & Review Panel| Broken demonstration, missing documentation, non-reproducible code |
