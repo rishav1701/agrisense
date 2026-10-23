@@ -9,7 +9,7 @@
 
 ## 1. Executive Summary
 
-The project owner approved an India-first multi-region scope direction (`DEC-10`) and selected Punjab and Tamil Nadu as states for data-evidence review (`DEC-11`); specific AOIs remain unselected. The owner selected a responsive browser dashboard with React + TypeScript and FastAPI as the preferred stack direction (`DEC-01`); team technical confirmation remains open. An extensible all-crops catalogue is the product direction, while initial model classes remain limited to verified labels (`DEC-12`). Canal-command summaries are conditional on proper boundaries and inputs (`DEC-13`). Existing task IDs and owners remain in force. Foundational and learning work may proceed when task inputs are met; AOI-dependent acquisition, scientific training/calibration, and validation remain gated. P0 remains complete; P1 and individual tasks are not marked complete.
+The project owner approved an India-first multi-region scope direction (`DEC-10`). The initial Punjab/Tamil Nadu evidence-review scope in `DEC-11` has been broadened by `DEC-14`: Telangana/TGRAC is the current lead candidate for evidence review, with the final location still determined by verifiable data suitability. A read-only audit retrieved TGRAC ground-truth points and I&CAD command polygons; SRSP Stage I has the largest observed overlap (147 points), but its boundary provenance/reuse terms and label suitability are unresolved. The 12 points tagged Wanaparthy intersect none of the seven queried commands. No AOI is selected and `DS-09` remains a blocker. See [`docs/DS09_AOI_AUDIT.md`](DS09_AOI_AUDIT.md). The owner selected a responsive browser dashboard with React + TypeScript and FastAPI as the preferred stack direction (`DEC-01`); team technical confirmation remains open. An extensible all-crops catalogue is the product direction, while initial model classes remain limited to verified labels (`DEC-12`). Canal-command summaries are conditional on proper boundaries and inputs (`DEC-13`). Existing task IDs and owners remain in force. Foundational and learning work may proceed when task inputs are met; AOI-dependent acquisition, scientific training/calibration, and validation remain gated. P0 remains complete; P1 and individual tasks are not marked complete.
 
 The Phase 0 documentation baseline is complete and approved by all three team members, as confirmed by the project owner on 2026-10-23. The project owner waived guide sign-off for Phase 0. Audit remediation corrected source overclaims, units, resolution, ownership, unsupported scientific examples, and advisory semantics. This approval closes Phase 0 documentation; it does not approve individual proposed scientific/architecture decisions or satisfy the separate P1 entry prerequisites.
 
@@ -37,6 +37,7 @@ The project has exactly three members. The project owner approved Phase 0 on 202
 | **API & Data Contracts** | [`docs/API_CONTRACTS.md`](API_CONTRACTS.md) | **Amended; unanimous member approval recorded** | `CON-01` to `CON-09` revised to remove fabricated examples and unsupported thresholds, clarify units and provenance, and bound water-balance/canal outputs. |
 | **Team Workflow** | [`docs/TEAM_WORKFLOW.md`](TEAM_WORKFLOW.md) | **Drafted; audit remediation applied; provisional** | Branching, conventional commits, unanimous contract review protocol, and session recovery steps. |
 | **Architectural Decisions** | [`docs/DECISIONS.md`](DECISIONS.md) | **Updated with owner directions and open team decisions** | `DEC-01`–`DEC-13` cover architecture, scope, crop inventory, pilot evidence and conditional canal outputs. |
+| **DS-09 AOI Evidence Audit** | [`docs/DS09_AOI_AUDIT.md`](DS09_AOI_AUDIT.md) | **Candidate evidence recorded; AOI not selected** | Live TGRAC point/polygon intersections and Copernicus product-footprint availability; open provenance, license, label, date, and advisory validation checks. |
 | **Reference Documentation** | [`docs/references/README.md`](references/README.md) | **Drafted; audit remediation applied; provisional** | Source traceability, visually reviewed Mava diagrams, and unresolved technical claims. |
 | **Scientific Risk Register** | [`docs/risks/SCIENTIFIC_RISKS.md`](risks/SCIENTIFIC_RISKS.md) | **Drafted; audit remediation applied; provisional** | Scientific and operational risks with mitigation strategies. |
 | **Repository Configuration** | [`.gitignore`](../.gitignore), [`.env.example`](../.env.example) | **Complete** | Configured to exclude PDFs, large rasters, cache files, and private credentials. |
@@ -57,11 +58,12 @@ The project has exactly three members. The project owner approved Phase 0 on 202
 | **`DEC-08`** | Intermediate Data Caching | Local ignored cache for initial build | **Owner-preferred** |
 | **`DEC-09`** | Software Testing Fixtures | Clearly labelled synthetic software fixtures only | **Owner-approved integrity rule** |
 | **`DEC-10`** | India-first multi-region scope and regional configuration | Shared pipeline with region-specific profiles; no transferability claims without evaluation | **Approved by project owner; implementation/schema review remains open** |
-| **`DEC-11`** | Initial multi-region AOIs | Evidence-based AOI comparison in Punjab and Tamil Nadu; exact AOIs unset | **Candidate states selected; AOI evidence review open** |
+| **`DEC-11`** | Initial multi-region AOIs | Initial Punjab/Tamil Nadu evidence comparison, broadened by `DEC-14`; exact AOI unset | **Initial candidate review; AOI evidence review open** |
 | **`DEC-12`** | Crop catalogue and model class scope | Broad catalogue; initial model limited to verified labels | **Owner direction; evidence review open** |
 | **`DEC-13`** | Canal aggregation scope | Conditional descriptive aggregation only with sourced command boundaries | **Owner-approved conditional scope** |
+| **`DEC-14`** | Evidence-led first pilot | TGRAC/Telangana is a leading candidate; SRSP Stage I has the strongest queried overlap, not a verified AOI | **Owner-approved audit direction; final AOI open** |
 
-*DEC status distinguishes owner direction from team technical confirmation. No team consensus is implied by an owner-selected recommendation. `DEC-11` leaves specific AOIs open.*
+*DEC status distinguishes owner direction from team technical confirmation. No team consensus is implied by an owner-selected recommendation. `DEC-11` records the initial candidate-state scope; `DEC-14` expands the evidence review. No specific AOI is selected.*
 
 DEC-01 records the project owner's selected direction of a responsive React + TypeScript dashboard with a FastAPI API; team technical confirmation remains open. The source documents propose Streamlit. Phase 0 baseline approval does not approve technical choices.
 
@@ -70,15 +72,15 @@ DEC-01 records the project owner's selected direction of a responsive React + Ty
 ## 4. Current Blockers & Unresolved Questions
 
 ### Critical Blockers (must be resolved before dependent implementation or scientific claims)
-1. **`BLOCKER-01`: Specific Study Area Undefined**
-   - *Impact:* Neither PDF specifies the geographic boundary or administrative district for the project. Satellite queries, coordinate reference systems, crop calendars, and canal boundary acquisitions cannot proceed without a defined Area of Interest (AOI).
-   - *Action Required:* Compare specific candidate AOIs in Punjab and Tamil Nadu using evidence; select one or more AOIs and save only sourced boundaries to the configuration.
-2. **`BLOCKER-02`: Ground-Truth Crop Training Labels Unidentified**
-   - *Impact:* Supervised Random Forest classification requires suitable, sourced, georeferenced crop labels (points or polygons). No ground-truth source is identified in the project documents.
-   - *Action Required:* Determine source of ground-truth data (e.g., state remote sensing centre datasets, ICAR survey data, or high-resolution visual digitization).
-3. **`BLOCKER-03`: Canal Command Boundary Vector Data Availability**
-   - *Impact:* Canal-boundary aggregation (`F7`, `O3`) requires boundary data; any area-derived volume also needs documented valid-area and method assumptions.
-   - *Action Required:* Acquire and verify official canal-command boundaries. If unavailable, defer canal-command summaries or report summaries for another sourced boundary under its correct name; administrative areas are not canal commands.
+1. **`BLOCKER-01`: Pilot AOI Not Verified (`DS-09`)**
+   - *Impact:* No candidate boundary has passed source-lineage, vintage, reuse, spatial suitability, study-period, and irrigation-advisory validation checks. AOI-specific acquisition and scientific processing remain gated.
+   - *Action Required:* Continue the `DEC-14` review. Resolve whether evidence supports SRSP Stage I or a different command; address the mismatch between 12 Wanaparthy-tagged points and the inspected commands; select and document one verified command polygon and study period.
+2. **`BLOCKER-02`: Ground-Truth Suitability Unverified (`DS-04`)**
+   - *Impact:* TGRAC layers provide candidate georeferenced point labels (2,446 across February–April 2023), but survey lineage, date semantics, positional accuracy, class validity, domain inconsistencies, reuse terms, and independent evaluation suitability are unconfirmed.
+   - *Action Required:* Obtain source metadata/terms and quality details; define a spatially grouped evaluation design. Do not fit or report accuracy until labels and data-use conditions are accepted.
+3. **`BLOCKER-03`: Command-Boundary Authority and Reuse Unverified (`DS-05`)**
+   - *Impact:* TGRAC I&CAD layers 9 and 10 each return the same seven command polygons with coordinate-identical geometries, but metadata does not explain the duplicate layers or identify vintage, responsible authority, or reuse terms.
+   - *Action Required:* Confirm the authoritative layer/version, topology, area attributes, source lineage, and permission. Keep command aggregation gated until verified.
 
 ### Open Questions Awaiting Confirmation
 - **`Q-01` Role Mapping:** Member assignments were approved with the Phase 0 baseline, per project-owner confirmation.
@@ -91,7 +93,7 @@ DEC-01 records the project owner's selected direction of a responsive React + Ty
 
 Phase 0 is complete. P1 foundation tasks may begin when their own dependencies are satisfied. This does not close P1 or authorize AOI-specific scientific work. The following remain prerequisites for the dependent activities shown:
 1. [x] All three members approved the Phase 0 baseline (reported by the project owner, 2026-10-23); guide sign-off waived by the owner for P0.
-2. [ ] Before AOI-specific acquisition: select a pilot AOI and date range through `DEC-11`, verify its sourced boundary (`DS-09`), and confirm access to selected providers.
+2. [ ] Before AOI-specific acquisition: select one pilot command and study period through `DEC-14`, verify its sourced boundary (`DS-09`), and confirm provider access and reuse terms.
 3. [ ] Before supervised training/evaluation: confirm supported crop classes and a feasible ground-truth source/strategy; acquire/verify independent labels (`DS-04`).
 4. [ ] Before canal aggregation: record a licensed canal-boundary source (`DS-05`) or explicitly defer canal aggregation.
 5. [ ] Before implementing a technology-dependent task: obtain the required member confirmation for its owner-selected direction (including `DEC-01` before framework-specific frontend/API work); keep methods, parameters, and unresolved decisions explicitly open.
@@ -102,8 +104,8 @@ Phase 0 is complete. P1 foundation tasks may begin when their own dependencies a
 
 - `T-P1-SH-001` — Ashwanth C: environment/tooling foundation.
 - `T-P1-SH-002` — Ashwanth C: implement only the already approved `CON-01`–`CON-09` schema; do not add regional fields without unanimous contract approval.
-- `T-P1-SC-002` — Rishav: crop catalogue and label-feasibility inventory for Punjab/Tamil Nadu.
-- `T-P1-DE-002` — Peter: weather, boundary and irrigation-data inventory for Punjab/Tamil Nadu.
+- `T-P1-SC-002` — Rishav: crop catalogue and label-feasibility inventory for evidence-supported candidate regions, including the TGRAC lead candidate in `DEC-14`.
+- `T-P1-DE-002` — Peter: weather, boundary and irrigation-data inventory for evidence-supported candidate regions, including the TGRAC lead candidate in `DEC-14`.
 - `T-P1-SC-001` — Rishav: explicitly synthetic software fixtures after `T-P1-SH-002` handoff.
 - `T-P1-DE-001` — Peter: GEE setup only after the required account/project access is available.
 - All members: candidate-region evidence collection and independent satellite/ML learning. These do not count as scientific validation or phase completion.

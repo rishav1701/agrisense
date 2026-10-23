@@ -3,7 +3,7 @@
 > **P0 baseline approved by the three-member team per project-owner confirmation (2026-10-23); guide sign-off waived by the project owner for P0. P1 execution remains subject to the listed entry prerequisites and task dependencies.**
 > **Team Allocation:** Exactly three human student members. The project owner approved the proposed allocation and sequential handoff plan; this records the approved Phase 0 baseline and role plan, not approval of individual scientific decisions. Member A is Peter Livins (weather, water-balance support, geospatial); Member B is Rishav Raj (satellite data, ML, scientific modelling); Member C is Ashwanth C (application, dashboard, integration).
 > **Execution mode:** Sequential, non-overlapping stage handoffs are preferred. A member can work from an accepted handoff package without monitoring another member's day-to-day progress. This does not waive formal phase gates or shared-contract approval.
-> **Scope direction:** The project owner approved an India-first multi-region design direction on 2026-10-23. No pilot AOI is selected. Existing task IDs and owners are retained. Region-dependent scientific work remains gated by sourced AOI/data/method inputs; independent foundation, learning, and source-inventory work may proceed without waiting for a pilot.
+> **Scope direction:** The project owner approved an India-first multi-region design direction and evidence-led pilot review on 2026-10-23 (`DEC-10`, `DEC-14`). Telangana/TGRAC is currently a lead candidate; SRSP Stage I is not a selected AOI. Existing task IDs, primary owners, reviewers, and file boundaries are retained. Region-dependent scientific work remains gated by sourced AOI/data/method inputs; independent foundation, learning, and source-inventory work may proceed without a pilot.
 > **Academic Project:** BACSE291 — Innovative Design Project, VIT Vellore (Fall 2026).
 > **Guide:** Dr. Muthuraja S, Assistant Professor Sr. Grade 1.
 
@@ -109,8 +109,8 @@ To prevent merge conflicts, strict file boundaries govern ownership. Work procee
 - **Testing Requirements:** Mocked auth unit test when offline; live smoke test when online.
 - **Blockers:** Team members must have registered GEE developer accounts.
 
-#### `T-P1-DE-002`: Punjab/Tamil Nadu Weather, Boundary, and Irrigation Data Inventory
-- **Objective:** Identify and compare publicly documented candidate-area sources for administrative/AOI boundaries, weather, soil, crop calendars, and irrigation/canal context in Punjab and Tamil Nadu.
+#### `T-P1-DE-002`: Candidate-Region Weather, Boundary, and Irrigation Data Inventory
+- **Objective:** Identify and compare publicly documented sources for administrative/AOI boundaries, weather, soil, crop calendars, and irrigation/command context in evidence-supported candidate regions. Include the TGRAC candidate review in `DEC-14`; do not assume its boundary vintage, authority, or reuse terms.
 - **Primary Owner:** Member A (Peter Livins).
 - **Reviewers:** Member B (Rishav Raj) and Member C (Ashwanth C).
 - **File Ownership:** `docs/data_audit/region_sources.md`.
@@ -133,8 +133,8 @@ To prevent merge conflicts, strict file boundaries govern ownership. Work procee
 
 **Start condition:** May start after the shared schemas in `T-P1-SH-002` are accepted. Fixtures are software-only and must not be described as region-specific observations or validation.
 
-#### `T-P1-SC-002`: Punjab/Tamil Nadu Crop Catalogue and Label Feasibility Inventory
-- **Objective:** Build an extensible crop catalogue from traceable public crop sources and assess whether any candidate products provide georeferenced labels suitable for training and independent evaluation in Punjab and Tamil Nadu.
+#### `T-P1-SC-002`: Candidate-Region Crop Catalogue and Label Feasibility Inventory
+- **Objective:** Build an extensible crop catalogue from traceable public crop sources and assess whether candidate products provide georeferenced labels suitable for training and independent evaluation. Include the retrieved TGRAC candidate evidence in `DEC-14`, while keeping suitability, label semantics, terms, and study-area selection open.
 - **Primary Owner:** Member B (Rishav Raj).
 - **Reviewers:** Member A (Peter Livins) and Member C (Ashwanth C).
 - **File Ownership:** `docs/data_audit/crop_catalogue_and_labels.md`.
@@ -169,7 +169,7 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 
 **Before real satellite processing (`T-P2-DE-002`, `003`, `005`):**
 1. Accepted P1 handoffs and approved shared observation contracts.
-2. At least one sourced AOI in each selected candidate state (Punjab and Tamil Nadu), with geometry source, license, CRS, boundary vintage, and specific date ranges/seasons.
+2. One sourced real irrigation-command pilot AOI selected through `DEC-14`, with verified geometry source, reuse terms, CRS, boundary vintage, and study period. Additional regions are included only if selected for a separate evidence-backed evaluation.
 3. Crop/season inventory with source citations; candidate DS-04 labels with geometry/coordinates, label semantics, observation date/season, license, provenance, and an independent spatial/temporal holdout plan. District aggregate tables are insufficient by themselves.
 4. Team confirmation of the selected provider (GEE or a documented alternative), working account/access if GEE is selected, and confirmation of data export/storage limits.
 5. Reviewed decisions for optical collection/quality masking, SAR orbit/polarization/filtering, temporal compositing, analysis grid/CRS, index definitions, missing-observation handling, and feature-stack metadata. Keep source acquisition times, native resolution, masks and resampling explicit.
@@ -373,7 +373,7 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 ### Phase P4: Real-Data Campaign Execution
 
 #### `T-P4-DE-006`: Seasonal Observation Acquisition for Study Area
-- **Objective:** Ingest and cache seasonal Sentinel-1, Sentinel-2, and ERA5-Land records for the accepted candidate AOIs in Punjab and Tamil Nadu where data access and evidence support the study design; identify coverage gaps by AOI/source.
+- **Objective:** Ingest and cache seasonal Sentinel-1, Sentinel-2, and ERA5-Land records for the accepted pilot command area, and any additional AOIs explicitly selected for an evidence-backed evaluation; identify coverage gaps by AOI/source.
 - **Primary Owner:** Member B (Rishav)
 - **Reviewer:** Member A (Peter)
 - **File Ownership:** `data/cache/` (Gitignored), `scripts/download_season.py`

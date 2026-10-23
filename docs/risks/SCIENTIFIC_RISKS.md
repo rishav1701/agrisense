@@ -8,7 +8,7 @@
 > [!IMPORTANT]
 > Two risks are flagged as **BLOCKER** (RISK-01, RISK-16). These must be resolved before meaningful Phase 1 work can begin. The team should treat these as the highest-priority action items in the Phase 0 → Phase 1 gate review.
 
-> **Scope update:** Project owner approved the India-first multi-region design direction on 2026-10-23. The initial AOI is unselected. RISK-09 (transferability), RISK-12 (licensing), RISK-16 (undefined AOI), and RISK-01 (labels) remain open. These blockers gate region-dependent scientific work, not independent documentation, source review, or setup tasks whose inputs are available.
+> **Scope update:** Project owner approved the India-first multi-region design and evidence-led pilot review on 2026-10-23. TGRAC/Telangana is a lead candidate; SRSP Stage I has the highest retrieved point overlap, but no AOI is selected. TGRAC label and command-boundary reuse terms, data lineage, date semantics, and scientific suitability remain unverified. RISK-09 (transferability), RISK-12 (licensing), RISK-16 (pilot AOI), and RISK-01 (labels) remain open. These blockers gate region-dependent scientific work, not independent documentation, source review, or setup tasks whose inputs are available.
 
 ---
 
@@ -45,7 +45,7 @@
 | Field | Value |
 |-------|-------|
 | Category | Scientific |
-| Cause | No ground-truth label source is identified in either the IDP Review PDF or the Mava hackathon PDF. The project specifies a Random Forest crop classifier (F2) but provides no training labels, reference crop maps, or field survey protocol. |
+| Cause | Neither reference PDF specifies a label source or survey protocol. A read-only audit later retrieved candidate TGRAC point records (see `docs/DS09_AOI_AUDIT.md`), but source lineage, date semantics, positional/class accuracy, license, and suitability for independent evaluation remain unconfirmed. |
 | Consequence | Without verified labels, the classifier cannot be trained or validated. All downstream outputs — phenology tracking (F3), stage-aware stress detection (F4), and FAO-56 water balance (F6) — depend on correct crop type assignment. An unvalidated classifier invalidates the entire pipeline. |
 | Likelihood | High |
 | Impact | Critical — **BLOCKER** |
@@ -221,7 +221,7 @@
 | Field | Value |
 |-------|-------|
 | Category | Operational |
-| Cause | The project uses multiple datasets with different licenses: Copernicus Sentinel data (free, open, with attribution requirements), ERA5-Land (Copernicus Climate Data Store license), and canal boundary shapefiles (source unknown, potentially restricted government data). Each dataset has specific terms of use, attribution requirements, and redistribution constraints. |
+| Cause | The project uses datasets with different terms. In particular, TGRAC ground-truth records and I&CAD command polygons are queryable, but the inspected service metadata has empty copyright/description fields and does not specify reuse terms or boundary lineage. Public query access does not establish reuse or redistribution permission. |
 | Consequence | License violations could prevent publication or sharing of results. Inability to redistribute input data could hinder reproducibility. |
 | Likelihood | Low |
 | Impact | Medium |
@@ -285,12 +285,12 @@
 | Field | Value |
 |-------|-------|
 | Category | Scientific |
-| Cause | Neither the IDP Review PDF nor the Mava hackathon PDF specifies a study area. The project mentions "canal irrigation" and "Wheat vs. Mustard" as example crops, but no geographic extent, state, district, or canal command area is named. |
-| Consequence | All data acquisition, ground-truth labeling, crop calendar selection, Kc table selection, and ERA5-Land extraction depend on knowing the study area. This is a **BLOCKER** — no Phase 1 data engineering work can begin without a defined study area. |
+| Cause | Neither source PDF defines a study area. The owner has since directed an evidence-led search for one real command area, and TGRAC provides candidate geometries/labels, but no candidate has passed provenance, reuse, geometry-version, label, and pilot-suitability checks. |
+| Consequence | AOI-specific acquisition, ground-truth acceptance, crop-calendar/Kc selection, and ERA5-Land extraction depend on one verified command and study period. This is a **BLOCKER** for region-specific scientific work; independent setup and source audits may proceed where their own inputs are met. |
 | Likelihood | High |
 | Impact | Critical — **BLOCKER** |
-| Mitigation | (1) The team MUST define the study area before Phase 1 begins. (2) Selection criteria: availability of canal command boundaries, presence of target crops, data availability (cloud-free optical windows), accessibility for potential field validation. (3) Recommended approach: choose a well-studied canal command area in a Rabi-season wheat-growing region (e.g., parts of Haryana, Punjab, Rajasthan, or Uttar Pradesh) where reference data may be available. (4) Document the rationale for the choice. |
-| Validation Strategy | Confirm that the chosen study area has: (a) Sentinel-2 coverage, (b) identifiable canal infrastructure, (c) known crop types, and (d) available crop calendar information. |
+| Mitigation | (1) Select the strongest verifiable public-data combination under `DEC-14`; do not preselect a state or command. (2) Verify boundary authority/vintage/reuse, field-label semantics and date, point overlap, usable satellite observations, and feasibility of independent spatial evaluation. (3) Treat SRSP Stage I only as the current lead candidate; compare its 433,249 ha attributed ayacut and the Wanaparthy mismatch against alternatives before selection. (4) Document unresolved gaps and keep `DS-09` open until all selection checks pass. |
+| Validation Strategy | Confirm that one selected command has a source-verified geometry and reuse terms, suitable crop labels and spatially independent holdout, usable Sentinel observations for the confirmed study dates, and evidence that can evaluate both project objectives. |
 | Owner Role | All |
 | Status | Open |
 
@@ -301,12 +301,12 @@
 | Field | Value |
 |-------|-------|
 | Category | Engineering |
-| Cause | Feature F7 (Canal Command Boundary Aggregator) and Sub-Objective O3 require canal command boundary shapefiles to aggregate pixel-level deficits to canal-level advisories. However, no data source for these boundaries is identified in either PDF. Canal command area boundaries are typically maintained by state irrigation departments and may not be publicly available in digital (shapefile) format. |
+| Cause | F7/O3 require verified irrigation-command polygons. TGRAC I&CAD layers 9 and 10 expose the same seven coordinate-identical command geometries, but the inspected metadata does not explain the duplicate layers or identify the authoritative layer, boundary vintage/source lineage, or reuse terms. |
 | Consequence | Without canal boundaries, the aggregation step (F7) cannot be implemented, and the canal-level irrigation advisory (O3) — a key differentiator of this project — is blocked. |
 | Likelihood | High |
 | Impact | High |
-| Mitigation | (1) Contact the local irrigation department or state water resources department for the chosen study area. (2) Check India-WRIS (Water Resources Information System) for digitized canal network data. (3) Check OpenStreetMap for canal network features. (4) As a fallback, use administrative boundaries (village, block, or district) instead of canal commands — this reduces the project's novelty but maintains the aggregation functionality. (5) As a last resort, manually digitize canal commands from satellite imagery if the area is small. |
-| Validation Strategy | Confirm that boundary data exists in usable format (shapefile, GeoJSON) before Phase 1 milestone for F7. |
+| Mitigation | (1) Ask the responsible irrigation authority to confirm the TGRAC layer provenance, authoritative version, vintage, `Ayacut_ha` meaning, and reuse terms. (2) Check for an official sub-command boundary if the 433,249 ha SRSP Stage I extent is too large for the pilot. (3) If an appropriate command boundary cannot be verified, defer command-level aggregation; an administrative area may only be reported as an administrative summary under its correct name and scope. |
+| Validation Strategy | Verify source and reuse conditions, geometry validity/topology, attributes, area, and overlap with the accepted study boundary before the F7 milestone. |
 | Owner Role | Member A |
 | Status | Open |
 

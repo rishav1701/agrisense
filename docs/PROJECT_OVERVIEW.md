@@ -27,7 +27,7 @@
 
 ### Geographic Scope
 
-AgriSense is intended to use a shared, region-parameterized pipeline for an India-first multi-region platform. Punjab and Tamil Nadu are the initial states for evidence-based candidate-AOI review; specific AOIs are not selected. Public crop/area statistics are useful for candidate screening but are not georeferenced field labels by themselves. Compare satellite coverage, traceable labels, boundary data, crop/season references, weather and soil inputs, irrigation context, licensing, and independent validation feasibility. No region-level performance or transferability is implied until evaluated.
+AgriSense is intended to use a shared, region-parameterized pipeline for an India-first multi-region platform. The first pilot is intended to cover one real irrigation-command area and support both crop classification and irrigation-advisory research. The initial Punjab/Tamil Nadu candidate review is broadened by `DEC-14`; Telangana/TGRAC is currently a leading evidence candidate, but the AOI is not selected. The live source audit found 147 ground-truth point intersections with the TGRAC I&CAD SRSP Stage I polygon, the largest among seven inspected commands, while the 12 points explicitly tagged Wanaparthy intersect none of those commands. See [`docs/DS09_AOI_AUDIT.md`](DS09_AOI_AUDIT.md). These results identify a candidate for further verification, not a validated study area. Compare satellite coverage, traceable labels, command-boundary provenance and terms, crop/season references, weather and soil inputs, irrigation context, and independent validation feasibility. No region-level performance or transferability is implied until evaluated.
 
 The initial scientific baseline remains the proposed Random Forest classifier. Maintain an extensible crop catalogue, but model only classes with verified labels in selected AOIs/seasons. Multi-region readiness requires region/season-aware profiles and separate spatial, temporal, and cross-region evaluation. A single region's results do not establish performance elsewhere.
 
@@ -299,16 +299,11 @@ The proposed AgriSense pipeline transforms satellite and meteorological inputs i
 
 ### RECOMMENDATION 3: Select Evidence-Supported AOIs Before Processing
 
-**Rationale:** Neither PDF specifies an AOI. The owner selected Punjab and Tamil Nadu as candidate states for evidence review. Before AOI-specific processing, the team should identify concrete AOIs in the selected states with:
-- Known cropping patterns (for ground truth validation)
-- Available canal boundary shapefiles
-- Reasonable size (a few hundred km²) for initial development and testing
-
-This allows rapid iteration on all pipeline stages before scaling to larger regions.
+**Rationale:** Neither PDF specifies an AOI. The owner approved an evidence-based search for one real command area, with Telangana/TGRAC as a leading candidate and final selection based on the strongest verifiable public data. SRSP Stage I currently has the most point overlap but an attributed ayacut of 433,249 ha; verify whether this scale is workable and whether an official sub-command is available before selection. The Wanaparthy-tagged sample points do not intersect the seven inspected command polygons. Do not start AOI-specific processing until label and boundary provenance, reuse terms, actual survey dates, suitable Sentinel observations, and the first-pilot validation evidence are checked. The complete source audit is in [`docs/DS09_AOI_AUDIT.md`](DS09_AOI_AUDIT.md).
 
 ### RECOMMENDATION 4: Prioritize Ground-Truth Acquisition Early
 
-**Rationale:** Random Forest classification (F2/O1) requires labeled training data. No ground truth dataset, collection method, or existing labeled dataset is mentioned in either PDF. This is the single largest risk to the project timeline. The team should:
+**Rationale:** Random Forest classification (F2/O1) requires labeled training data. A TGRAC ground-truth candidate has been retrieved, but the survey protocol, positional/date semantics, class quality, licensing, and independent-test suitability remain unverified. The team should:
 - Identify if any existing crop-type ground truth exists for their chosen study area
 - Plan field visits or use high-resolution imagery for manual labeling if needed
 - Budget sufficient time for this before the classification milestone
@@ -322,9 +317,9 @@ This allows rapid iteration on all pipeline stages before scaling to larger regi
 
 | # | Assumption | Status | Impact if Unresolved |
 |---|-----------|--------|---------------------|
-| A1 | **Study area not specified** — No geographic region, state, district, or canal system is named in either PDF | ❓ Unresolved | Cannot begin data ingestion, ground truth, or canal boundary work |
+| A1 | **Pilot command not selected** — The owner requires one real irrigation command area; Telangana/TGRAC is a lead evidence candidate, not a selected AOI | ❓ Unresolved | AOI-specific acquisition and scientific processing remain gated until the command geometry, source, period, and suitability are verified |
 | A2 | **Specific crop types TBD** — Mava's diagram illustrates Wheat, Mustard, and Fallow as proposal examples, not an approved class map | ❓ Unresolved | Affects classifier training, Kc values, crop calendar definitions |
-| A3 | **Ground truth collection method undefined** — No labeled dataset, field survey plan, or reference data source specified | ❓ Unresolved | Random Forest (F2) cannot be trained without labels |
+| A3 | **Ground-truth suitability unresolved** — TGRAC point records have been retrieved, but survey method, observation dates, positional/class quality, terms, and independent evaluation suitability need confirmation | ❓ Unresolved | Random Forest (F2) cannot be fit or evaluated defensibly without accepted labels |
 | A4 | **Canal boundary shapefile source undefined** — F7/O3 require canal command polygons but no source is identified | ❓ Unresolved | Cannot implement canal aggregation (F7) |
 | A5 | **Crop calendar and Kc values source undefined** — FAO-56 (F6) requires stage-specific crop coefficients | ❓ Unresolved | Cannot compute ETc without Kc per growth stage |
 | A6 | **Soil parameters not mentioned** — Water balance may need soil water-holding capacity, field capacity, etc. | ❓ Unresolved | Simplified FAO-56 may suffice; needs clarification |

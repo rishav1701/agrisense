@@ -58,6 +58,7 @@ ERA5-Land (Met) ──────┘                                         �
 | [`docs/API_CONTRACTS.md`](docs/API_CONTRACTS.md) | Inter-module interface contracts |
 | [`docs/TEAM_WORKFLOW.md`](docs/TEAM_WORKFLOW.md) | Git, review, and collaboration process |
 | [`docs/DECISIONS.md`](docs/DECISIONS.md) | Architecture decision log |
+| [`docs/DS09_AOI_AUDIT.md`](docs/DS09_AOI_AUDIT.md) | TGRAC command-area and ground-truth evidence audit; AOI remains unselected |
 | [`docs/STATUS.md`](docs/STATUS.md) | Current progress and checkpoints |
 | [`docs/risks/SCIENTIFIC_RISKS.md`](docs/risks/SCIENTIFIC_RISKS.md) | Risk register |
 | [`docs/references/README.md`](docs/references/README.md) | Reference document inventory |

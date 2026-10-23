@@ -18,9 +18,10 @@
 | **`DEC-08`** | Intermediate Data Caching: Local GeoTIFF Cache vs. Cloud Object Storage | **Owner-preferred: local ignored cache for initial build** | 2026-10-23 | Peter + Ashwanth C; no guide prerequisite recorded |
 | **`DEC-09`** | Software Testing Data Integrity: Pure Synthetic Fixtures vs. Sample Data | **Owner-approved integrity rule: labelled synthetic fixtures for software tests only** | 2026-10-23 | All 3 Members |
 | **`DEC-10`** | India-first Multi-Region Scope and Regional Configuration | **Project-owner approved; team implementation review open** | 2026-10-23 | Project Owner; team review for implementation |
-| **`DEC-11`** | Initial Multi-Region Candidate AOIs: Punjab and Tamil Nadu | **Candidate states selected for evidence audit; AOIs open** | 2026-10-23 | Project Owner + all 3 Members |
+| **`DEC-11`** | Initial Multi-Region Candidate AOIs: Punjab and Tamil Nadu | **Initial candidate review; broadened by DEC-14; AOIs open** | 2026-10-23 | Project Owner + all 3 Members |
 | **`DEC-12`** | Initial Crop Catalogue and Model Class Scope | **Owner direction; model classes depend on verified labels** | 2026-10-23 | Project Owner; team review |
 | **`DEC-13`** | Canal Aggregation Scope | **Owner-approved conditional descriptive scope** | 2026-10-23 | Project Owner; Peter/Ashwanth method review |
+| **`DEC-14`** | Evidence-Led First Pilot: TGRAC Agriculture2 and I&CAD Command Boundaries | **Owner-approved evidence audit; SRSP Stage I is a lead candidate only; final AOI open** | 2026-10-23 | Project Owner; team review before final AOI/data use |
 
 ---
 
@@ -30,15 +31,15 @@
 
 - **Topic:** Project geographic scope and separation of shared pipeline behavior from region-specific inputs.
 - **Status:** **APPROVED BY PROJECT OWNER — 2026-10-23; team implementation review and any shared-contract approval remain open.**
-- **Decision:** Design AgriSense for an India-first multi-region direction. Punjab and Tamil Nadu are selected as candidate states for evidence review, not as finalized AOIs. Use region/season-specific configuration and provenance; do not embed state-specific assumptions in shared modules or claim transferability without independent evaluation.
+- **Decision:** Design AgriSense for an India-first multi-region direction. Punjab and Tamil Nadu were the initial candidate states recorded in `DEC-11`; the candidate review was broadened by `DEC-14`, and no state or AOI is preselected as final. Use region/season-specific configuration and provenance; do not embed state-specific assumptions in shared modules or claim transferability without independent evaluation.
 - **Constraints:** This approval does not select an AOI, crop classes, season, dataset, algorithm parameters, or technology stack. Any amendment to shared contracts still requires all three team members' approval.
 - **Required next decisions:** Regional profile fields/representation; pilot AOI; crop/season scope; evaluation extent.
 
 ### `DEC-11`: Initial AOI Set for Punjab and Tamil Nadu
 
 - **Topic:** Evidence-based selection or deferral of the first pilot region/AOI.
-- **Status:** **Punjab and Tamil Nadu selected as candidate states for evidence audit; specific AOIs remain open.**
-- **Decision direction:** Assess candidate AOIs in both Punjab and Tamil Nadu, and use multiple locations if traceable evidence supports them. Do not equate a state-level crop statistics table with field-level labels. The OGD Punjab portal lists district/season/crop production and area statistics; Tamil Nadu's portal includes crop area/production and land-use statistics. These help identify crop/season availability, but are not sufficient satellite training labels on their own. See [Punjab crop production statistics](https://punjab.data.gov.in/catalog/district-wise-season-wise-crop-production-statistics-0), [Tamil Nadu principal-crop statistics](https://tn.data.gov.in/resource/area-production-and-productivity-principal-crops-shb-2019), and [Tamil Nadu district land-use statistics](https://tn.data.gov.in/catalog/classification-land-districts-tamil-nadu-scr-2018-19).
+- **Status:** **Initial candidate states for evidence audit; review broadened by `DEC-14`; specific AOIs remain open.**
+- **Decision direction:** Assess candidate AOIs in the initial Punjab/Tamil Nadu review set, and extend the search where the evidence warrants it under `DEC-14`. Do not equate a state-level crop statistics table with field-level labels. The OGD Punjab portal lists district/season/crop production and area statistics; Tamil Nadu's portal includes crop area/production and land-use statistics. These help identify crop/season availability, but are not sufficient satellite training labels on their own. See [Punjab crop production statistics](https://punjab.data.gov.in/catalog/district-wise-season-wise-crop-production-statistics-0), [Tamil Nadu principal-crop statistics](https://tn.data.gov.in/resource/area-production-and-productivity-principal-crops-shb-2019), and [Tamil Nadu district land-use statistics](https://tn.data.gov.in/catalog/classification-land-districts-tamil-nadu-scr-2018-19).
 - **Decision rule:** Compare concrete AOIs using the same season and criteria: Sentinel-1/2 usable coverage; traceable georeferenced crop labels suitable for training and independent testing; boundary suitability and license; crop/season diversity and calendar references; weather/soil inputs; irrigation evidence and command boundaries if retained; and validation feasibility. Do not finalize AOIs or create boundary files before that review.
 - **Required approvers:** Project owner and all three members for selected AOIs; guide approval is not assumed as a prerequisite unless the team later requests it.
 
@@ -46,7 +47,7 @@
 
 - **Topic:** Broad crop catalogue versus the supervised classification scope.
 - **Status:** **Owner direction recorded; data-supported model class list open.**
-- **Decision direction:** Build an extensible crop database/catalogue for crop types represented by the selected source datasets, with names/aliases and region/season provenance. For the initial model, use only classes with verified, traceable labels in the selected Punjab/Tamil Nadu AOIs and seasons. Do not claim exhaustive all-crop classification or add classes based only on an aggregate crop statistics table.
+- **Decision direction:** Build an extensible crop database/catalogue for crop types represented by the selected source datasets, with names/aliases and region/season provenance. For the initial model, use only classes with verified, traceable labels in the selected AOI(s) and seasons. Do not claim exhaustive all-crop classification or add classes based only on an aggregate crop statistics table.
 - **Acceptance rule:** Each modeled class has source, geography, season/date, label semantics, licensing, and enough independent support to define a defensible evaluation split; unsupported classes remain catalogue-only/unavailable for the model.
 
 ### `DEC-13`: Canal Aggregation Scope
@@ -55,6 +56,18 @@
 - **Status:** **Owner-approved conditional scope; data/method approval remains open.**
 - **Decision direction:** Retain descriptive canal-command aggregation only when authoritative, licensed command boundaries and suitable estimates exist. Defer it for any AOI lacking those inputs. Administrative or district boundaries must never be relabeled as canal commands. No operational release, gate-control, or irrigation schedule recommendation is implied.
 - **Required approvers:** Project owner and all three members for the chosen pilot; guide approval is not assumed as a prerequisite unless the team later requests it.
+
+### `DEC-14`: Evidence-Led First Pilot: TGRAC Agriculture2 and I&CAD Command Boundaries
+
+- **Topic:** Evidence-based selection of one real irrigation-command area for an initial pilot that supports both crop classification and irrigation-advisory research.
+- **Status:** **OWNER-APPROVED EVIDENCE AUDIT; no final AOI or dataset-use approval. `DS-09` remains open.** This broadens the initial candidate-state review recorded in `DEC-11`; it does not cancel the India-first, multi-region scope in `DEC-10` or select a state by preference alone.
+- **Approved review direction:** Inspect the TGRAC Agriculture2 CropAnalysis ground-truth layers for February, March, and April 2023 and TGRAC I&CAD project/command boundaries. Compare candidate commands using verifiable label coverage, spatial overlap, acquisition availability, boundary provenance, reuse terms, study period, crop/season support, and the evidence available for irrigation-advisory validation. Select the strongest verifiable public-data combination; do not infer an AOI from a service title or administrative geography.
+- **Evidence checkpoint (2026-10-23):** The read-only audit retrieved 2,446 point records from TGRAC layers 10–12 and seven polygons each from I&CAD layers 9 and 10. The named polygons in layers 9 and 10 have coordinate-identical geometries. `SRSP STAGE I` has the largest observed intersection (147 points: 84 February, 46 March, 17 April), making it the lead candidate for additional verification. Its `Ayacut_ha` attribute is 433,249; this extent is not independently verified. The 12 records tagged Wanaparthy do not intersect any of the seven returned command polygons. See [DS-09 AOI evidence audit](DS09_AOI_AUDIT.md) for methods, candidate counts, Sentinel catalog matches, and limitations.
+- **Recommendation:** Advance SRSP Stage I as the next candidate for suitability review because it has the greatest point overlap and records in all three month layers. Do not treat it as a selected/verified AOI: the boundary source vintage/authority and reuse terms are absent from layer metadata; record `CreationDate` is not confirmed as the field-observation date; labels/domains need provider review; and the returned data do not contain measured moisture stress, irrigation quantity/timing, or recommendation outcomes. The large attributed command area and rare-class support also need assessment.
+- **Sentinel evidence limit:** Copernicus Data Space STAC products intersecting SRSP point footprints were found in the February–April 2023 window. Temporal proximity was checked against `CreationDate` as an explicitly unverified proxy, not as confirmed observation-date matching. Catalog presence does not prove cloud-free usable pixels or a valid scientific feature stack.
+- **Required before final selection / closing `DS-09`:** Confirm source lineage/version and reuse terms for labels and boundaries; establish the authoritative I&CAD layer/vintage and verify topology/area; confirm survey date semantics, point meaning/positional quality, crop-label validity, and a non-leaking spatial holdout; inspect usable pixel coverage; identify independent field evidence for moisture-stress and irrigation-advisory validation; and document the selected study period. If the Wanaparthy focus is retained, identify a matching real command and adequate labels because its 12 tagged points are outside these seven polygons.
+- **Scope controls:** Keep one real command-area pilot as the first target and maintain multi-region capability. This decision changes no task ID, primary owner, file-ownership boundary, architecture, or shared API contract. It does not mark `DS-04`, `DS-05`, or `DS-09` complete and does not authorize model fitting, accuracy claims, or operational irrigation advice.
+- **Required approvers:** The project owner approved this evidence-based planning direction. Final AOI selection and use of a data source remain subject to the project’s existing member-review rules; no guide approval is asserted.
 
 ### `DEC-01`: Application Architecture & Technology Stack
 

@@ -317,21 +317,23 @@ The datasets fall into two tiers:
 | Attribute | Detail |
 |-----------|--------|
 | **Purpose** | Training and validation of the Random Forest crop-type classifier (F2, O1) |
-| **Provider / Source** | ❓ **UNKNOWN** — must be field-collected, obtained from agricultural department records, or derived from very high resolution imagery interpretation |
+| **Provider / Source** | **Candidate identified:** [TGRAC Agriculture2 CropAnalysis service](https://tgrac.telangana.gov.in/arcgis/rest/services/Agri2/Agriculture2_CropAnalysis_Layers/MapServer), child layers 10 (February), 11 (March), and 12 (April) under Ground Truth - Rabi Season 2023. The live query returned 2,446 point features in EPSG:4326. Source-survey lineage/version and reuse terms are not stated in the inspected layer metadata. |
 | **Requirements** | Georeferenced point or polygon samples with confirmed crop type, cropping season (Kharif/Rabi/Zaid), and collection date |
 | **Sample Size** | Not specified by the source PDFs. Determine from label availability, spatial design, class distribution, and validation needs; do not treat a generic count as a guarantee of adequacy. |
 | **Spatial Format** | GeoJSON, Shapefile, or GeoPackage with CRS metadata |
 | **Temporal Alignment** | Must correspond to the same season as the satellite imagery used for classification |
 | **Preprocessing** | Verify label source, date, positional and class uncertainty; keep spatially independent evaluation labels outside model fitting. Split proportions are to be selected and documented based on the independent validation design. |
 | **Missing-Data Handling** | Preserve uncertain, conflicting, or incomplete labels with quality metadata; exclude or separately handle them under the approved training/evaluation protocol rather than silently assigning a class. |
-| **License** | Depends on source; government records may have restricted redistribution |
-| **Access Confirmed** | ❌ **NO** |
-| **Status** | 🔴 **BLOCKER** for classification validation |
+| **License** | **Unconfirmed.** The layer metadata has empty `copyrightText` and descriptions; do not infer permission to reuse or redistribute from public query access. |
+| **Access Confirmed** | **Read-only query confirmed; reuse/redistribution permission and provider access conditions are unconfirmed.** |
+| **Status** | 🔴 **BLOCKER** for model fitting and independent classification validation until label semantics, positional/date quality, class-domain discrepancies, license, and spatial holdout are reviewed. |
 
 > [!CAUTION]
-> **Critical gap:** Neither reference PDF identifies a ground-truth data source. Without appropriate labels, supervised model fitting and credible independent accuracy evaluation cannot be claimed. Software tests with synthetic fixtures do not resolve this scientific evidence gap.
+> **Critical gap:** A TGRAC candidate source has now been identified and queried, but source lineage, observation-date semantics, label accuracy, field-point meaning, reuse terms, and suitability for independent evaluation remain unverified. These records do not yet authorize supervised model fitting or accuracy claims. Software tests with synthetic fixtures do not resolve this scientific evidence gap.
 
 > **Punjab/Tamil Nadu screening note (2026-10-23):** Public government portals list district/season/crop area and production statistics for Punjab and crop area/production and land-use statistics for Tamil Nadu. These may guide candidate crop/season selection, but aggregate statistics are not georeferenced field labels and do not satisfy DS-04. Verify the underlying downloadable resource, spatial support, reference dates, license, and independent-test suitability before using any product.
+
+> **TGRAC candidate audit (2026-10-23):** The queried monthly layers contain 2,446 statewide point records (1,397 February, 662 March, 387 April). `CreationDate` is present but its relationship to field-observation time is unconfirmed. Returned labels include values absent from the service's coded-value domains (`mixedcrop`, `plantation`, plus additional irrigation categories). The audit found 147 point intersections with the I&CAD `SRSP STAGE I` polygon, the largest of seven tested project polygons; only 12 points are tagged Wanaparthy and none intersects those seven polygons. Detailed counts and limitations are in [`DS09_AOI_AUDIT.md`](DS09_AOI_AUDIT.md). This is candidate evidence, not verified training data.
 
 **Potential Sources to Investigate:**
 
@@ -348,15 +350,15 @@ The datasets fall into two tiers:
 | Attribute | Detail |
 |-----------|--------|
 | **Purpose** | Spatial aggregation of pixel-level irrigation deficits to minor canal command areas for advisory output (F7, O3) |
-| **Provider / Source** | ❓ **UNKNOWN** — likely from the local Irrigation Department, Command Area Development Authority (CADA), India-WRIS, or state water resources department |
+| **Provider / Source** | **Candidate identified:** [TGRAC I&CAD service](https://tgrac.telangana.gov.in/arcgis/rest/services/IandCAD_Folder/I_and_CAD/MapServer), layers 9 and 10 named `Command_Boundary`. Each returned the same seven polygon features with coordinate-identical geometries in EPSG:4326. The layer does not explain the duplicate layers or specify boundary vintage/lineage or reuse terms. |
 | **Requirements** | Polygon geometries delineating minor canal command areas, with unique identifiers (canal name/code) and optional attributes (designed discharge, command area in hectares) |
 | **Spatial Format** | Shapefile, GeoJSON, or GeoPackage |
 | **CRS** | Any standard CRS with metadata (will be reprojected to match the analysis grid) |
 | **Preprocessing** | Validate topology (no gaps, no overlaps within the command area); verify attribute completeness; clip to study area |
 | **Missing-Data Handling** | If minor boundaries are unavailable, use a verified major canal/distributary boundary only when its geography and role are known, and label the output at that level. Do not substitute administrative areas and call them canal commands. |
-| **License** | Government data; may require formal data-sharing agreement or RTI request |
-| **Access Confirmed** | ❌ **NO** |
-| **Status** | 🔴 **BLOCKER** for canal-level advisory (F7, O3) |
+| **License** | **Unconfirmed.** Public query access is not evidence of reuse or redistribution permission. |
+| **Access Confirmed** | **Read-only geometry query confirmed; authority, reuse permission, and boundary vintage unconfirmed.** |
+| **Status** | 🔴 **BLOCKER** for command-level aggregation (F7, O3) until the responsible authority and appropriate boundary version are confirmed and topology/attributes are checked. |
 
 ---
 
@@ -420,22 +422,24 @@ The datasets fall into two tiers:
 | Attribute | Detail |
 |-----------|--------|
 | **Purpose** | Define the geographic extent for all data queries, processing, and output products |
-| **Provider / Source** | ❓ **UNKNOWN** — must be defined by the project team |
+| **Provider / Source** | **Candidate under review:** one real irrigation-command polygon from the TGRAC I&CAD `Command_Boundary` layers, linked to suitable crop labels and satellite coverage. [SRSP STAGE I](DS09_AOI_AUDIT.md) is the leading candidate by observed ground-truth overlap, but no AOI is selected and the boundary authority, vintage, and reuse terms are unresolved. |
 | **Requirements** | One sourced polygon (or multipolygon) per selected AOI, in a standard geospatial format; multiple AOIs may be configured independently |
 | **Spatial Format** | GeoJSON or Shapefile |
 | **CRS** | EPSG:4326 (WGS84) or the project's chosen UTM zone |
-| **Preprocessing** | None — this is a primary input that gates all other data acquisition |
+| **Preprocessing** | Select one source-verified command polygon after geometry, lineage, vintage, license, and overlap checks; validate geometry before storing a sourced AOI. The candidate audit has not produced an approved AOI file. |
 | **Missing-Data Handling** | N/A — cannot proceed without a defined study area |
-| **License** | N/A |
-| **Access Confirmed** | ❌ **NO** |
-| **Status** | 🔴 **BLOCKER** — no study area is specified in either reference PDF; this must be the first decision made |
+| **License** | Unconfirmed for candidate TGRAC boundaries and ground-truth records; must be established for each source before use. |
+| **Access Confirmed** | **Candidate geometries and feature records were queryable read-only; final AOI source suitability and reuse permissions are not confirmed.** |
+| **Status** | 🔴 **BLOCKER** — the owner approved one command-area pilot and an evidence-based review, but no boundary has passed provenance, reuse, suitability, study-period, and validation checks. Do not mark DS-09 complete. |
 
 > [!CAUTION]
-> **Foundational dependency:** Each AOI boundary determines which
+> **Foundational dependency:** Each approved AOI boundary determines which
 > Sentinel-2 tiles, Sentinel-1 orbits, and ERA5-Land grid cells to query. It
 > also determines the UTM zone, the relevant canal command boundaries, crop
-> types, and cropping seasons. **No data acquisition or pipeline development can
-> begin until this is defined.**
+> types, and cropping seasons. **AOI-specific acquisition, processing, or
+> scientific modelling cannot begin until the boundary and study period pass
+> the documented selection checks.** Independent source audits and learning
+> notes may proceed without a final AOI.
 
 ---
 
@@ -512,12 +516,12 @@ For pilot selection, maintain a candidate-by-candidate evidence record covering 
 | DS-01 | Sentinel-2 MSI | ❌ UNCONFIRMED | Define study area → identify required tiles → verify GEE account access → test query for date range |
 | DS-02 | Sentinel-1 SAR | ❌ UNCONFIRMED | Define study area → identify orbit coverage (ascending/descending) → verify GEE access → test query |
 | DS-03 | ERA5-Land | ❌ UNCONFIRMED | Define study area → verify GEE access OR provision CDS API key → test data download for date range |
-| DS-04 | Ground Truth Labels | ❌ UNCONFIRMED | Identify source (field survey, government records, VHR imagery) → acquire samples → validate GPS accuracy |
-| DS-05 | Canal Command Boundaries | ❌ UNCONFIRMED | Contact local irrigation department or CADA → request shapefiles → verify topology and coverage |
+| DS-04 | Ground Truth Labels | 🟡 CANDIDATE RETRIEVED; NOT VERIFIED | Confirm TGRAC survey provenance/date semantics, label meaning/quality, code-domain mismatches, reuse terms, and spatially independent evaluation feasibility |
+| DS-05 | Canal Command Boundaries | 🟡 CANDIDATE GEOMETRIES RETRIEVED; NOT VERIFIED | Confirm responsible authority, which layer/vintage is authoritative, reuse terms, topology, and attributes; verify overlap with selected command and labels |
 | DS-06 | Crop Calendar | ❌ UNCONFIRMED | Identify target crops → obtain regional phenology guides from FAO, state agriculture dept, or ICAR |
 | DS-07 | Crop Coefficients (Kc) | 🟡 PARTIAL | Generic FAO-56 values available → confirm target crop list → check for locally calibrated values |
 | DS-08 | Soil Parameters | ❌ UNCONFIRMED | Evaluate SoilGrids coverage over study area → download and validate AWC estimates → compare with local soil surveys if available |
-| DS-09 | Study Area Boundaries | ❌ UNCONFIRMED | Compare specific AOIs in Punjab and Tamil Nadu using data evidence → select AOI(s) → source and verify each boundary before configuration |
+| DS-09 | Study Area Boundary | 🟡 LEAD CANDIDATE; NOT VERIFIED | Review SRSP Stage I candidate against other evidence; resolve Wanaparthy mismatch, command source/vintage/license, label suitability, actual observation dates, satellite pixel usability, advisory validation evidence, and pilot study period before selecting one command polygon |
 
 > [!IMPORTANT]
 > **Key scientific/operational dependencies** include DS-04 (labels), DS-05 (canal boundaries, if canal summaries remain in scope), and DS-09 (study area). DS-09 is foundational for regional data-access checks. Synthetic software work may proceed after contract approval, but it is not scientific validation.

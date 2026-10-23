@@ -2,7 +2,7 @@
 
 > **P0 Status: COMPLETE — approved by the three-member team per project-owner confirmation (2026-10-23); guide sign-off waived by the project owner for the P0 baseline. P1 entry remains blocked by unresolved inputs and decisions.**
 
-> **Scope direction:** India-first multi-region design approved by the project owner (2026-10-23); no pilot AOI selected. P1 setup tasks may proceed independently where their task inputs are satisfied. AOI-dependent acquisition, scientific training/calibration, and validation remain gated by their named inputs. Individual task completion does not close a phase gate.
+> **Scope direction:** India-first multi-region design and evidence-led first-pilot review approved by the project owner (2026-10-23; `DEC-10`, `DEC-14`). TGRAC/Telangana is a leading candidate and SRSP Stage I has the strongest queried label overlap, but no pilot AOI is selected. P1 setup tasks may proceed independently where their task inputs are satisfied. AOI-dependent acquisition, scientific training/calibration, and validation remain gated by verified inputs. Individual task completion does not close a phase gate.
 > **Academic Context:** BACSE291 — Innovative Design Project, VIT Vellore (Fall Semester 2026).
 > **Team Structure:** Member A is Peter Livins (weather, water-balance support, geospatial); Member B is Rishav Raj (satellite data, ML, scientific modelling); Member C is Ashwanth C (application, dashboard, integration). The project owner reports unanimous three-member approval of the P0 baseline and waives guide sign-off for P0; sequential, non-overlapping handoffs are approved.
 > **Mandatory Rule:** Do not advance between phases without formal gate approval recorded in `docs/STATUS.md`.
