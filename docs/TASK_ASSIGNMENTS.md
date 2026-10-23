@@ -1,9 +1,9 @@
 # AgriSense Task Assignments & Work Breakdown Structure
 
-> **Status: PROVISIONAL — Subject to team review and guide sign-off**  
-> **Team Allocation:** Exactly three human student members. The project owner approved the proposed allocation and sequential handoff plan; this records the project owner's approval of the plan, not the Phase 0 gate or scientific decisions. Member A is Peter Livins (weather, water-balance support, geospatial); Member B is Rishav Raj (satellite data, ML, scientific modelling); Member C is Ashwanth C (application, dashboard, integration).
+> **P0 baseline approved by the three-member team per project-owner confirmation (2026-10-23); guide sign-off waived by the project owner for P0. P1 execution remains subject to the listed entry prerequisites and task dependencies.**
+> **Team Allocation:** Exactly three human student members. The project owner approved the proposed allocation and sequential handoff plan; this records the approved Phase 0 baseline and role plan, not approval of individual scientific decisions. Member A is Peter Livins (weather, water-balance support, geospatial); Member B is Rishav Raj (satellite data, ML, scientific modelling); Member C is Ashwanth C (application, dashboard, integration).
 > **Execution mode:** Sequential, non-overlapping stage handoffs are preferred. A member can work from an accepted handoff package without monitoring another member's day-to-day progress. This does not waive formal phase gates or shared-contract approval.
-> **Academic Project:** BACSE291 — Innovative Design Project, VIT Vellore (Fall 2026).  
+> **Academic Project:** BACSE291 — Innovative Design Project, VIT Vellore (Fall 2026).
 > **Guide:** Dr. Muthuraja S, Assistant Professor Sr. Grade 1.
 
 ---
@@ -78,7 +78,7 @@ To prevent merge conflicts, strict file boundaries govern ownership. Work procee
 - **Contract Dependencies:** `CON-01` through `CON-09`.
 - **Acceptance Criteria:** All contract data structures instantiate, validate fields, and serialize/deserialize JSON/GeoJSON cleanly.
 - **Testing Requirements:** Schema validation tests with valid and invalid input fixtures.
-- **Blockers:** Full Phase 0/guide sign-off is still pending; the contract amendment itself has unanimous approval from all three members (2026-10-23).
+- **Blockers:** The contract amendment has unanimous approval from all three members (2026-10-23); implementation remains subject to the P1 entry gate and relevant decisions.
 
 #### `T-P1-SH-003`: Browser/API Boundary Specification
 - **Objective:** Document the proposed browser-to-API request/response boundary after DEC-01 selection, reusing approved scientific output contracts and specifying loading, empty, error, provenance, and uncertainty states.

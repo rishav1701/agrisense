@@ -1,8 +1,8 @@
 # AgriSense Execution Plan (Phases P0 – P6)
 
-> **Status: PROVISIONAL — Subject to team review and guide approval**  
-> **Academic Context:** BACSE291 — Innovative Design Project, VIT Vellore (Fall Semester 2026).  
-> **Team Structure:** Member A is Peter Livins (weather, water-balance support, geospatial); Member B is Rishav Raj (satellite data, ML, scientific modelling); Member C is Ashwanth C (application, dashboard, integration). The project owner approved sequential, non-overlapping handoffs; formal Phase 0 approval remains pending.
+> **P0 Status: COMPLETE — approved by the three-member team per project-owner confirmation (2026-10-23); guide sign-off waived by the project owner for the P0 baseline. P1 entry remains blocked by unresolved inputs and decisions.**
+> **Academic Context:** BACSE291 — Innovative Design Project, VIT Vellore (Fall Semester 2026).
+> **Team Structure:** Member A is Peter Livins (weather, water-balance support, geospatial); Member B is Rishav Raj (satellite data, ML, scientific modelling); Member C is Ashwanth C (application, dashboard, integration). The project owner reports unanimous three-member approval of the P0 baseline and waives guide sign-off for P0; sequential, non-overlapping handoffs are approved.
 > **Mandatory Rule:** Do not advance between phases without formal gate approval recorded in `docs/STATUS.md`.
 
 ---
@@ -47,7 +47,7 @@ Architecture  & Contracts   Development   & Contracts   End-to-End    Validation
 
 ### Roles & Responsibilities
 - **Primary Owner:** All members (co-designed with AI architect).
-- **Reviewer:** Project Guide (Dr. Muthuraja S) & Team Lead (Member A/B/C consensus).
+- **Reviewer:** All three human team members. The project owner waived guide sign-off for the P0 baseline.
 
 ### Dependencies
 - Access to reference documents and repository setup.
@@ -58,11 +58,11 @@ Architecture  & Contracts   Development   & Contracts   End-to-End    Validation
 - Neither reference PDF is committed to the Git repository.
 - Decisions are labeled `PROPOSED` until approved by team consensus.
 
-### Gate Conditions (Preventing Progression to P1)
-- The Phase 0 baseline has not been reviewed and approved by all three members and the guide.
-- Role-to-name mapping and the sequential allocation plan are recorded as project-owner-approved; formal team/guide Gate 0 approval remains pending.
-- The API contract amendment has unanimous approval from all three members (2026-10-23); guide review and Gate 0 approval remain pending before implementation.
-- The study-area selection and data acquisition strategy are not recorded. GEE access is required only if GEE is selected.
+### P1 Entry Gate Conditions (Preventing Progression from P0 to P1)
+- The Phase 0 baseline is approved by all three members per the project owner’s confirmation; guide sign-off is waived by the project owner for this baseline.
+- Role-to-name mapping and the sequential allocation plan are approved as part of the Phase 0 baseline.
+- The API contract amendment has unanimous approval from all three members (2026-10-23).
+- Study area, crop classes, ground-truth strategy, canal-boundary source, required decision approvals, and GEE access if selected are not yet recorded. P0 may be complete while this P1 entry gate remains open.
 
 ---
 

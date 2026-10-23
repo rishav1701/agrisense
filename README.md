@@ -2,9 +2,9 @@
 
 **AI-Driven Automated Crop Type, Moisture Stress Detection and Irrigation Advisory Across Growth Stages Using Moderate Resolution Spectral Signatures (Optical & Microwave Satellite Data)**
 
-> **Current Phase: P0 — Planning & Architecture (Provisional)**
+> **Phase 0: COMPLETE — approved by the three-member team; guide sign-off waived by the project owner.**
 >
-> No implementation has been performed. All architecture and design decisions are provisional pending team approval.
+> **Phase 1 has not started.** Project-specific data prerequisites and individual architecture/scientific decisions remain open. No implementation has been performed.
 
 ## Project Purpose
 
@@ -41,7 +41,7 @@ ERA5-Land (Met) ──────┘                                         �
 
 ## Recommended Architecture *(Provisional — Pending Approval)*
 
-**Owner-preferred direction:** a responsive browser dashboard with a Python API/backend; React + TypeScript and FastAPI are candidates, pending team and guide approval. The source documents propose Streamlit. GEE, scikit-learn, and SciPy remain proposed scientific stack elements. See `docs/ARCHITECTURE.md` and `docs/DECISIONS.md` for the comparison and open decision.
+**Owner-preferred direction:** a responsive browser dashboard with a Python API/backend; React + TypeScript and FastAPI are candidates, pending their named decision approvals. The source documents propose Streamlit. GEE, scikit-learn, and SciPy remain proposed scientific stack elements. See `docs/ARCHITECTURE.md` and `docs/DECISIONS.md` for the comparison and open decision.
 
 ## Project Documentation
 

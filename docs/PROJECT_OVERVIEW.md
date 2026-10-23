@@ -397,4 +397,4 @@ This allows rapid iteration on all pipeline stages before scaling to larger regi
 
 ---
 
-> **Next Steps:** Resolve the blocking assumptions and questions, obtain unanimous approval for shared contracts, then record the Phase 0 gate before implementation.
+> **Status:** Phase 0 baseline approved by the three-member team per project-owner confirmation; guide sign-off waived for P0. Before implementation, resolve the P1 entry prerequisites in `docs/STATUS.md`, including the AOI, ground-truth strategy, and required decision approvals.
