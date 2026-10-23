@@ -1,6 +1,6 @@
 # AgriSense API & Data Contracts
 
-> **Status: PROVISIONAL — This amendment was approved by all three team members on 2026-10-23; guide review and Phase 0 sign-off remain pending.**  
+> **Status: PROVISIONAL — Contract amendment reported approved by all three team members on 2026-10-23. Phase 0 baseline approval and guide waiver are recorded in `docs/STATUS.md`; this does not approve new regional-profile fields or any proposed technical decision.**
 > **Contract Version:** `0.2.0-draft`  
 > **Implementation gate:** Do not implement dependent modules until the full Phase 0 sign-off is recorded. Future schema changes require approval from all three team members (see `docs/TEAM_WORKFLOW.md`).
 

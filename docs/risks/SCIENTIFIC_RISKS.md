@@ -8,6 +8,8 @@
 > [!IMPORTANT]
 > Two risks are flagged as **BLOCKER** (RISK-01, RISK-16). These must be resolved before meaningful Phase 1 work can begin. The team should treat these as the highest-priority action items in the Phase 0 → Phase 1 gate review.
 
+> **Scope update:** Project owner approved the India-first multi-region design direction on 2026-10-23. The initial AOI is unselected. RISK-09 (transferability), RISK-12 (licensing), RISK-16 (undefined AOI), and RISK-01 (labels) remain open. These blockers gate region-dependent scientific work, not independent documentation, source review, or setup tasks whose inputs are available.
+
 ---
 
 ## Summary Table
@@ -22,7 +24,7 @@
 | RISK-06 | Confounding Factors in Moisture-Stress Indicators | Scientific | Medium | High | Member B | Open |
 | RISK-07 | Missing or Uncertain FAO-56 Inputs | Scientific | High | High | Member A + Member B | Open |
 | RISK-08 | Uncertainty in Irrigation Recommendations | Scientific | Medium | Critical | Member A + Member B | Open |
-| RISK-09 | Geographic Transferability | Scientific | Medium | Medium | All | Open |
+| RISK-09 | Geographic Transferability | Scientific | High | High | All | Open |
 | RISK-10 | Google Earth Engine Access and Quotas | Engineering | Medium | Medium | Member A | Open |
 | RISK-11 | Compute and Storage Constraints | Engineering | Medium | Medium | Member A | Open |
 | RISK-12 | Dataset Licensing and Provenance | Operational | Low | Medium | All | Open |

@@ -9,6 +9,8 @@
 
 ## 1. Executive Summary
 
+The project owner approved an India-first multi-region scope direction on 2026-10-23, recorded as `DEC-10`. The pilot AOI is not selected (`DEC-11` open). This scope decision does not approve technical choices or change shared contracts. Existing task IDs and owners remain in force. Foundational and learning work may proceed when each task's own inputs are accepted; AOI-dependent acquisition, scientific training/calibration, and validation remain blocked pending their inputs. P0 remains complete; this does not mark P1 or any task complete.
+
 The Phase 0 documentation baseline is complete and approved by all three team members, as confirmed by the project owner on 2026-10-23. The project owner waived guide sign-off for Phase 0. Audit remediation corrected source overclaims, units, resolution, ownership, unsupported scientific examples, and advisory semantics. This approval closes Phase 0 documentation; it does not approve individual proposed scientific/architecture decisions or satisfy the separate P1 entry prerequisites.
 
 The project has exactly three members. The project owner approved Phase 0 on 2026-10-23 and previously approved this role mapping and sequential handoff plan: Member A — Peter Livins (weather, water-balance support, geospatial); Member B — Rishav Raj (satellite data, ML, scientific modelling); Member C — Ashwanth C (application, dashboard, integration). The project owner reports that all three members approved the Phase 0 baseline; guide sign-off was waived by the owner for this phase. Individual decisions retain their listed approval requirements. The shared API contract amendment has unanimous member approval.
@@ -54,8 +56,10 @@ The project has exactly three members. The project owner approved Phase 0 on 202
 | **`DEC-07`** | Canal Aggregation Method | Vector Zonal Overlay via GeoPandas & Rasterio | `PROPOSED` |
 | **`DEC-08`** | Intermediate Data Caching | Local Filesystem Cache (`data/cache/` ignored) | `PROPOSED` |
 | **`DEC-09`** | Software Testing Fixtures | Pure Synthetic Mock Arrays (Strictly Labeled) | `PROPOSED` |
+| **`DEC-10`** | India-first multi-region scope and regional configuration | Shared pipeline with region-specific profiles; no transferability claims without evaluation | **Approved by project owner; implementation/schema review remains open** |
+| **`DEC-11`** | First pilot AOI | Evidence-based comparison of specific candidates; no AOI chosen | **OPEN** |
 
-*No decision has been marked `APPROVED` pending human review.*
+*No technical decision `DEC-01`–`DEC-09` has been marked `APPROVED`; `DEC-10` records project-owner scope approval only. `DEC-11` remains open.*
 
 DEC-01 records the project owner's preference for a responsive browser dashboard with a Python API; React + TypeScript and FastAPI remain candidates. The source documents propose Streamlit. DEC-01 remains proposed pending its named decision approvals; Phase 0 baseline approval does not approve it.
 
@@ -81,19 +85,27 @@ DEC-01 records the project owner's preference for a responsive browser dashboard
 
 ---
 
-## 5. Conditions Required Before Phase P1 Begins (P1 Entry Gate)
+## 5. P1 Startup and Region-Dependent Gates
 
-Phase 0 is complete. Do not start P1 implementation until the following project-specific prerequisites are recorded:
+Phase 0 is complete. P1 foundation tasks may begin when their own dependencies are satisfied. This does not close P1 or authorize AOI-specific scientific work. The following remain prerequisites for the dependent activities shown:
 1. [x] All three members approved the Phase 0 baseline (reported by the project owner, 2026-10-23); guide sign-off waived by the owner for P0.
-2. [ ] Confirm target study area and add its sourced boundary to `config/study_area.geojson` (`DS-09`).
-3. [ ] Confirm target crop classes and a feasible ground-truth source/strategy; acquire or verify suitable independent labels (`DS-04`).
-4. [ ] Record a canal-boundary source/fallback and acquire its licensed boundary data (`DS-05`), or explicitly defer canal aggregation.
-5. [ ] Resolve DEC-01 and any other decisions required by the next implementation task with their named member approvals; keep unresolved decisions `PROPOSED`.
+2. [ ] Before AOI-specific acquisition: select a pilot AOI and date range through `DEC-11`, verify its sourced boundary (`DS-09`), and confirm access to selected providers.
+3. [ ] Before supervised training/evaluation: confirm supported crop classes and a feasible ground-truth source/strategy; acquire/verify independent labels (`DS-04`).
+4. [ ] Before canal aggregation: record a licensed canal-boundary source (`DS-05`) or explicitly defer canal aggregation.
+5. [ ] Before implementing a technology-dependent task: resolve the relevant proposed decision (including `DEC-01` before frontend/API framework implementation); preserve unresolved decisions as proposed.
 6. [ ] Verify required GEE account access if the team selects GEE; do not share credentials.
 7. [ ] Identify crop-calendar (`DS-06`) and Kc (`DS-07`) references before corresponding scientific implementation. Soil parameters (`DS-08`) are required only for a method that models soil storage; otherwise document the supported balance scope and limitations.
+
+### Work That Can Start Without a Pilot AOI
+
+- `T-P1-SH-001` — Ashwanth C: environment/tooling foundation.
+- `T-P1-SH-002` — Ashwanth C: implement only the already approved `CON-01`–`CON-09` schema; do not add regional fields without unanimous contract approval.
+- `T-P1-SC-001` — Rishav: explicitly synthetic software fixtures after `T-P1-SH-002` handoff.
+- Peter: source/license inventory and weather/boundary feasibility research; `T-P1-DE-001` only after the required GEE account/project access is available.
+- All members: candidate-region evidence collection and independent satellite/ML learning. These do not count as scientific validation or phase completion.
 
 ---
 
 ## 6. Next Recommended Action
 
-Phase 0 is complete. Before implementation, collect or decide the missing P1-entry materials in Section 5: AOI boundary, crop classes/ground-truth, canal-boundary source, required decision approvals, GEE access, and method references. Then start the sequential handoffs in `docs/TASK_ASSIGNMENTS.md`.
+Phase 0 is complete. Begin the unblocked P1 tasks above. Complete the region-specific inputs in Section 5 before dependent acquisition or scientific claims. The pilot remains unselected; no task or phase status is advanced by this note.

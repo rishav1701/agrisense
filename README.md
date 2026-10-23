@@ -14,6 +14,8 @@ AgriSense is an academic project (BACSE291 — Innovative Design Project, VIT Ve
 2. **Candidate growth-stage-aware vegetation-stress indicators** using thresholds selected and validated for the chosen study area
 3. **Irrigation-deficit estimates** based on FAO-56 water-balance methods; any area-based volume is derived only when its assumptions and inputs are documented.
 
+The project-owner-approved direction is an India-first, multi-region design with a shared pipeline and region-specific configuration. The pilot AOI is not selected. Regional coverage and model transfer performance are not claims until independently evaluated.
+
 ## High-Level Scientific Workflow
 
 ```

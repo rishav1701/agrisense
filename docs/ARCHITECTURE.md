@@ -57,6 +57,14 @@ AgriSense is provisionally a Python scientific backend with a separate, responsi
 
 ## 2. Frontend Decision: Streamlit vs a Responsive Web Application
 
+### Multi-Region Design Direction
+
+The project-owner-approved scope direction is India-first and multi-region. The first AOI remains unselected. Separate shared processing logic from versioned regional profiles. A profile references sourced AOI/boundary data, supported crops and seasons, crop-calendar references, CRS/grid choices, and applicable local scientific parameters. Shared modules must not embed state-specific defaults. Derived products identify their region/profile version, source provenance, and limitations. A profile does not make an unvalidated model transferable; each region and season requires appropriate evaluation.
+
+Regional profile fields that affect `CON-01`–`CON-09` require a proposed schema change and unanimous approval from all three members before implementation.
+
+The regional configuration boundary is a configuration/provenance layer consumed by shared acquisition, feature, modelling, water-balance, aggregation, and presentation modules. It selects region-specific references and supported domains; it must not silently tune models, substitute missing labels, or supply unsourced agronomic defaults.
+
 ### Option A: Streamlit Monolith *(Source-proposed option)*
 
 | Aspect | Assessment |

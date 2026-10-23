@@ -11,6 +11,8 @@
 > be meaningfully validated. No study area has been defined yet — every satellite
 > and reanalysis dataset access status is therefore listed as **UNCONFIRMED**.
 
+> **Scope direction:** India-first multi-region design is approved by the project owner. The initial AOI remains unselected. Dataset availability must be assessed separately for each candidate AOI and season; national or state-level coverage does not establish field-level labels or validation suitability.
+
 ---
 
 ## Table of Contents
@@ -500,6 +502,8 @@ flowchart LR
 ---
 
 ## 5. Data Access Verification Checklist
+
+For pilot selection, maintain a candidate-by-candidate evidence record covering satellite acquisitions and usable observations for a specified season; crop labels and their spatial/temporal precision, provenance and license; boundary vintage/scale/license; supported crops and regional calendars; weather and soil input suitability; irrigation/command evidence where required; and availability of independent validation data. Mark unknowns as unknown. Administrative polygons must not be represented as irrigation-command boundaries.
 
 | ID | Dataset | Status | Action Required to Confirm |
 |----|---------|--------|--------------------------|

@@ -3,6 +3,7 @@
 > **P0 baseline approved by the three-member team per project-owner confirmation (2026-10-23); guide sign-off waived by the project owner for P0. P1 execution remains subject to the listed entry prerequisites and task dependencies.**
 > **Team Allocation:** Exactly three human student members. The project owner approved the proposed allocation and sequential handoff plan; this records the approved Phase 0 baseline and role plan, not approval of individual scientific decisions. Member A is Peter Livins (weather, water-balance support, geospatial); Member B is Rishav Raj (satellite data, ML, scientific modelling); Member C is Ashwanth C (application, dashboard, integration).
 > **Execution mode:** Sequential, non-overlapping stage handoffs are preferred. A member can work from an accepted handoff package without monitoring another member's day-to-day progress. This does not waive formal phase gates or shared-contract approval.
+> **Scope direction:** The project owner approved an India-first multi-region design direction on 2026-10-23. No pilot AOI is selected. Existing task IDs and owners are retained. Region-dependent scientific work remains gated by sourced AOI/data/method inputs; independent foundation, learning, and source-inventory work may proceed without waiting for a pilot.
 > **Academic Project:** BACSE291 — Innovative Design Project, VIT Vellore (Fall 2026).
 > **Guide:** Dr. Muthuraja S, Assistant Professor Sr. Grade 1.
 
@@ -67,6 +68,8 @@ To prevent merge conflicts, strict file boundaries govern ownership. Work procee
 - **Testing Requirements:** Test that ruff and black execute cleanly in CI / local terminal.
 - **Blockers:** None.
 
+**Start condition:** This foundation task may start as independent setup; completion does not declare P1 or the project phase complete.
+
 #### `T-P1-SH-002`: Data Contract Schemas Implementation
 - **Objective:** Translate abstract contracts (`CON-01` to `CON-09`) into strict Python dataclasses/Pydantic schemas with type enforcement and unit metadata.
 - **Primary Owner:** Member C (Ashwanth C; Coordinator)
@@ -117,6 +120,18 @@ To prevent merge conflicts, strict file boundaries govern ownership. Work procee
 - **Testing Requirements:** Ensure synthetic fixtures cannot be mistaken for real observations.
 - **Blockers:** None.
 
+**Start condition:** May start after the shared schemas in `T-P1-SH-002` are accepted. Fixtures are software-only and must not be described as region-specific observations or validation.
+
+#### `T-P1-SH-004`: Regional Profile and Provenance Specification
+- **Status:** Proposed addition; team confirmation required before work begins.
+- **Objective:** Specify how AOI, crop/season support, region-specific references, profile versioning, and provenance will be represented without embedding regional assumptions in shared modules.
+- **Primary Owner:** Member C (Ashwanth C; contract custodian).
+- **Reviewers:** Member A (Peter) and Member B (Rishav); all three members approve any shared-contract change.
+- **File Ownership:** Proposed profile section in `docs/ARCHITECTURE.md`; proposed schema amendments in `docs/API_CONTRACTS.md` only after unanimous approval.
+- **Dependencies:** `T-P1-SH-002`; `DEC-10` scope direction.
+- **Acceptance Criteria:** Profile fields, versioning, missing-input behavior, data provenance, region/season identifiers, and separation of generic versus regional parameters are documented; compatibility with `CON-01`–`CON-09` is reviewed; any contract amendment records unanimous approval.
+- **Blockers:** The profile is specified, not populated with an unselected AOI. Do not create regional values or a boundary file by assumption.
+
 ---
 
 ### Rishav's First Satellite Learning and Prototype Sequence
@@ -127,6 +142,8 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 4. After Peter accepts the complete `CON-03` assembly handoff, start `T-P2-SC-002` classifier software, then phenology and stress tasks in dependency order. Fit/evaluation claims remain blocked on sourced labels and approved methods.
 
 ### Phase P2: Sequential Module Implementation and Handoffs
+
+**Region-dependent gate:** A specific AOI, season, supported crop set, and relevant source/method approvals are required before AOI-specific acquisition, scientific calibration, training, or performance claims. Shared contract/schema changes require unanimous approval. Unblocked setup and literature/source review do not satisfy these gates.
 
 #### Stage 1 — Member B (Rishav): Satellite Processing
 
@@ -350,7 +367,7 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 ### Phase P5: Scientific Validation & Evaluation
 
 #### `T-P5-SC-007`: Classification Metrics, Confusion Matrix & Spatial Hold-Out Evaluation
-- **Objective:** Compute Overall Accuracy, Cohen's Kappa, Macro-F1, and per-class error matrices using spatially segregated ground-truth test folds.
+- **Objective:** Compute agreed classification metrics using spatially segregated held-out ground-truth folds; where data support it, separately evaluate held-out seasons and transfer to an unseen region.
 - **Primary Owner:** Member B (Rishav)
 - **Reviewer:** Member A (Peter) and the Guide; the held-out labels and evaluation design must be independent of model fitting.
 - **File Ownership:** `src/evaluation/metrics.py`, `docs/VALIDATION_REPORT.md`
@@ -358,12 +375,12 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Outputs:** Numerical evaluation tables and published validation report.
 - **Dependencies:** `T-P4-SC-006`.
 - **Contract Dependencies:** `CON-04`.
-- **Acceptance Criteria:** Strictly honest, uninflated metrics; zero spatial leakage between train and test sets.
+- **Acceptance Criteria:** Strictly honest metrics; zero spatial leakage; temporal and cross-region splits are explicitly identified and isolated from fitting/tuning. Report transfer failure or insufficient evidence without substituting in-region scores. Do not require every split where verified independent labels are unavailable; document that limitation.
 - **Testing Requirements:** Unit tests verifying accuracy calculation mathematics.
 - **Blockers:** Size and quality of independent test label dataset.
 
 #### `T-P5-SC-008`: False-Alarm Comparison & Uncertainty Analysis
-- **Objective:** Compare candidate stage-aware indicators with a documented static baseline and report any measured false-alarm change only when independent labels and the evaluation design support that conclusion; document ERA5-Land resolution limitations.
+- **Objective:** Compare candidate stage-aware indicators with a documented static baseline within the supported region/season and, only where independent evidence exists, assess stability across regions/seasons; report measured false-alarm changes only when the evaluation design supports them.
 - **Primary Owner:** Member B (Rishav)
 - **Reviewer:** Member C (Ashwanth C) & Guide
 - **File Ownership:** `docs/VALIDATION_REPORT.md`, `src/evaluation/uncertainty.py`
@@ -371,7 +388,7 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Outputs:** Comparative false-alarm results (direction and magnitude only if supported) and uncertainty narrative.
 - **Dependencies:** `T-P4-SC-006`.
 - **Contract Dependencies:** `CON-06`.
-- **Acceptance Criteria:** Explicitly documents conditions where stress detection is uncertain or ambiguous.
+- **Acceptance Criteria:** Explicitly documents uncertain/ambiguous conditions, regional/season limits, and whether cross-region evidence exists. Classification metrics do not stand in for stress or advisory validation.
 - **Testing Requirements:** Select an evaluation method appropriate to the available independent reference data and sample size; do not require significance testing without a defensible design.
 - **Blockers:** None.
 

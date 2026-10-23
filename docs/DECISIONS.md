@@ -17,10 +17,27 @@
 | **`DEC-07`** | Canal Aggregation Strategy: Vector GeoPandas vs. Server-Side GEE Zonal Stats | **PROPOSED** | 2026-10-23 | Member A & C |
 | **`DEC-08`** | Intermediate Data Caching: Local GeoTIFF Cache vs. Cloud Object Storage | **PROPOSED** | 2026-10-23 | Member A & C |
 | **`DEC-09`** | Software Testing Data Integrity: Pure Synthetic Fixtures vs. Sample Data | **PROPOSED** | 2026-10-23 | All 3 Team Members |
+| **`DEC-10`** | India-first Multi-Region Scope and Regional Configuration | **Project-owner approved; team implementation review open** | 2026-10-23 | Project Owner; team review for implementation |
+| **`DEC-11`** | First Pilot AOI Selection | **OPEN** | 2026-10-23 | Project Owner + all 3 Members |
 
 ---
 
 ## Detailed Decision Records
+
+### `DEC-10`: India-First Multi-Region Scope and Regional Configuration
+
+- **Topic:** Project geographic scope and separation of shared pipeline behavior from region-specific inputs.
+- **Status:** **APPROVED BY PROJECT OWNER — 2026-10-23; team implementation review and any shared-contract approval remain open.**
+- **Decision:** Design AgriSense for an India-first multi-region direction. Punjab remains a candidate, not the selected pilot. Use region/season-specific configuration and provenance; do not embed state-specific assumptions in shared modules or claim transferability without independent evaluation.
+- **Constraints:** This approval does not select an AOI, crop classes, season, dataset, algorithm parameters, or technology stack. Any amendment to shared contracts still requires all three team members' approval.
+- **Required next decisions:** Regional profile fields/representation; pilot AOI; crop/season scope; evaluation extent.
+
+### `DEC-11`: First Pilot AOI Selection
+
+- **Topic:** Evidence-based selection or deferral of the first pilot region/AOI.
+- **Status:** **OPEN — project-owner input required after candidate evidence review.**
+- **Decision rule:** Compare at least two specific candidate AOIs using the same season and criteria: Sentinel-1/2 usable coverage; traceable crop labels suitable for training and independent testing; boundary suitability and license; crop diversity and calendar references; weather/soil inputs; irrigation evidence and command boundaries if retained; and validation feasibility. Do not finalize an AOI or create a boundary file before that review.
+- **Required approvers:** Project owner and all three members for the chosen pilot; guide approval is not assumed as a prerequisite unless the team later requests it.
 
 ### `DEC-01`: Application Architecture & Technology Stack
 

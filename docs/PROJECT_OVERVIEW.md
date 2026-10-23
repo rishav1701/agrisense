@@ -1,7 +1,7 @@
 # AgriSense — Project Overview
 
 > **Document Type:** Phase 0 — Architecture & Planning  
-> **Status:** Draft — Awaiting Team Confirmation  
+> **Status:** Project-owner approved scope direction (multi-region India-first); pilot AOI and implementation decisions remain open.
 > **Created:** 2026-10-23  
 > **Project Title:** AI-Driven Automated Crop Type, Moisture Stress Detection and Irrigation Advisory Across Growth Stages Using Moderate Resolution Spectral Signatures (Optical & Microwave Satellite Data)  
 > **Domain:** Remote Sensing & Geospatial AI for Precision Agriculture and Water Resource Management
@@ -24,6 +24,12 @@
 ---
 
 ## 1. Problem Statement and Motivation
+
+### Geographic Scope
+
+AgriSense is intended to use a shared, region-parameterized pipeline for an India-first multi-region platform. The first pilot Area of Interest (AOI) is not selected. Punjab, Haryana, Rajasthan, and Uttar Pradesh are candidate regions only; a specific AOI will be selected only after comparing satellite coverage, traceable crop labels, boundary data, crop/season references, weather and soil inputs, irrigation context, licensing, and independent validation feasibility. No region-level performance or transferability is implied until evaluated.
+
+The initial scientific baseline remains the proposed Random Forest classifier. Multi-region readiness requires region/season-aware profiles and separate spatial, temporal, and cross-region evaluation. A single region's results do not establish performance elsewhere.
 
 Canal irrigation systems across India's agricultural belts rely on **district-level averages and fixed schedules** to allocate water. This coarse, one-size-fits-all approach leads to systematic over- and under-watering of individual fields, with cascading consequences:
 

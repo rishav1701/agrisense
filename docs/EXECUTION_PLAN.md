@@ -1,6 +1,8 @@
 # AgriSense Execution Plan (Phases P0 – P6)
 
 > **P0 Status: COMPLETE — approved by the three-member team per project-owner confirmation (2026-10-23); guide sign-off waived by the project owner for the P0 baseline. P1 entry remains blocked by unresolved inputs and decisions.**
+
+> **Scope direction:** India-first multi-region design approved by the project owner (2026-10-23); no pilot AOI selected. P1 setup tasks may proceed independently where their task inputs are satisfied. AOI-dependent acquisition, scientific training/calibration, and validation remain gated by their named inputs. Individual task completion does not close a phase gate.
 > **Academic Context:** BACSE291 — Innovative Design Project, VIT Vellore (Fall Semester 2026).
 > **Team Structure:** Member A is Peter Livins (weather, water-balance support, geospatial); Member B is Rishav Raj (satellite data, ML, scientific modelling); Member C is Ashwanth C (application, dashboard, integration). The project owner reports unanimous three-member approval of the P0 baseline and waives guide sign-off for P0; sequential, non-overlapping handoffs are approved.
 > **Mandatory Rule:** Do not advance between phases without formal gate approval recorded in `docs/STATUS.md`.
@@ -68,8 +70,10 @@ Architecture  & Contracts   Development   & Contracts   End-to-End    Validation
 
 ## Phase P1: Repository Foundation, Shared Contracts, Environments, and Quality Gates
 
+Independent foundation tasks may start when their own inputs are satisfied; pilot AOI and data prerequisites gate AOI-specific acquisition and scientific modelling, not environment setup. Add `T-P1-SH-004` to specify regional profile/provenance handling. Any shared-contract changes still require unanimous approval.
+
 ### Objectives
-1. Configure local virtual environments, Python dependency definitions (`requirements.txt`), and developer linting/formatting hooks (`black`, `ruff`, `isort`, `pytest`); add frontend tooling only after DEC-01 approves the stack.
+1. Configure local virtual environments, Python dependency definitions (`requirements.txt`), and developer linting/formatting hooks (`black`, `ruff`, `isort`, `pytest`); add frontend tooling only after DEC-01 approves the stack. This setup may begin independently of pilot AOI selection.
 2. Implement contract schemas in Python (`src/contracts/schemas.py`) using Pydantic or dataclasses to enforce inter-module interfaces.
 3. Establish directory structure and mock data fixtures for unit and interface testing.
 4. Set up GEE project credentials and verify cloud connectivity.
@@ -89,6 +93,7 @@ Architecture  & Contracts   Development   & Contracts   End-to-End    Validation
 3. Ashwanth C: `T-P1-SH-003` browser/API boundary after DEC-01 approval.
 4. Peter: `T-P1-DE-001` GEE setup.
 5. Rishav: `T-P1-SC-001` explicitly synthetic software fixtures.
+6. Proposed: `T-P1-SH-004` regional profile/provenance specification after team confirms the task and its owner.
 
 This order is sequential for implementation ownership. A task can be complete while P1 remains open; P2 starts only after the complete P1 deliverables and Gate 1.
 
@@ -249,6 +254,7 @@ This order is sequential for implementation ownership. A task can be complete wh
 3. Compare the stage-aware candidate indicator with a documented static baseline where independent evidence supports evaluation; report whether false alarms decrease, increase, or remain uncertain.
 4. Perform sensitivity and uncertainty analysis on FAO-56 irrigation deficit estimates ($ET_c = K_c \times ET_0$).
 5. Document all assumptions, biases, and methodological limitations.
+6. Where suitable independent labels exist, separately evaluate transfer to unseen regions and across seasons. A single-area spatial holdout is not evidence of cross-region transfer. If evidence is unavailable, report the gap rather than inventing or substituting metrics.
 
 ### Deliverables
 - `docs/VALIDATION_REPORT.md`: Comprehensive evaluation findings.
@@ -268,6 +274,7 @@ This order is sequential for implementation ownership. A task can be complete wh
 
 ### Testing and Validation Requirements
 - Quantitative validation must use held-out test data strictly isolated from training folds (no spatial data leakage).
+- Cross-region and cross-season results must use data held out from fitting, feature selection, and tuning; report each evaluation domain separately.
 - All scientific claims must cite source data and methodology.
 - Software tests must remain strictly separated from scientific validation analyses.
 
@@ -319,7 +326,7 @@ This order is sequential for implementation ownership. A task can be complete wh
 
 | Gate | Target Milestone | Approvers | Blocker Criteria |
 |:---|:---|:---|:---|
-| **Gate 0** | Phase P0 -> P1 | All 3 Members | Unresolved task ownership, missing PDF requirements, lack of team consensus |
+| **Gate 0** | Phase P0 -> P1 | All 3 Members | P0 baseline approval and ownership are recorded; phase remains open until the P1 deliverables are accepted. Independent P1 tasks may begin when their own dependencies are satisfied. |
 | **Gate 1** | Phase P1 -> P2 | All 3 Members | Unstable environment, broken tests, unapproved contract schemas |
 | **Gate 2** | Phase P2 -> P3 | Member A, B, C | Unit test failures, contract violations, unmerged rogue code |
 | **Gate 3** | Phase P3 -> P4 | All 3 Members | Broken pipeline integration, coordinate misalignment, memory exhaustion |
