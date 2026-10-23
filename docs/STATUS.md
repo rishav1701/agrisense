@@ -11,7 +11,7 @@
 
 Phase 0 documentation has been drafted from the two project references and includes known assumptions and gaps. Audit remediation has corrected source overclaims, units, resolution, ownership, unsupported scientific examples, and advisory semantics across the project documentation. All three team members approved the API contract amendment on 2026-10-23. The full document set remains provisional pending guide review and formal Phase 0 sign-off, and is not yet an implementation baseline.
 
-The project team has exactly three members, as confirmed by the project owner. The IDP PDF lists three students; the Mava PDF lists an additional person, which is not part of this project team. Role-to-name mapping, architecture decisions, and the Phase 0 gate still require the approvals recorded below. The shared API contract amendment has unanimous member approval; final guide and Phase 0 approval remain pending.
+The project has exactly three members. The project owner approved this role mapping and sequential handoff plan: Member A — Peter Livins (weather, water-balance support, geospatial); Member B — Rishav Raj (satellite data, ML, scientific modelling); Member C — Ashwanth C (application, dashboard, integration). This approval records the owner’s preferred plan, not formal team/guide Gate 0 approval or approval of scientific decisions. The shared API contract amendment has unanimous member approval; guide and Phase 0 approval remain pending.
 
 ---
 
@@ -51,7 +51,7 @@ The project team has exactly three members, as confirmed by the project owner. T
 
 *No decision has been marked `APPROVED` pending human review.*
 
-DEC-01 records the project owner's preference for a responsive browser dashboard with a Python API; React + TypeScript and FastAPI remain candidates. The source documents propose Streamlit. The three-member team and project guide must review the architecture and Member C's capacity before implementation.
+DEC-01 records the project owner's preference for a responsive browser dashboard with a Python API; React + TypeScript and FastAPI remain candidates. The source documents propose Streamlit. Team and guide review of the architecture remains required before implementation.
 
 ---
 
@@ -69,7 +69,7 @@ DEC-01 records the project owner's preference for a responsive browser dashboard
    - *Action Required:* Acquire and verify official canal-command boundaries. If unavailable, defer canal-command summaries or report summaries for another sourced boundary under its correct name; administrative areas are not canal commands.
 
 ### Open Questions Awaiting Confirmation
-- **`Q-01` Role Mapping:** The project has exactly three members. The task plan uses Member A/B/C roles; the team must approve the mapping from the three IDP-listed students to those roles. The additional name in the Mava team list is not part of this project team.
+- **`Q-01` Role Mapping:** The project owner approved Member A — Peter Livins, Member B — Rishav Raj, and Member C — Ashwanth C. Formal team/guide review and Gate 0 approval remain pending.
 - **`Q-02` 8-Day Monitoring Window:** `mava.pdf` mentions an 8-day monitoring cycle without justification. Treat it as a proposed reporting interval only; do not call it a forecast or guaranteed sensor cadence.
 - **`Q-03` Target Crop Classes:** Mava's diagram illustrates Wheat, Mustard, and Fallow; these are proposal examples, not an approved class map. Confirm the formal classes and traceable labels for the selected study area.
 
@@ -78,7 +78,7 @@ DEC-01 records the project owner's preference for a responsive browser dashboard
 ## 5. Conditions Required Before Phase P1 Begins (Gate 0)
 
 To transition from Phase P0 to Phase P1, the following conditions must be met:
-1. [ ] Team members review and formally approve `docs/TASK_ASSIGNMENTS.md` and role distribution.
+1. [ ] Team and guide review the owner-approved sequential role/task allocation in `docs/TASK_ASSIGNMENTS.md`; record formal Gate 0 approval separately.
 2. [ ] All three members review and approve the proposed architecture decisions (`DEC-01` through `DEC-09`); the guide reviews decisions requiring guide approval.
 3. [ ] Team selects the target study area (`BLOCKER-01`) and confirms the target crop classes.
 4. [ ] Team records a feasible ground-truth strategy and verifies whether independent labels can be obtained before classifier implementation.
@@ -90,9 +90,4 @@ To transition from Phase P0 to Phase P1, the following conditions must be met:
 
 ## 6. Next Recommended Action
 
-The project lead (Rishav Raj) should convene a team sync with Ashwanth C and Peter Livins to:
-1. Review the corrected provisional documents in `docs/` and confirm that the team consists of the three students listed in the IDP review.
-2. Assign those three members to **Member A**, **Member B**, and **Member C** roles based on their actual skills and availability.
-3. Resolve `BLOCKER-01` and agree the crop classes, ground-truth strategy, and canal-boundary plan.
-4. Confirm that the unanimously approved API contract amendment is reflected in the implementation plan; keep implementation gated on Phase 0 approval.
-5. Ask Dr. Muthuraja S to review the revised Phase 0 baseline and record Gate 0 approval.
+The next work is to resolve the remaining Gate 0 items (study area, crop classes, ground-truth strategy, canal-boundary source, DEC reviews) and obtain guide/team sign-off. After Gate 0, follow the approved sequential handoffs in `docs/TASK_ASSIGNMENTS.md`. Rishav’s plan approval does not mark P0 complete or authorize implementation before the formal gate.

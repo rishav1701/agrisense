@@ -32,13 +32,13 @@
 - **Alternatives Considered:**
   - *Option 1 (Streamlit Monolith):* Native Python, fast iteration, minimal boilerplate, and directly proposed in reference documents.
   - *Option 2 (Responsive Web Frontend + Python API):* Supports a custom responsive interface and separates UI from scientific services, but introduces frontend tooling, API integration, and deployment coordination.
-- **Recommendation:** The project owner prefers **Option 2**, a highly responsive and professional browser dashboard, and does not prefer Streamlit. React + TypeScript and FastAPI are provisional candidates only; team and guide approval and a three-member capacity check are still required.
+- **Recommendation:** The project owner prefers **Option 2**, a highly responsive and professional browser dashboard, and does not prefer Streamlit. React + TypeScript and FastAPI are provisional candidates only; team and guide approval is still required.
 - **Rationale:**
   - The reference documents propose Streamlit (IDP PDF Sub-Objective O3, page 23; `mava.pdf` Feature F8 and Tech Stack, page 9); they do not prevent the team from selecting another implementation for the same dashboard objective.
-  - The owner prioritizes a polished, adaptive dashboard experience. The three-person constraint makes scope control and a capacity review essential; individual skills and availability remain unconfirmed.
+  - The owner prioritizes a polished, adaptive dashboard experience. The selected stack and delivery choices remain subject to team and guide approval.
 - **Consequences & Trade-offs:**
   - *Potential benefits:* Custom responsive layouts and clear separation between browser presentation and Python scientific processing.
-  - *Costs and open questions:* Frontend/API integration, separate tooling, deployment topology, mapping/chart library choices, and Member C workload must be assessed before implementation.
+  - *Costs and open questions:* Frontend/API integration, separate tooling, deployment topology, and mapping/chart library choices must be decided before implementation.
 - **Evidence / Source:** `IDP_Review_1_AgriSense (1).pdf` p. 23; `mava.pdf` p. 9.
 - **Required Approver Role:** All 3 Team Members and Project Guide.
 

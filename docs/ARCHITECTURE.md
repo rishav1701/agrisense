@@ -62,7 +62,7 @@ AgriSense is provisionally a Python scientific backend with a separate, responsi
 | Aspect | Assessment |
 |--------|------------|
 | **Source alignment** | The source documents propose Streamlit (IDP O3, mava F8) |
-| **Team capacity** | All-Python stack; member experience and availability are not yet confirmed |
+| **Implementation choice** | All-Python stack; framework selection remains subject to DEC-01 review |
 | **Development speed** | Rapid prototyping; single codebase |
 | **Interactivity** | Streamlit-Folium for maps; Plotly for charts; adequate for the use case |
 | **Deployment** | Single process; Streamlit Community Cloud or simple server |
@@ -74,7 +74,7 @@ AgriSense is provisionally a Python scientific backend with a separate, responsi
 | Aspect | Assessment |
 |--------|------------|
 | **Source alignment** | The source documents propose Streamlit; this option changes that implementation proposal while retaining the dashboard objective |
-| **Team capacity** | Adds frontend tooling and API integration; skills and effort for the three members are not yet confirmed |
+| **Implementation choice** | Adds frontend tooling and API integration; deployment topology and tooling must be decided |
 | **Development speed** | Separate frontend and backend work can proceed against contracts, with added integration and deployment work |
 | **Interactivity** | Supports a custom responsive layout and tailored map, chart, and table interactions |
 | **Deployment** | Frontend and API hosting must be planned; exact deployment remains undecided |
@@ -83,13 +83,13 @@ AgriSense is provisionally a Python scientific backend with a separate, responsi
 
 ### Decision
 
-> **DEC-01: Proposed — responsive web frontend with Python API/backend; React + TypeScript and FastAPI are candidates.** The owner prefers a professional responsive dashboard and does not prefer Streamlit. The source documents propose Streamlit, so this is a deliberate departure from their implementation proposal while preserving the requested dashboard outcome. Framework, mapping/chart libraries, team capacity, and deployment remain subject to team and guide review. Status: PROPOSED — not approved for implementation.
+> **DEC-01: Proposed — responsive web frontend with Python API/backend; React + TypeScript and FastAPI are candidates.** The owner prefers a professional responsive dashboard and does not prefer Streamlit. The source documents propose Streamlit, so this is a deliberate departure from their implementation proposal while preserving the requested dashboard outcome. Framework, mapping/chart libraries, and deployment remain subject to team and guide review. Status: PROPOSED — not approved for implementation.
 
 ## 3. Module Responsibilities
 
 ### 3.1 Data Acquisition & GEE Integration (M-DATA)
 
-**Owner:** Member A
+**Owners:** Member B (satellite ingestion/features), Member A (weather ingestion, assembly/cache).
 
 **Responsibilities:**
 - GEE authentication and session management
@@ -154,7 +154,7 @@ AgriSense is provisionally a Python scientific backend with a separate, responsi
 
 ### 3.5 Water-Balance Estimate (M-WATER)
 
-**Owner:** Member B
+**Owner:** Member A (Peter); Member B (Rishav) reviews scientific assumptions.
 
 **Responsibilities:**
 - FAO-56 ETc = Kc × ET0 computation
@@ -170,7 +170,7 @@ AgriSense is provisionally a Python scientific backend with a separate, responsi
 
 ### 3.6 Canal Boundary Aggregation (M-CANAL)
 
-**Primary owner:** Member A (spatial inputs and processing). **Integration owner:** Member C.
+**Primary owner:** Member A (Peter). **Integration reviewer:** Member C (Ashwanth C).
 
 **Responsibilities:**
 - Load and validate canal command boundary shapefiles
@@ -267,7 +267,7 @@ Deployment and containerisation remain provisional; evaluate only after the team
 | Dashboard | Responsive web frontend; React + TypeScript candidate | Owner preference; DEC-01 remains proposed; source documents propose Streamlit |
 | API/backend | Python API; FastAPI candidate | Keeps scientific modules in Python; DEC-01 remains proposed |
 | Map visualisation | Library TBD | Source proposes Folium via Streamlit; select after framework and integration review |
-| Charts | Library TBD | Source proposes Plotly; confirm compatibility and team capacity |
+| Charts | Library TBD | Source proposes Plotly; confirm compatibility with DEC-01 |
 | Testing | pytest | Standard Python testing |
 | Formatting | black, ruff, isort | Code quality |
 
@@ -289,21 +289,22 @@ agrisense/
 │   └── app_config.yaml         # Application settings
 ├── src/
 │   ├── __init__.py
-│   ├── data/                   # M-DATA: GEE integration, preprocessing (Member A)
+│   ├── data/                   # Satellite files (Member B); auth/weather/assembly/cache (Member A)
 │   │   ├── __init__.py
 │   │   ├── gee_auth.py
 │   │   ├── sentinel2.py
 │   │   ├── sentinel1.py
 │   │   ├── era5land.py
 │   │   ├── preprocessing.py
-│   │   └── cache.py
-│   ├── models/                 # M-CLASS, M-PHENO, M-STRESS, M-WATER (Member B)
+│   │   ├── observation_assembly.py
+│   │   └── cache.py (Member A owns cache; Member B owns preprocessing)
+│   ├── models/                 # CLASS/PHENO/STRESS (Member B); WATER (Member A)
 │   │   ├── __init__.py
 │   │   ├── classifier.py
 │   │   ├── phenology.py
 │   │   ├── stress.py
 │   │   └── water_balance.py
-│   ├── spatial/                # M-CANAL: Canal aggregation (Member A; Member C integrates)
+│   ├── spatial/                # M-CANAL: Canal aggregation (Member A)
 │   │   ├── __init__.py
 │   │   └── canal_aggregator.py
 │   ├── dashboard/              # M-DASH: Python-side dashboard integration (Member C)
@@ -371,10 +372,7 @@ Sequential dependencies:
 4. M-STRESS requires M-PHENO (growth stage determines threshold).
 5. M-WATER requires M-PHENO (Kc depends on stage) and meteorological data from M-DATA.
 6. M-CANAL requires M-WATER outputs and canal boundary data.
-7. M-DASH can be developed in parallel using mock data conforming to contracts.
+7. Sequential stages use explicit reviewed handoffs; downstream modules wait for complete required inputs.
 8. M-EVAL runs after all modules produce outputs.
 
-Safe parallel work:
-- Member A (M-DATA) and Member C (M-DASH) can work simultaneously from P2 onward using contracts.
-- Member B may develop model software against explicitly synthetic fixtures after the shared contracts are approved; scientific training and claims require sourced labels. 
-- Member C can build dashboard UI with mock contract-conforming data.
+Approved work order: Member B completes satellite processing; Member A completes weather ingestion and final assembly; Member B completes scientific models; Member A completes water-balance/canal outputs; Member C completes dashboard/API after DEC-01 and API boundary approval. Each handoff is reviewed. Synthetic fixtures are for labeled software tests only.

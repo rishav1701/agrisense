@@ -1,6 +1,6 @@
 # Team Workflow — AgriSense
 
-> How we work together: branching, reviews, ownership, and keeping things sane while juggling coursework at VIT.
+> How we work: task ownership, review, and explicit sequential handoffs for a three-member team.
 
 This document defines the day-to-day engineering workflow for the AgriSense team — three students building a satellite-based crop monitoring system alongside their regular studies. The rules here aren't bureaucracy for the sake of it; they exist so we don't step on each other's code, lose work, or merge something broken at 2 AM before a review.
 
@@ -9,6 +9,8 @@ Read this once, bookmark it, and refer back when unsure.
 ---
 
 ## 1. Task ID Convention
+
+**Team role mapping:** Member A — Peter Livins (weather, water-balance support, geospatial); Member B — Rishav Raj (satellite data, ML, scientific modelling); Member C — Ashwanth C (application, dashboard, integration).
 
 Every piece of work gets a task ID so we can trace commits, PRs, and discussions back to a specific goal.
 
@@ -21,8 +23,8 @@ Every piece of work gets a task ID so we can trace commits, PRs, and discussions
 
 | Code | Module | Typical Owner |
 |------|--------|---------------|
-| `DE` | Data Engineering (ingestion, GEE pipelines, preprocessing) | Member A |
-| `SC` | Scientific Models (classification, phenology, stress, FAO-56) | Member B |
+| `DE` | Data Engineering (satellite and weather ingestion, assembly) | Member A / Member B by task register |
+| `SC` | Scientific Models (classification, phenology, stress, water balance) | Member B / Member A for water balance |
 | `AP` | Application (responsive dashboard, Python API, visualization) | Member C |
 | `SH` | Shared (contracts, schemas, utilities used by multiple modules) | Any / All |
 | `IN` | Integration (cross-module wiring, end-to-end tests) | Member C (coordinator) |
@@ -151,26 +153,32 @@ Every PR description should include this checklist (copy-paste it):
 
 ## 5. Task Ownership and File Restrictions
 
-Each member owns specific parts of the codebase. This prevents merge conflicts and ensures accountability.
+Each member owns the files listed for their task. Work follows sequential handoffs; owning a later task does not require tracking another member’s daily progress.
 
 > [!IMPORTANT]
 > This table uses a **provisional directory structure**. Actual paths will be finalized when the architecture is approved in Phase 1. The ownership principle stays the same regardless of exact paths.
 
 | Directory / File | Primary Owner | Others May Edit? |
 |---|---|---|
-| `src/data/` | Member A | No — PR required |
-| `src/models/` | Member B | No — PR required |
-| `frontend/`, `src/api/`, `src/dashboard/` | Member C | No — PR required after DEC-01 finalizes paths and tools |
-| `src/contracts/` | Member C (coordinator) | Only via approved PR by **all** members |
-| `src/spatial/` | Member A | No — PR required; Member C reviews integration |
-| `src/evaluation/` | Member B | No — PR required |
-| `tests/data/` | Member A | No |
-| `tests/models/` | Member B | No |
-| `tests/dashboard/` | Member C | No |
-| `tests/contracts/` | Member C | Shared schema tests require Member A and B review |
-| `tests/integration/` | Member C (coordinator) | Any member may add tests |
-| `tests/spatial/` | Member A | Member C reviews integration |
-| `tests/evaluation/` | Member B | Member C reviews integration |
+| `src/data/sentinel1.py`, `sentinel2.py`, `preprocessing.py` | Member B (Rishav) | No — PR required |
+| `src/data/gee_auth.py`, `era5land.py`, `observation_assembly.py`, `cache.py` | Member A (Peter) | No — PR required |
+| `src/data/` satellite task tests | Member B (Rishav) | No — PR required |
+| `src/data/` weather/assembly tests | Member A (Peter) | No — PR required |
+| `src/models/classifier.py`, `phenology.py`, `stress.py` | Member B (Rishav) | No — PR required |
+| `src/models/water_balance.py` | Member A (Peter) | No — PR required; Member B reviews scientific assumptions |
+| `frontend/`, `src/api/`, `src/dashboard/` | Member C (Ashwanth C) | No — PR required after DEC-01 finalizes paths and tools |
+| `src/contracts/` | Member C (Ashwanth C; coordinator) | Only via approved PR by **all** members |
+| `src/spatial/` | Member A (Peter) | No — PR required; Member C reviews at handoff |
+| `src/evaluation/` | Member B (Rishav) | No — PR required |
+| Satellite tests in `tests/data/` | Member B (Rishav) | No |
+| Weather/assembly tests in `tests/data/` | Member A (Peter) | No |
+| Classifier/phenology/stress tests | Member B (Rishav) | No |
+| Water-balance tests | Member A (Peter) | No |
+| `tests/dashboard/` | Member C (Ashwanth C) | No |
+| `tests/contracts/` | Member C (Ashwanth C) | Shared schema tests require Member A (Peter) and Member B (Rishav) review |
+| `tests/integration/` | Member C (Ashwanth C; coordinator) | Any member may add tests |
+| `tests/spatial/` | Member A (Peter) | Member C (Ashwanth C) reviews at handoff |
+| `tests/evaluation/` | Member B (Rishav) | Member C (Ashwanth C) reviews integration |
 | `docs/` | Any member (for their area) | Shared docs need review |
 | `scripts/` | Owner of the related module | PR required |
 | `.env.example` | Member A | PR required |
@@ -185,7 +193,7 @@ Each member owns specific parts of the codebase. This prevents merge conflicts a
 
 ## 6. Shared Contract Approval Process
 
-Contracts (the agreed-upon data formats, function signatures, and interfaces between modules) are the glue that lets us work in parallel. Changing them without coordination breaks everyone's code.
+Contracts define handoff formats and interfaces. The team works in sequence; a shared contract change still requires unanimous approval before implementation.
 
 ### Process for Contract Changes
 
@@ -230,18 +238,18 @@ Contracts (the agreed-upon data formats, function signatures, and interfaces bet
 
 ## 8. Integration Checkpoints
 
-Working in parallel is great until the pieces don't fit together. These checkpoints catch that early.
+The project owner prefers non-overlapping stages and no day-to-day dependency monitoring. For each handoff, the outgoing owner provides the artifacts, provenance, schema/version, known gaps, and acceptance evidence listed in the task. The reviewer records accept/reject and any blocking defects. Only after acceptance does the next dependent owner begin. This task-level handoff does not itself close a phase gate.
+
+Handoffs are the integration checkpoints. The next dependent stage starts only after the current owner’s deliverables and acceptance criteria are reviewed.
 
 | When | What | Who |
 |---|---|---|
-| **Mid-phase sync** | Brief check-in: Are contracts being followed? Any blockers? Anything drifting? | All 3 members |
+| **Task handoff** | Record named artifacts and reviewer acceptance before the dependent stage begins | Task owner + independent reviewer |
 | **End of phase** | Integration review: merge all module branches, run integration tests, verify outputs match contracts | All 3 members |
 | **Phase 3** | Dedicated integration phase: full end-to-end testing, dashboard wiring, bug fixes | All 3 members |
 
-### How to Run a Mid-Phase Sync
-- Can be 15 minutes in the hostel or a quick WhatsApp call.
-- Each member shares: what's done, what's next, what's blocking them.
-- Update `docs/STATUS.md` afterward.
+### Handoff Record
+Record the task ID, outgoing artifacts, contract version, provenance, known gaps, acceptance evidence, reviewer decision, and any unresolved blocker in the task PR or status checkpoint. This task handoff is separate from formal phase gates.
 
 ### End-of-Phase Integration Review
 - All members pull `main`, run the full test suite, and try the end-to-end flow.
@@ -371,10 +379,9 @@ We're three students at VIT, not a distributed enterprise team. Keep communicati
 | Quick questions, scheduling | WhatsApp / in person |
 | Blockers | Communicate immediately (don't wait for sync) |
 
-### Weekly Sync
-- Aim for a brief weekly sync (15–30 min, in person or online).
-- Cover: progress, blockers, upcoming deadlines, contract changes.
-- Not mandatory every single week, but don't go more than 2 weeks without one.
+### Status and Handoff Updates
+- Update `docs/STATUS.md` at meaningful checkpoints and when blockers or formal gate decisions change.
+- Follow the task register and explicit reviewer handoffs. Daily cross-member progress monitoring is not required.
 
 ### Academic Schedule
 - We all have exams, labs, and assignments. That's expected.
@@ -385,18 +392,18 @@ We're three students at VIT, not a distributed enterprise team. Keep communicati
 
 ## 14. Coordinating Shared Interfaces
 
-Shared interfaces are the contracts between modules — the agreed-upon data formats, function signatures, and schemas that let Member A's data pipeline feed into Member B's models, which feed into Member C's dashboard.
+Shared interfaces define the handoffs: Member B’s satellite package is assembled with Member A’s weather data, feeds Member B’s models, then Member A’s water-balance/geospatial outputs feed Member C’s dashboard.
 
 ### Where Interfaces Are Defined
 - All shared interfaces live in [`docs/API_CONTRACTS.md`](API_CONTRACTS.md).
 - Any changes follow the process in [Section 6](#6-shared-contract-approval-process).
 
-### Parallel Development Strategy
-Since each member works on their module independently most of the time:
+### Sequential Handoff Strategy
+Since each member starts a dependent stage after a reviewed handoff:
 
 1. **Define the contract first.** Before writing implementation code, agree on the interface (what data goes in, what comes out, what format).
 2. **Write interface tests early.** Test that your module's output conforms to the contract. Test that your module can consume the expected input.
-3. **Use mock data during development.** If Member B needs data from Member A's pipeline but it's not ready yet, create mock data that conforms to the contract. This lets both members work in parallel.
+3. Use synthetic data only in clearly labelled software tests. Downstream scientific modules wait for the accepted data handoff; synthetic fixtures are not a substitute for observed inputs or scientific validation.
 4. **Validate at integration checkpoints.** When real data replaces mocks, run integration tests to catch mismatches.
 
 ### Member C's Coordinator Role
@@ -420,4 +427,4 @@ For day-to-day use, here's the essentials on one screen:
 | Secrets | Never in Git. Use `.env` + `.env.example` |
 | AI code | Must be human-reviewed before merge |
 | Getting back in | Read: AGENTS.md → STATUS.md → TASK_ASSIGNMENTS.md → API_CONTRACTS.md |
-| Blocked? | Say so immediately. Don't wait for the weekly sync. |
+| Blocked? | Say so immediately. Notify the relevant task reviewer and record blockers at the next meaningful checkpoint. |

@@ -2,12 +2,14 @@
 
 > **Status: PROVISIONAL — Subject to team review and guide approval**  
 > **Academic Context:** BACSE291 — Innovative Design Project, VIT Vellore (Fall Semester 2026).  
-> **Team Structure:** Exactly three student members (Member A, Member B, Member C).  
+> **Team Structure:** Member A is Peter Livins (weather, water-balance support, geospatial); Member B is Rishav Raj (satellite data, ML, scientific modelling); Member C is Ashwanth C (application, dashboard, integration). The project owner approved sequential, non-overlapping handoffs; formal Phase 0 approval remains pending.
 > **Mandatory Rule:** Do not advance between phases without formal gate approval recorded in `docs/STATUS.md`.
 
 ---
 
 ## 1. Roadmap Overview
+
+**Progress policy:** Task completion, workstream readiness, and phase completion are distinct. A member may complete assigned P1 tasks independently, but P2 cannot start until all P1 deliverables and Gate 1 are complete. In P2, one member owns each sequential stage and can finish it without monitoring another member’s daily progress; the next owner starts only after a documented, reviewed handoff. A phase is complete only when all phase deliverables and its formal exit gate are satisfied and recorded.
 
 ```
 ┌───────┐     ┌───────┐     ┌───────┐     ┌───────┐     ┌───────┐     ┌───────┐     ┌───────┐
@@ -58,7 +60,7 @@ Architecture  & Contracts   Development   & Contracts   End-to-End    Validation
 
 ### Gate Conditions (Preventing Progression to P1)
 - The Phase 0 baseline has not been reviewed and approved by all three members and the guide.
-- Role-to-name mapping and task ownership are not recorded.
+- Role-to-name mapping and the sequential allocation plan are recorded as project-owner-approved; formal team/guide Gate 0 approval remains pending.
 - The API contract amendment has unanimous approval from all three members (2026-10-23); guide review and Gate 0 approval remain pending before implementation.
 - The study-area selection and data acquisition strategy are not recorded. GEE access is required only if GEE is selected.
 
@@ -77,8 +79,18 @@ Architecture  & Contracts   Development   & Contracts   End-to-End    Validation
 - `pyproject.toml` or configuration files for `black`, `ruff`, and `isort`.
 - Provisional directory skeleton for approved backend/scientific modules and tests; frontend/API directories are created only after DEC-01 approval.
 - Python implementation of data contracts in `src/contracts/schemas.py`.
+- Reviewed browser/API boundary specification (`T-P1-SH-003`) after DEC-01 selection.
 - Mock fixture generator in `tests/fixtures/` producing synthetic data adhering strictly to `CON-01` through `CON-09`.
 - Verified GEE connection script (`scripts/verify_gee.py`).
+
+### Ordered P1 Handoffs
+1. Ashwanth C: `T-P1-SH-001` environment/tooling.
+2. Ashwanth C: `T-P1-SH-002` schemas, with Peter and Rishav sign-off.
+3. Ashwanth C: `T-P1-SH-003` browser/API boundary after DEC-01 approval.
+4. Peter: `T-P1-DE-001` GEE setup.
+5. Rishav: `T-P1-SC-001` explicitly synthetic software fixtures.
+
+This order is sequential for implementation ownership. A task can be complete while P1 remains open; P2 starts only after the complete P1 deliverables and Gate 1.
 
 ### Roles & Responsibilities
 - **Lead Owner:** Member C (Application, Environment & Contracts Coordinator).
@@ -100,6 +112,7 @@ Architecture  & Contracts   Development   & Contracts   End-to-End    Validation
 
 ### Gate Conditions (Preventing Progression to P2)
 - Any member cannot run the agreed software checks.
+- Required P1 task handoffs, including the DEC-01/API boundary, are incomplete or unreviewed.
 - Shared contracts have not been unanimously approved.
 - DEC-01 and the frontend/API toolchain have not been approved by the three members and guide.
 - Study area and target crop classes remain undefined.
@@ -107,44 +120,41 @@ Architecture  & Contracts   Development   & Contracts   End-to-End    Validation
 
 ---
 
-## Phase P2: Independent Implementation Workstreams
+## Phase P2: Sequential Implementation Workstreams
 
 ### Objectives
-1. Develop isolated modules concurrently without mutual file edits or branch collisions.
-2. Member A builds GEE ingestion, cloud masking, S1/S2 preprocessing, and ERA5-Land extraction.
-3. Member B owns candidate scientific model implementations using approved contracts and clearly synthetic software fixtures; claims and calibration remain gated on suitable source data and validation.
-4. Member C builds the owner-preferred responsive browser dashboard and integrates it with the Python API using contract-mocked outputs after DEC-01 approves the frameworks and libraries.
+1. Implement isolated modules in sequential, non-overlapping stages with formal handoff packages; do not use another member’s daily progress as a prerequisite.
+2. Member B (Rishav) completes Sentinel-1/2 and satellite feature/time-series preparation (`T-P2-DE-002`, `003`, `005`); Member A (Peter) then completes ERA5-Land and cross-source assembly (`T-P2-DE-004`, `006`).
+3. Member B (Rishav) implements the scientific models sequentially after the accepted complete `CON-03` data handoff: classifier, phenology, then stress model, respecting sourced-label and method blockers. Synthetic fixtures support software tests only; scientific claims and calibration require sourced evidence.
+4. Member A (Peter) completes water-balance and canal-geospatial outputs (`T-P2-SC-005`, `T-P2-AP-001`); Member C (Ashwanth C) begins API/dashboard work only after reviewed output handoffs and DEC-01/API boundary approval.
 
 ### Deliverables
-- **Member A (Data Engineering):**
-  - `src/data/gee_auth.py`, `sentinel2.py`, `sentinel1.py`, `era5land.py`, `preprocessing.py`, `cache.py`.
-  - Comprehensive unit tests in `tests/data/`.
-- **Member B (Scientific Modeling):**
-  - `src/models/classifier.py`, `phenology.py`, `stress.py`, `water_balance.py`.
-  - Comprehensive unit tests in `tests/models/` using synthetic raster arrays.
-- **Member C (Backend/API, Responsive Frontend & Integration):**
-  - `src/spatial/canal_aggregator.py`.
-  - Approved frontend and API modules (exact paths/framework follow DEC-01).
-  - Browser/component and API integration checks in the approved test layout.
+- **Stage 1 — Member B (Rishav):** `T-P2-DE-002`, `T-P2-DE-003`, `T-P2-DE-005` — satellite package.
+- **Stage 2 — Member A (Peter):** `T-P2-DE-004`, `T-P2-DE-006` — ERA5-Land and complete `CON-03` assembly.
+  - Satellite tests in the task-owned `tests/data/` files.
+- **Stage 3 — Member B (Rishav):** `T-P2-SC-002`, `003`, `004` — classification, phenology, stress.
+- **Stage 4 — Member A (Peter):** `T-P2-SC-005`, `T-P2-AP-001` — approved water-balance method and canal aggregation.
+  - Task-owned model tests in `tests/models/`; synthetic inputs are software fixtures only.
+- **Stage 5 — Member C (Ashwanth C):** `T-P2-AP-002`, `003` — responsive dashboard and charts/exports, after `T-P1-SH-003` boundary approval.
+- API/browser boundary must be documented and approved before API implementation; `T-P3-IN-001` follows all accepted P2 handoffs.
 
 ### Roles & Responsibilities
-- **Workstream A:** Member A (Data Engineering). Reviewer: Member B.
-- **Workstream B:** Member B (Scientific Models). Reviewer: Member C.
-- **Workstream C:** Member C (Dashboard & UI). Reviewer: Member A.
+- The primary owner and independent reviewer for every task are listed in `docs/TASK_ASSIGNMENTS.md`; sequential stage handoffs are required before the next owner starts dependent work.
 
 ### Dependencies
-- Successful completion of Phase P1 and frozen `src/contracts/schemas.py`.
+- Successful completion of Phase P1, approved DEC-01/API boundary, and frozen `src/contracts/schemas.py`.
 
 ### Testing and Validation Requirements
 - Every non-trivial module needs unit tests for its defined behavior; software coverage is not scientific validation.
-- No cross-module imports during P2 except through `src/contracts/schemas.py`.
-- No live network or GEE access required to run Member B or Member C unit test suites.
+- No cross-module imports during P2 except through `src/contracts/schemas.py`. No downstream stage begins before its named inputs are handed off and reviewed.
+- Offline software tests should not require live GEE/network access; data acquisition checks are separate smoke tests.
 
 ### Definition of Done
-- Each member's feature branch builds cleanly, passes all unit tests, and satisfies all linters.
+- Each task owner’s branch passes its defined acceptance criteria and tests, with the designated reviewer’s handoff recorded. Individual task completion does not complete a phase.
 - Each module consumes and produces valid contract objects.
 
 ### Gate Conditions (Preventing Progression to P3)
+- Every required P2 task and sequential handoff has met its acceptance criteria and is reviewed.
 - Unit tests failing on any individual workstream.
 - Unapproved alterations made to shared contract files.
 - Persistent blocker on ground-truth label acquisition or study area definition.
@@ -155,7 +165,7 @@ Architecture  & Contracts   Development   & Contracts   End-to-End    Validation
 
 ### Objectives
 1. Connect module outputs to downstream module inputs on feature integration branches.
-2. Verify that live data outputs from Member A feed seamlessly into Member B's models.
+2. Verify that accepted data outputs from Member A feed Member B's models.
 3. Verify that Member B's scientific outputs feed into Member C's spatial aggregator, Python API, and responsive browser dashboard.
 4. Resolve edge cases, coordinate transformations, missing pixel handling, and NaN propagation.
 

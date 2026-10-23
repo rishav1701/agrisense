@@ -16,19 +16,19 @@
 |----|-------|----------|------------|--------|-------|--------|
 | RISK-01 | Missing or Unreliable Ground-Truth Labels | Scientific | High | Critical | All | Open |
 | RISK-02 | Class Imbalance and Spatial Leakage | Scientific | Medium | High | Member B | Open |
-| RISK-03 | Cloud Contamination and Temporal Gaps | Scientific | High | High | Member A | Open |
-| RISK-04 | Resolution Mismatch Between Datasets | Engineering | High | High | Member A | Open |
+| RISK-03 | Cloud Contamination and Temporal Gaps | Scientific | High | High | Member B | Open |
+| RISK-04 | Resolution Mismatch Between Datasets | Engineering | High | High | Member A + Member B | Open |
 | RISK-05 | Uncertainty in Crop Calendars and Phenology | Scientific | Medium | High | Member B | Open |
 | RISK-06 | Confounding Factors in Moisture-Stress Indicators | Scientific | Medium | High | Member B | Open |
-| RISK-07 | Missing or Uncertain FAO-56 Inputs | Scientific | High | High | Member B | Open |
-| RISK-08 | Uncertainty in Irrigation Recommendations | Scientific | Medium | Critical | Member B | Open |
+| RISK-07 | Missing or Uncertain FAO-56 Inputs | Scientific | High | High | Member A + Member B | Open |
+| RISK-08 | Uncertainty in Irrigation Recommendations | Scientific | Medium | Critical | Member A + Member B | Open |
 | RISK-09 | Geographic Transferability | Scientific | Medium | Medium | All | Open |
 | RISK-10 | Google Earth Engine Access and Quotas | Engineering | Medium | Medium | Member A | Open |
 | RISK-11 | Compute and Storage Constraints | Engineering | Medium | Medium | Member A | Open |
 | RISK-12 | Dataset Licensing and Provenance | Operational | Low | Medium | All | Open |
-| RISK-13 | Three-Member Team Workload | Operational | High | High | All | Open |
+| RISK-13 | Three-Member Scope and Delivery Risk | Operational | High | High | All | Open |
 | RISK-14 | Integration and Ownership Conflicts | Operational | Medium | High | All (Member C coordinates) | Open |
-| RISK-15 | SAR Data Interpretation Complexity | Scientific | Medium | Medium | Member A + Member B | Open |
+| RISK-15 | SAR Data Interpretation Complexity | Scientific | Medium | Medium | Member B | Open |
 | RISK-16 | Study Area Not Defined | Scientific | High | Critical | All | Open |
 | RISK-17 | Canal Boundary Data Availability | Engineering | High | High | Member A | Open |
 
@@ -230,17 +230,17 @@
 
 ---
 
-### RISK-13: Three-Member Team Workload
+### RISK-13: Three-Member Scope and Delivery Risk
 
 | Field | Value |
 |-------|-------|
 | Category | Operational |
-| Cause | The project is executed by exactly three students alongside their academic commitments. The project scope spans data engineering (GEE pipelines), machine learning (Random Forest classification), scientific modelling (FAO-56 water balance, phenology), geospatial processing (raster/vector operations), and web development (responsive frontend and Python API) — a breadth that requires careful scope control and an explicit capacity review. |
+| Cause | The project scope spans data engineering, machine learning, scientific modelling, geospatial processing, and web application development. Dependencies and unresolved data sources can affect delivery even with explicit owners and sequential handoffs. |
 | Consequence | Risk of incomplete features, insufficient validation, or shallow implementation across too many modules. Time pressure may lead to cutting corners on documentation, testing, or scientific rigour. |
 | Likelihood | High |
 | Impact | High |
 | Mitigation | (1) Prioritize the core pipeline (data → classification → stress → deficit) over advanced features. (2) Define clear task ownership per member to avoid duplication and gaps. (3) Set realistic milestones with explicit "minimum viable deliverable" for each phase. (4) Identify which features can be descoped if time runs short (e.g., canal aggregation could use administrative boundaries instead of actual canal commands). (5) Automate repetitive tasks (testing, data processing) early. |
-| Validation Strategy | Review progress against milestones at each phase gate. If a member is blocked, redistribute tasks immediately. |
+| Validation Strategy | Review scope and blockers at formal phase gates. Preserve primary ownership; do not silently transfer tasks or weaken scientific acceptance criteria. |
 | Owner Role | All |
 | Status | Open |
 
@@ -251,11 +251,11 @@
 | Field | Value |
 |-------|-------|
 | Category | Operational |
-| Cause | Three members working on different modules (data ingestion, ML/stress, dashboard) that must integrate into a single pipeline. Shared interfaces (data formats, file structures, API contracts) may diverge during parallel development if not explicitly defined and enforced. |
+| Cause | Sequentially developed modules (satellite data, weather/assembly, modelling, geospatial outputs, dashboard) must integrate into one pipeline. Interfaces may diverge if handoff artifacts, schema versions, provenance, and acceptance evidence are not recorded. |
 | Consequence | Integration failures at assembly time. Incompatible data formats between modules. Duplicated or contradictory logic. Merge conflicts and rework. |
 | Likelihood | Medium |
 | Impact | High |
-| Mitigation | (1) Define interface contracts (data schemas, file formats, function signatures) BEFORE implementation begins. (2) Designate a contract owner responsible for maintaining interface definitions. (3) Schedule integration checkpoints (not just phase gates) — at minimum bi-weekly. (4) Use version control (Git) with pull request reviews for all code changes. (5) Create integration tests that verify module interfaces. |
+| Mitigation | (1) Define interface contracts (data schemas, file formats, function signatures) BEFORE implementation begins. (2) Designate a contract owner responsible for maintaining interface definitions. (3) Use the named task handoff and reviewer acceptance as integration checkpoints; formal phase gates remain separate. (4) Use version control (Git) with pull request reviews for all code changes. (5) Create integration tests that verify module interfaces. |
 | Validation Strategy | Run end-to-end integration tests at each checkpoint. Verify that module outputs conform to agreed schemas. |
 | Owner Role | All (Member C coordinates) |
 | Status | Open |
@@ -320,7 +320,7 @@ The risk register is a living document. Risks should be reviewed, updated, and r
 | **Phase 1 Mid-Point** | After initial data ingestion | Reassess RISK-03 (cloud coverage for chosen area/season), RISK-04 (resolution handling), RISK-10/11 (GEE quotas and compute). |
 | **Phase 1 → Phase 2 Gate** | Before ML training begins | Confirm ground-truth quality (RISK-01), assess class balance (RISK-02), validate phenology assumptions (RISK-05). |
 | **Phase 2 Mid-Point** | After initial model results | Reassess RISK-06 (confounders), RISK-07 (FAO-56 input quality), RISK-15 (SAR interpretation). |
-| **Phase 2 → Phase 3 Gate** | Before dashboard integration | Review RISK-08 (advisory framing), RISK-14 (integration), RISK-13 (workload). |
+| **Phase 2 → Phase 3 Gate** | Before dashboard integration | Review RISK-08 (advisory framing), RISK-14 (integration), RISK-13 (scope and delivery). |
 | **Phase 3 Final Review** | Before submission | Full risk register review. Document which risks materialized, which were mitigated, and which remain as known limitations. Update RISK-09 (transferability) and RISK-12 (licensing) for final deliverable. |
 
 > [!TIP]
