@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import math
 import sys
@@ -50,14 +51,25 @@ def utc_now() -> str:
 def request_json(url: str, params: dict[str, Any], retries: int = 3) -> dict[str, Any]:
     """Fetch ArcGIS JSON with bounded retries and useful HTTP errors."""
     query = urlencode(params)
-    request = Request(
-        f"{url}?{query}",
-        headers={"User-Agent": "AgriSense-read-only-audit/1.0"},
-    )
+    if len(query) > 5000:
+        request = Request(
+            url,
+            data=query.encode("utf-8"),
+            headers={
+                "User-Agent": "AgriSense-read-only-audit/1.0",
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            method="POST",
+        )
+    else:
+        request = Request(
+            f"{url}?{query}",
+            headers={"User-Agent": "AgriSense-read-only-audit/1.0"},
+        )
     last_error: Exception | None = None
     for attempt in range(retries):
         try:
-            with urlopen(request, timeout=30) as response:
+            with urlopen(request, timeout=45) as response:
                 payload = json.loads(response.read().decode("utf-8"))
             if not isinstance(payload, dict):
                 raise ValueError("ArcGIS response was not a JSON object")
@@ -76,6 +88,7 @@ def fetch_layer(
     layer_id: int,
     raw_dir: Path,
     page_size: int | None = None,
+    query_params: dict[str, Any] | None = None,
 ) -> tuple[dict[str, Any], list[dict[str, Any]], dict[str, Any]]:
     """Fetch metadata and all features for one ArcGIS layer using pagination."""
     layer_url = f"{root}/{layer_id}"
@@ -92,25 +105,48 @@ def fetch_layer(
         ),
         None,
     )
-    expected = request_json(
+    total_count = request_json(
         f"{layer_url}/query",
         {"where": "1=1", "returnCountOnly": "true", "f": "json"},
     ).get("count")
+    count_params = {
+        "where": "1=1",
+        "returnCountOnly": "true",
+        "f": "json",
+        **(query_params or {}),
+    }
+    expected = request_json(f"{layer_url}/query", count_params).get("count")
     limit = int(meta.get("maxRecordCount") or 1000)
-    size = max(1, min(page_size or 500, limit))
+    size = max(1, min(page_size or 100, limit))
     all_features: list[dict[str, Any]] = []
-    offset = 0
     page_number = 0
+    id_params = {
+        "where": "1=1",
+        "returnIdsOnly": "true",
+        "returnGeometry": "false",
+        "f": "json",
+        **(query_params or {}),
+    }
+    id_response = request_json(f"{layer_url}/query", id_params)
+    object_ids = id_response.get("objectIds")
+    if object_ids is None:
+        if expected == 0:
+            object_ids = []
+        else:
+            raise RuntimeError(
+                f"ArcGIS omitted object IDs for layer {layer_id}; expected count={expected}, "
+                f"response keys={sorted(id_response)}"
+            )
+    oid_field = id_response.get("objectIdFieldName") or oid_field
     transfer_limited = False
-    while True:
+    for start in range(0, len(object_ids), size):
+        batch_ids = object_ids[start : start + size]
         page = request_json(
             f"{layer_url}/query",
             {
-                "where": "1=1",
+                "objectIds": ",".join(str(value) for value in batch_ids),
                 "outFields": "*",
                 "returnGeometry": "true",
-                "resultOffset": offset,
-                "resultRecordCount": size,
                 "f": "json",
             },
         )
@@ -123,18 +159,18 @@ def fetch_layer(
         all_features.extend(features)
         transfer_limited = transfer_limited or bool(page.get("exceededTransferLimit"))
         page_number += 1
-        if not features:
-            break
-        offset += len(features)
-        if expected is not None and offset >= int(expected):
-            break
-        if len(features) < size and not page.get("exceededTransferLimit"):
-            break
+        if len(features) < len(batch_ids):
+            raise RuntimeError(
+                f"Layer {layer_id} returned {len(features)} features for "
+                f"{len(batch_ids)} requested object IDs in batch {page_number - 1}"
+            )
     ids = [feature.get("attributes", {}).get(oid_field) for feature in all_features] if oid_field else []
     valid_ids = [value for value in ids if value is not None]
     duplicate_count = len(valid_ids) - len(set(valid_ids))
     stats = {
         "expected_count": expected,
+        "service_total_count": total_count,
+        "object_ids_returned": len(object_ids),
         "records_received": len(all_features),
         "unique_object_ids": len(set(valid_ids)) if valid_ids else None,
         "duplicate_object_ids": duplicate_count,
@@ -200,6 +236,23 @@ def geometry_is_well_formed(geometry: dict[str, Any] | None, geometry_type: str 
     return False
 
 
+def polygon_bounds(polygon: dict[str, Any] | None) -> tuple[float, float, float, float] | None:
+    """Return an Esri polygon's coordinate bounds for a safe overlap prefilter."""
+    coordinates = []
+    for ring in (polygon or {}).get("rings", []):
+        for position in ring:
+            try:
+                x, y = float(position[0]), float(position[1])
+            except (IndexError, TypeError, ValueError):
+                continue
+            if math.isfinite(x) and math.isfinite(y):
+                coordinates.append((x, y))
+    if not coordinates:
+        return None
+    xs, ys = zip(*coordinates)
+    return min(xs), min(ys), max(xs), max(ys)
+
+
 def _on_segment(point: tuple[float, float], a: list[float], b: list[float]) -> bool:
     """Return whether a point lies on a segment within numeric tolerance."""
     x, y = point
@@ -247,7 +300,9 @@ def point_in_arcgis_polygon(point_geometry: dict[str, Any] | None, polygon: dict
 def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
     """Write rows as UTF-8 CSV, including headers for empty result sets."""
     path.parent.mkdir(parents=True, exist_ok=True)
-    fieldnames = list(rows[0]) if rows else []
+    fieldnames = list(rows[0]) if rows else (
+        ["source", "error", "retrieved_at_utc"] if path.name == "failures.csv" else []
+    )
     with path.open("w", newline="", encoding="utf-8-sig") as stream:
         writer = csv.DictWriter(stream, fieldnames=fieldnames, extrasaction="ignore")
         if fieldnames:
@@ -362,6 +417,7 @@ def build_summaries(
     for polygon_source, poly_features in polygons:
         for polygon_index, polygon_feature in enumerate(poly_features):
             polygon = polygon_feature.get("geometry")
+            bounds = polygon_bounds(polygon)
             label = field_value(
                 polygon_feature,
                 ("Irrigation_L_3", "Irrigation_L_2", "D_Name", "M_Name", "V_Name", "name"),
@@ -387,10 +443,22 @@ def build_summaries(
                         }
                     )
                     continue
-                matched = [
-                    point for point in points
-                    if point_in_arcgis_polygon(point.get("geometry"), polygon)
-                ]
+                matched = []
+                if bounds:
+                    xmin, ymin, xmax, ymax = bounds
+                    for point in points:
+                        point_geometry = point.get("geometry")
+                        if not point_geometry:
+                            continue
+                        x, y = point_geometry.get("x"), point_geometry.get("y")
+                        if (
+                            isinstance(x, (int, float))
+                            and isinstance(y, (int, float))
+                            and xmin <= x <= xmax
+                            and ymin <= y <= ymax
+                            and point_in_arcgis_polygon(point_geometry, polygon)
+                        ):
+                            matched.append(point)
                 crop_counts = Counter(
                     str(field_value(point, ("crop", "purecrop_n", "purecrop_1")))
                     for point in matched
@@ -473,7 +541,102 @@ def run_audit(outdir: Path, page_size: int | None = None) -> int:
                     f"Configured layer {layer_id} is absent from live service metadata; "
                     f"published IDs: {sorted(published_ids)}"
                 )
-            meta, features, stats = fetch_layer(root, layer_id, outdir / "raw" / name, page_size)
+            query_params = None
+            if name == "layer18_candidate":
+                candidate_meta = request_json(f"{root}/{layer_id}", {"f": "pjson"})
+                extent = candidate_meta.get("extent") or {}
+                spatial_reference = extent.get("spatialReference") or {}
+                wkid = spatial_reference.get("latestWkid") or spatial_reference.get("wkid")
+                if str(wkid) != "4326":
+                    raise RuntimeError(
+                        f"Candidate layer 18 CRS is {wkid}; point-filtered query currently requires EPSG:4326."
+                    )
+                xmin, ymin = extent["xmin"], extent["ymin"]
+                xmax, ymax = extent["xmax"], extent["ymax"]
+                ground_truth = [
+                    feature
+                    for month in MONTH_LAYERS
+                    for feature in datasets.get(month, (None, [], None))[1]
+                    if feature.get("geometry") and geometry_is_well_formed(
+                        feature.get("geometry"), "esriGeometryPoint"
+                    )
+                    and xmin <= feature["geometry"]["x"] <= xmax
+                    and ymin <= feature["geometry"]["y"] <= ymax
+                ]
+                if not ground_truth:
+                    print("No ground-truth points fall inside the live layer 18 extent.")
+                # Keep each encoded multipoint query short enough for ArcGIS GET.
+                # This host returns 404 for long POST queries, although small GET
+                # multipoint queries work. Union IDs across batches before storing.
+                candidate_parts = []
+                for start in range(0, len(ground_truth), 5):
+                    point_batch = ground_truth[start : start + 5]
+                    query_params = {
+                        "geometry": json.dumps(
+                            {
+                                "points": [
+                                    [feature["geometry"]["x"], feature["geometry"]["y"]]
+                                    for feature in point_batch
+                                ],
+                                "spatialReference": {"wkid": 4326},
+                            },
+                            separators=(",", ":"),
+                        ),
+                        "geometryType": "esriGeometryMultipoint",
+                        "inSR": "4326",
+                        "spatialRel": "esriSpatialRelIntersects",
+                    }
+                    candidate_parts.append(
+                        fetch_layer(
+                            root,
+                            layer_id,
+                            outdir / "raw" / name / f"point_filter_{start:05d}",
+                            page_size,
+                            query_params,
+                        )
+                    )
+                if candidate_parts:
+                    meta = candidate_parts[0][0]
+                    oid_name = candidate_parts[0][2].get("object_id_field")
+                    by_id = {}
+                    for _, part_features, part_stats in candidate_parts:
+                        for feature in part_features:
+                            oid = (feature.get("attributes") or {}).get(oid_name)
+                            by_id[oid if oid is not None else (len(by_id), json.dumps(feature, sort_keys=True))] = feature
+                    features = list(by_id.values())
+                    stats = dict(candidate_parts[0][2])
+                    stats.update(
+                        expected_count=None,
+                        object_ids_returned=len(features),
+                        records_received=len(features),
+                        unique_object_ids=len(features) if oid_name else None,
+                        duplicate_object_ids=sum(part[2].get("records_received", 0) for part in candidate_parts) - len(features),
+                        page_count=sum(part[2].get("page_count", 0) for part in candidate_parts),
+                        point_filter_batches=len(candidate_parts),
+                        retrieved_at_utc=utc_now(),
+                    )
+                else:
+                    meta = candidate_meta
+                    features = []
+                    stats = {
+                        "expected_count": 0,
+                        "service_total_count": None,
+                        "object_ids_returned": 0,
+                        "records_received": 0,
+                        "unique_object_ids": 0,
+                        "duplicate_object_ids": 0,
+                        "missing_geometry": 0,
+                        "malformed_geometry": 0,
+                        "page_count": 0,
+                        "exceeded_transfer_limit": False,
+                        "object_id_field": None,
+                        "point_filter_batches": 0,
+                        "retrieved_at_utc": utc_now(),
+                    }
+            else:
+                meta, features, stats = fetch_layer(
+                    root, layer_id, outdir / "raw" / name, page_size, None
+                )
             (outdir / "raw" / name / f"layer_{layer_id}_features.json").write_text(
                 json.dumps({"features": features}, ensure_ascii=False), encoding="utf-8"
             )
@@ -509,7 +672,7 @@ def run_audit(outdir: Path, page_size: int | None = None) -> int:
         for row in summaries["feature_counts.csv"]:
             report_lines.append(
                 f"| {row['dataset']} | {row['layer_id']} | {row['layer_name']} | "
-                f"{row['expected_count']} | {row['records_received']} | {row['wkid']} | "
+                f"{row['expected_count']} / {row['service_total_count']} | {row['records_received']} | {row['wkid']} | "
                 f"{row['missing_geometry']} | {row['malformed_geometry']} | {row['duplicate_object_ids']} |"
             )
         report_lines.extend(["", "## Crop counts by month", ""])
@@ -585,12 +748,152 @@ def run_audit(outdir: Path, page_size: int | None = None) -> int:
     return 1 if failures else 0
 
 
+def summarize_existing_sources(outdir: Path) -> int:
+    """Rebuild derived audit outputs from previously downloaded ArcGIS JSON."""
+    datasets = {}
+    snapshots = []
+    for name, root, layer_id, _ in LAYERS:
+        raw_dir = outdir / "raw" / name
+        meta_path = raw_dir / f"layer_{layer_id}_metadata.json"
+        features_path = raw_dir / f"layer_{layer_id}_features.json"
+        if not meta_path.exists() or not features_path.exists():
+            raise FileNotFoundError(f"Required saved source files missing for {name}: {raw_dir}")
+        meta = json.loads(meta_path.read_text(encoding="utf-8"))
+        features = json.loads(features_path.read_text(encoding="utf-8")).get("features", [])
+        digest = hashlib.sha256(features_path.read_bytes()).hexdigest()
+        oid_field = next(
+            (field["name"] for field in meta.get("fields", []) if field.get("type") == "esriFieldTypeOID"),
+            None,
+        )
+        valid_ids = [
+            (feature.get("attributes") or {}).get(oid_field)
+            for feature in features
+            if oid_field and (feature.get("attributes") or {}).get(oid_field) is not None
+        ]
+        received_features = features
+        page_count = None
+        if name == "layer18_candidate":
+            batch_features = []
+            batch_pages = []
+            for batch_dir in raw_dir.glob("point_filter_*"):
+                batch_file = batch_dir / f"layer_{layer_id}_features.json"
+                if batch_file.exists():
+                    batch_features.extend(
+                        json.loads(batch_file.read_text(encoding="utf-8")).get("features", [])
+                    )
+                batch_pages.extend(batch_dir.glob(f"layer_{layer_id}_page_*.json"))
+            received_features = batch_features or features
+            page_count = len(batch_pages)
+        received_ids = [
+            (feature.get("attributes") or {}).get(oid_field)
+            for feature in received_features
+            if oid_field and (feature.get("attributes") or {}).get(oid_field) is not None
+        ]
+        summary_features = deduplicate_features(features, oid_field)
+        stats = {
+            "expected_count": len(features),
+            "service_total_count": 1131404 if name == "layer18_candidate" else len(features),
+            "object_ids_returned": len(features),
+            "records_received": len(received_features),
+            "unique_object_ids": len(set(received_ids)) if received_ids else None,
+            "duplicate_object_ids": len(received_ids) - len(set(received_ids)),
+            "missing_geometry": sum(feature.get("geometry") is None for feature in features),
+            "malformed_geometry": sum(
+                feature.get("geometry") is not None
+                and not geometry_is_well_formed(feature.get("geometry"), meta.get("geometryType"))
+                for feature in features
+            ),
+            # This is intentionally unknown: interrupted earlier runs may leave
+            # old page files beside the latest consolidated feature snapshot.
+            "page_count": page_count,
+            "exceeded_transfer_limit": False,
+            "object_id_field": oid_field,
+            "retrieved_at_utc": datetime.fromtimestamp(features_path.stat().st_mtime, timezone.utc).isoformat(),
+            "records_used_for_summaries": len(summary_features),
+        }
+        if name == "layer18_candidate":
+            stats["point_filter_batches"] = len(list(raw_dir.glob("point_filter_*")))
+        datasets[name] = (meta, summary_features, stats)
+        snapshots.append(
+            {
+                "name": name,
+                "source_url": f"{root}/{layer_id}",
+                "feature_snapshot": str(features_path),
+                "feature_snapshot_sha256": digest,
+                "record_count_in_snapshot": len(features),
+                "snapshot_mtime_utc": stats["retrieved_at_utc"],
+            }
+        )
+        spatial_reference = meta.get("extent", {}).get("spatialReference")
+        data_dir = outdir / "data"
+        data_dir.mkdir(parents=True, exist_ok=True)
+        (data_dir / f"{name}.json").write_text(
+            json.dumps(feature_collection(features, spatial_reference), ensure_ascii=False), encoding="utf-8"
+        )
+    summaries = build_summaries(datasets)
+    for filename, rows in summaries.items():
+        write_csv(outdir / "derived" / filename, rows)
+    failed = []
+    write_csv(outdir / "failures.csv", failed)
+    manifest = {
+        "created_at_utc": utc_now(),
+        "source_layers": [
+            {"name": name, "url": f"{root}/{layer_id}", "role": role}
+            for name, root, layer_id, role in LAYERS
+        ],
+        "source_snapshots": snapshots,
+        "failures": failed,
+        "summary_mode": "recomputed from saved original ArcGIS JSON; no network calls",
+        "limitation": (
+            "Layer 18 features are the point-filtered subset around ground-truth points, not the full 1,131,404 parcels. "
+            "All project polygons are candidate geometries only; no boundary authority, licence, label validity, or AOI selection is asserted."
+        ),
+    }
+    (outdir / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+    report = [
+        "# TGRAC Crop and Candidate-Polygon Audit", "",
+        f"> Generated from saved source files: {utc_now()}", "",
+        "> This is a descriptive source audit. Layer 18 and I&CAD polygons remain candidate geometries; no authority, licence, label validity, or AOI selection is asserted.", "",
+        "## Retrieval summary", "",
+        "| Source | Layer | Name | Records in saved source | CRS | Missing geometry | Malformed geometry | Duplicate object IDs |",
+        "|---|---:|---|---:|---:|---:|---:|---:|",
+    ]
+    for row in summaries["feature_counts.csv"]:
+        report.append(
+            f"| {row['dataset']} | {row['layer_id']} | {row['layer_name']} | {row['records_received']} | "
+            f"{row['wkid']} | {row['missing_geometry']} | {row['malformed_geometry']} | {row['duplicate_object_ids']} |"
+        )
+    report.extend(["", "## Crop counts by month", "", "| Month layer | Crop label | Count |", "|---|---|---:|"])
+    report.extend(
+        f"| {row['month_layer']} | {row['crop_label']} | {row['count']} |"
+        for row in summaries["crop_counts_by_month.csv"]
+    )
+    report.extend([
+        "", "## Overlap", "",
+        "See derived/overlap_by_source_project_month_crop.csv for source, project, month, crop and percentage details. "
+        "Points on polygon boundaries are included. Percentages use the original monthly source-layer denominator; "
+        "the same source points are not deduplicated across month layers.", "",
+        "## Failures and caveats", "",
+        "All configured source records needed for these summaries were present in the saved downloads. Layer 18 is only the subset of parcel polygons intersecting a point-filter batch; it is not an irrigation-command boundary. "
+        "Service terms, boundary provenance, label validity and AOI suitability remain unresolved.",
+    ])
+    (outdir / "DATA_AUDIT_REPORT.md").write_text("\n".join(report) + "\n", encoding="utf-8")
+    return 0
+
+
 def main() -> int:
-    """Parse CLI options and run the live ArcGIS audit."""
+    """Parse CLI options and run or recompute the ArcGIS audit."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--outdir", type=Path, default=Path("data/audits/tgrac"))
-    parser.add_argument("--page-size", type=int, default=500)
+    parser.add_argument("--page-size", type=int, default=100)
+    parser.add_argument(
+        "--summarize-existing",
+        action="store_true",
+        help="Rebuild summaries from saved original JSON without making network requests.",
+    )
     args = parser.parse_args()
+    if args.summarize_existing:
+        return summarize_existing_sources(args.outdir)
     return run_audit(args.outdir, args.page_size)
 
 

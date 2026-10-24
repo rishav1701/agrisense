@@ -1,7 +1,7 @@
 # AgriSense Project Status & Progress Checkpoint
 
-> **Last Updated:** 2026-10-23
-> **Current Phase:** **Phase P0 complete; Phase P1 not started — P1 entry prerequisites remain open**
+> **Last Updated:** 2026-10-24
+> **Current Phase:** **Phase P0 complete; P1 readiness research underway — production entry gate remains open**
 > **Phase P0 Status:** **APPROVED BY THE THREE-MEMBER TEAM (per project-owner confirmation, 2026-10-23); GUIDE SIGN-OFF WAIVED BY PROJECT OWNER FOR P0**
 > **Implementation Status:** **NOT STARTED** (In strict compliance with Phase 0 scope, zero application or algorithmic code has been implemented).
 
@@ -98,7 +98,7 @@ Phase 0 is complete. P1 foundation tasks may begin when their own dependencies a
 4. [ ] Before canal aggregation: record a licensed canal-boundary source (`DS-05`) or explicitly defer canal aggregation.
 5. [ ] Before implementing a technology-dependent task: obtain the required member confirmation for its owner-selected direction (including `DEC-01` before framework-specific frontend/API work); keep methods, parameters, and unresolved decisions explicitly open.
 6. [ ] Verify required GEE account access if the team selects GEE; do not share credentials.
-7. [ ] Identify crop-calendar (`DS-06`) and Kc (`DS-07`) references before corresponding scientific implementation. Soil parameters (`DS-08`) are required only for a method that models soil storage; otherwise document the supported balance scope and limitations.
+7. [x] Initial references identified for later review: ICAR Telangana Kharif agro-advisories for DS-06 and FAO-56 Table 12 for generic DS-07 Kc values. These do not resolve a pilot-specific Rabi calendar, target-class coverage, local calibration, or method approval; those remain gates before the corresponding scientific implementation. Soil parameters (`DS-08`) are required only for a method that models soil storage; otherwise document the supported balance scope and limitations.
 
 ### Work That Can Start Without a Pilot AOI
 
@@ -115,3 +115,20 @@ Phase 0 is complete. P1 foundation tasks may begin when their own dependencies a
 ## 6. Next Recommended Action
 
 Phase 0 is complete. Begin the unblocked P1 tasks above. Complete the region-specific inputs in Section 5 before dependent acquisition or scientific claims. The pilot remains unselected; no task or phase status is advanced by this note.
+
+---
+
+## 7. Data-readiness checkpoint — 2026-10-24
+
+- Added a source/licence register, AOI evidence recommendation, GEE access guide, proposed satellite/weather conventions, proposed team interface sketch, and a detailed work status. These documents do not record team approval, final AOI selection, or task/phase completion.
+- A fresh authorized read-only retrieval completed for TGRAC crop layers 10–12 and I&CAD candidate command layers 9–10: all records returned without missing or malformed geometries (2,446 crop points; seven polygons in each I&CAD layer). Derived CSVs and source-preserving JSON are in Git-ignored `data/audits/tgrac/`.
+- The fresh I&CAD overlap results reproduce the DS-09 leading candidate: SRSP Stage I 84/46/17 points (147 total). Layer 18 metadata confirms 1,131,404 cadastral polygons; the point-filtered join retrieved 10 parcels with 12 point matches, and the layer is not a command boundary.
+- Alternative-data access: official ADeX linked dataset URL returned HTTP 404; DataSuds catalogue currently redirects to an IRD maintenance page. No actual file was acquired from these sources. A separate public Zindi challenge mirror was identified in the follow-up audit; see the new evidence below.
+- Follow-up source check: FAIR Forward's linked ADeX ID `583e8f01-160e-4f51-bde5-31dc7f2a5887` returned 404. Its linked Zindi raw `train.csv` is now acquired to Git-ignored `data/audits/external/` (SHA-256 `92ab358eda4416a7510d174db4925c3599678905f4883a3dccfacb228157b989`) and fully counted: 7,888 rows, 20 columns, no nulls or duplicate FarmIDs, basic polygon-ring closure/length checks passed, and crop/category/season/district counts are in `docs/data_audit/crop_catalogue_and_labels.md`. Its CRS, polygon topology, label protocol, AOI overlap and pixel/date match remain open. FAIR Forward describes source data as CC BY 4.0; Zindi challenge rules permit challenge-data use/share under CC-BY-SA 4.0. Retain both provenance statements, attribute the challenge copy, and meet share-alike conditions. `Stressed` is not verified moisture stress.
+- The data-readiness workbook was updated with the acquired Zindi audit, NWIC project record and remaining prerequisite actions. It has five rendered sheets and its formula-error scan found none; it marks unresolved items open.
+- TGRAC's command-area monitoring page gives program-level boundary methods, but not layer-9/10-specific lineage/version. The downloaded NWIC Command_Area_GeoJSON contains 1,448 features, including 63 marked Telangana and a same-named `Sriramsagar Stage-I (Pochampad)` project feature. NWIC lists `area_ha=880,121.94`, versus TGRAC's `Ayacut_ha=433,249`; the figures are unreconciled. The GeoJSON has projected coordinate values but no declared CRS, so no overlay or AOI selection is made. Portal metadata says “Other (Open)” without specific licence text; authority, CRS and reuse remain open.
+- DS-06/DS-07 source identification is now complete for planning: ICAR's Telangana Kharif agro-advisory and FAO-56 Table 12 are recorded in the crop-label inventory. The ICAR reference is not a pilot-specific Rabi calendar, and the FAO values are generic rather than locally calibrated; target-class and method review remain open.
+- Software audit tests pass (8/8) and script byte-compilation passes. No Earth Engine account/project authentication was attempted.
+- P1 status remains unchanged. AOI, reuse, source QA, team-review and independent moisture/advisory validation gates remain open.
+
+See [`docs/WORK_STATUS.md`](WORK_STATUS.md), [`docs/AOI_DECISION.md`](AOI_DECISION.md), and [`docs/DATA_SOURCES_AND_LICENCES.md`](DATA_SOURCES_AND_LICENCES.md) for details. The AOI evidence and reuse blockers remain open.

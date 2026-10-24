@@ -15,6 +15,7 @@ from scripts.agrisense_tgrac_audit import (
     fetch_layer,
     deduplicate_features,
     geometry_is_well_formed,
+    polygon_bounds,
 )
 
 
@@ -39,6 +40,11 @@ class GeometryTests(unittest.TestCase):
 
     def test_missing_geometry_does_not_match(self):
         self.assertFalse(point_in_arcgis_polygon(None, {"rings": []}))
+
+    def test_polygon_bounds(self):
+        polygon = {"rings": [[[2, 1], [2, 8], [9, 8], [9, 1], [2, 1]]]}
+        self.assertEqual(polygon_bounds(polygon), (2.0, 1.0, 9.0, 8.0))
+        self.assertIsNone(polygon_bounds({"rings": []}))
 
     def test_malformed_point_and_polygon_are_flagged(self):
         self.assertFalse(
@@ -93,10 +99,12 @@ class SummaryTests(unittest.TestCase):
             {"id": 10, "name": "synthetic", "maxRecordCount": 2,
              "fields": [{"name": "OBJECTID", "type": "esriFieldTypeOID"}]},
             {"count": 3},
+            {"count": 3},
+            {"objectIdFieldName": "OBJECTID", "objectIds": [1, 2, 3]},
             {"features": [
                 {"attributes": {"OBJECTID": 1}, "geometry": {"x": 1, "y": 1}},
                 {"attributes": {"OBJECTID": 2}, "geometry": None},
-            ], "exceededTransferLimit": True},
+            ]},
             {"features": [
                 {"attributes": {"OBJECTID": 2}, "geometry": {"x": 2, "y": 2}},
             ]},
@@ -129,7 +137,7 @@ class SummaryTests(unittest.TestCase):
         self.assertEqual(stats["expected_count"], 3)
         self.assertEqual(stats["duplicate_object_ids"], 1)
         self.assertEqual(stats["missing_geometry"], 1)
-        self.assertEqual(mocked.call_count, 4)
+        self.assertEqual(mocked.call_count, 6)
 
     def test_duplicate_source_ids_are_deduplicated_for_summaries(self):
         features = [
