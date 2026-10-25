@@ -48,22 +48,20 @@ The project has exactly three members. The project owner approved Phase 0 on 202
 
 | Decision ID | Summary | Proposed Recommendation | Status |
 |:---|:---|:---|:---|
-| **`DEC-01`** | Web Application Architecture | Responsive React + TypeScript frontend and FastAPI candidate stack | **Owner-approved; team confirmation open** |
-| **`DEC-02`** | Satellite Geoprocessing Engine | Google Earth Engine Python API (Server-Side) | **Owner-approved candidate; Peter/Rishav review and access open** |
+| **`DEC-01`** | Web Application Architecture | Responsive React + TypeScript frontend and FastAPI candidate stack | **Owner-selected; team confirmation open** |
+| **`DEC-02`** | Satellite Geoprocessing Engine | Google Earth Engine Python API (Server-Side) | **Owner-preferred; Peter/Rishav review open** |
 | **`DEC-03`** | Crop Classification Algorithm | Random Forest baseline; classes/features remain data-dependent | **Owner-approved baseline; team review open** |
-| **`DEC-04`** | Phenology Curve Tracking | Evaluate documented SciPy time-series methods; parameters unselected | **Owner-approved candidate; method/parameters open** |
-| **`DEC-05`** | Moisture-Stress Detection | Evaluate stage-aware indicators; thresholds unapproved | **Owner-approved research direction; method open** |
-| **`DEC-06`** | Agro-Meteorological Forcing | ERA5-Land with native-grid/temporal limits preserved | **Owner-approved; Peter/Rishav review open** |
-| **`DEC-07`** | Canal Aggregation Method | Conditional local vector descriptive summary | **Owner-approved conditional method** |
-| **`DEC-08`** | Intermediate Data Caching | Local ignored cache for initial build | **Owner-approved; member review open** |
+| **`DEC-04`** | Phenology Curve Tracking | Evaluate documented SciPy time-series methods; parameters unselected | **Owner-preferred candidate** |
+| **`DEC-05`** | Moisture-Stress Detection | Evaluate stage-aware indicators; thresholds unapproved | **Owner-preferred direction; method open** |
+| **`DEC-06`** | Agro-Meteorological Forcing | ERA5-Land with native-grid/temporal limits preserved | **Owner-preferred; Peter/Rishav review open** |
+| **`DEC-07`** | Canal Aggregation Method | Conditional local vector descriptive summary | **Owner-preferred conditional method** |
+| **`DEC-08`** | Intermediate Data Caching | Local ignored cache for initial build | **Owner-preferred** |
 | **`DEC-09`** | Software Testing Fixtures | Clearly labelled synthetic software fixtures only | **Owner-approved integrity rule** |
 | **`DEC-10`** | India-first multi-region scope and regional configuration | Shared pipeline with region-specific profiles; no transferability claims without evaluation | **Approved by project owner; implementation/schema review remains open** |
 | **`DEC-11`** | Initial multi-region AOIs | Initial Punjab/Tamil Nadu evidence comparison, broadened by `DEC-14`; exact AOI unset | **Initial candidate review; AOI evidence review open** |
 | **`DEC-12`** | Crop catalogue and model class scope | Broad catalogue; initial model limited to verified labels | **Owner direction; evidence review open** |
 | **`DEC-13`** | Canal aggregation scope | Conditional descriptive aggregation only with sourced command boundaries | **Owner-approved conditional scope** |
 | **`DEC-14`** | Evidence-led first pilot | TGRAC/Telangana is a leading candidate; SRSP Stage I has the strongest queried overlap, not a verified AOI | **Owner-approved audit direction; final AOI open** |
-
-On 2026-10-25 the project owner approved the owner-level directions in `DEC-01`, `DEC-02`, `DEC-04`–`DEC-08`, and `DEC-12`; see [`docs/DECISIONS.md`](DECISIONS.md). The required technical reviews by assigned members remain open. No AOI, dataset reuse, model classes, scientific parameters, or validated methods were approved by this update.
 
 *DEC status distinguishes owner direction from team technical confirmation. No team consensus is implied by an owner-selected recommendation. `DEC-11` records the initial candidate-state scope; `DEC-14` expands the evidence review. No specific AOI is selected.*
 
