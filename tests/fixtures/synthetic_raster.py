@@ -119,6 +119,10 @@ def make_synthetic_raster_fixture(
             "time_support": "fabricated test timestamp",
             "resampling_method": None,
             "mask_reference": f"{modality}_valid",
+            "missing_reasons": {
+                "scale": "Synthetic test values do not represent a source scale.",
+                "resampling_method": "No spatial resampling is performed in this fixture.",
+            },
         }
         for modality, bands in (
             ("optical", optical),
@@ -129,14 +133,19 @@ def make_synthetic_raster_fixture(
     ]
     sources = [
         {
-            "identifier": "synthetic_test_fixture",
-            "collection": None,
+            "source_id": f"synthetic_test_fixture:{modality}",
+            "collection_id": None,
             "version": None,
-            "modality": modality,
             "timestamps": list(timestamps[modality]),
-            "native_grid_resolution": None,
+            "native_grid": None,
+            "native_resolution_m": None,
             "quality_mask_reference": f"{modality}_valid",
-            "synthetic_only": True,
+            "missing_reasons": {
+                "collection_id": "Synthetic fixture; no source collection exists.",
+                "version": "Synthetic fixture; no source version exists.",
+                "native_grid": "Synthetic arrays have no source grid.",
+                "native_resolution_m": "Synthetic arrays have no source resolution.",
+            },
         }
         for modality in ("optical", "sar", "weather")
     ]
@@ -167,6 +176,11 @@ def make_synthetic_raster_fixture(
                 "end": max(interval_dates),
             },
             "processing_version": "synthetic-fixture-v1",
+            "missing_reasons": {
+                "analysis_crs": "No real CRS exists in this synthetic fixture.",
+                "grid_transform": "Array indices have no real-world coordinates.",
+                "aoi_geometry": "No study area is represented.",
+            },
             "limitations": [
                 SYNTHETIC_ONLY,
                 "No real AOI, CRS, asset identifier, acquisition time, or units.",

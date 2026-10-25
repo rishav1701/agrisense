@@ -1,9 +1,9 @@
 # AgriSense Project Status & Progress Checkpoint
 
-> **Last Updated:** 2026-10-24
+> **Last Updated:** 2026-10-25
 > **Current Phase:** **Phase P0 complete; P1 readiness research underway — production entry gate remains open**
 > **Phase P0 Status:** **APPROVED BY THE THREE-MEMBER TEAM (per project-owner confirmation, 2026-10-23); GUIDE SIGN-OFF WAIVED BY PROJECT OWNER FOR P0**
-> **Implementation Status:** **NOT STARTED** (In strict compliance with Phase 0 scope, zero application or algorithmic code has been implemented).
+> **Implementation Status:** **Foundation schemas and software-only fixtures implemented; scientific/application production implementation has not started.**
 
 ---
 
@@ -48,20 +48,22 @@ The project has exactly three members. The project owner approved Phase 0 on 202
 
 | Decision ID | Summary | Proposed Recommendation | Status |
 |:---|:---|:---|:---|
-| **`DEC-01`** | Web Application Architecture | Responsive React + TypeScript frontend and FastAPI candidate stack | **Owner-selected; team confirmation open** |
-| **`DEC-02`** | Satellite Geoprocessing Engine | Google Earth Engine Python API (Server-Side) | **Owner-preferred; Peter/Rishav review open** |
+| **`DEC-01`** | Web Application Architecture | Responsive React + TypeScript frontend and FastAPI candidate stack | **Owner-approved; team confirmation open** |
+| **`DEC-02`** | Satellite Geoprocessing Engine | Google Earth Engine Python API (Server-Side) | **Owner-approved candidate; Peter/Rishav review and access open** |
 | **`DEC-03`** | Crop Classification Algorithm | Random Forest baseline; classes/features remain data-dependent | **Owner-approved baseline; team review open** |
-| **`DEC-04`** | Phenology Curve Tracking | Evaluate documented SciPy time-series methods; parameters unselected | **Owner-preferred candidate** |
-| **`DEC-05`** | Moisture-Stress Detection | Evaluate stage-aware indicators; thresholds unapproved | **Owner-preferred direction; method open** |
-| **`DEC-06`** | Agro-Meteorological Forcing | ERA5-Land with native-grid/temporal limits preserved | **Owner-preferred; Peter/Rishav review open** |
-| **`DEC-07`** | Canal Aggregation Method | Conditional local vector descriptive summary | **Owner-preferred conditional method** |
-| **`DEC-08`** | Intermediate Data Caching | Local ignored cache for initial build | **Owner-preferred** |
+| **`DEC-04`** | Phenology Curve Tracking | Evaluate documented SciPy time-series methods; parameters unselected | **Owner-approved candidate; method/parameters open** |
+| **`DEC-05`** | Moisture-Stress Detection | Evaluate stage-aware indicators; thresholds unapproved | **Owner-approved research direction; method open** |
+| **`DEC-06`** | Agro-Meteorological Forcing | ERA5-Land with native-grid/temporal limits preserved | **Owner-approved; Peter/Rishav review open** |
+| **`DEC-07`** | Canal Aggregation Method | Conditional local vector descriptive summary | **Owner-approved conditional method** |
+| **`DEC-08`** | Intermediate Data Caching | Local ignored cache for initial build | **Owner-approved; member review open** |
 | **`DEC-09`** | Software Testing Fixtures | Clearly labelled synthetic software fixtures only | **Owner-approved integrity rule** |
 | **`DEC-10`** | India-first multi-region scope and regional configuration | Shared pipeline with region-specific profiles; no transferability claims without evaluation | **Approved by project owner; implementation/schema review remains open** |
 | **`DEC-11`** | Initial multi-region AOIs | Initial Punjab/Tamil Nadu evidence comparison, broadened by `DEC-14`; exact AOI unset | **Initial candidate review; AOI evidence review open** |
 | **`DEC-12`** | Crop catalogue and model class scope | Broad catalogue; initial model limited to verified labels | **Owner direction; evidence review open** |
 | **`DEC-13`** | Canal aggregation scope | Conditional descriptive aggregation only with sourced command boundaries | **Owner-approved conditional scope** |
 | **`DEC-14`** | Evidence-led first pilot | TGRAC/Telangana is a leading candidate; SRSP Stage I has the strongest queried overlap, not a verified AOI | **Owner-approved audit direction; final AOI open** |
+
+On 2026-10-25 the project owner approved the owner-level directions in `DEC-01`, `DEC-02`, `DEC-04`–`DEC-08`, and `DEC-12`; see [`docs/DECISIONS.md`](DECISIONS.md). The required technical reviews by assigned members remain open. No AOI, dataset reuse, model classes, scientific parameters, or validated methods were approved by this update.
 
 *DEC status distinguishes owner direction from team technical confirmation. No team consensus is implied by an owner-selected recommendation. `DEC-11` records the initial candidate-state scope; `DEC-14` expands the evidence review. No specific AOI is selected.*
 
@@ -103,10 +105,10 @@ Phase 0 is complete. P1 foundation tasks may begin when their own dependencies a
 ### Work That Can Start Without a Pilot AOI
 
 - `T-P1-SH-001` — Ashwanth C: environment/tooling foundation.
-- `T-P1-SH-002` — Ashwanth C: implement only the already approved `CON-01`–`CON-09` schema; do not add regional fields without unanimous contract approval.
+- `T-P1-SH-002` — `CON-01`–`CON-09` schema implementation is now present; reviewer handoff/acceptance is pending. No regional fields were added.
 - `T-P1-SC-002` — Rishav: crop catalogue and label-feasibility inventory for evidence-supported candidate regions, including the TGRAC lead candidate in `DEC-14`.
 - `T-P1-DE-002` — Peter: weather, boundary and irrigation-data inventory for evidence-supported candidate regions, including the TGRAC lead candidate in `DEC-14`.
-- `T-P1-SC-001` — Rishav: explicitly synthetic software fixtures after `T-P1-SH-002` handoff.
+- `T-P1-SC-001` — Rishav: explicitly synthetic software fixtures; schema integration now passes software validation, pending reviewer handoff/acceptance.
 - `T-P1-DE-001` — Peter: GEE setup only after the required account/project access is available.
 - All members: candidate-region evidence collection and independent satellite/ML learning. These do not count as scientific validation or phase completion.
 
@@ -131,6 +133,15 @@ Phase 0 is complete. Begin the unblocked P1 tasks above. Complete the region-spe
 - Software audit tests pass (8/8) and script byte-compilation passes. No Earth Engine account/project authentication was attempted.
 - P1 status remains unchanged. AOI, reuse, source QA, team-review and independent moisture/advisory validation gates remain open.
 - Rishav started the non-implementation research portion of the first satellite task (`T-P2-DE-002`): Sentinel-2 SR Harmonized scaling/resolution, SCL/QA60 coverage caveats and candidate index definitions are documented in `docs/PROCESSING_CONVENTIONS.md`, alongside Sentinel-1 source facts relevant to the next step. No collection was queried and no AOI-specific processing or implementation began. The `T-P1-SH-002` schema handoff and the documented P1/Gate 0/Gate 1, AOI/access/method prerequisites remain unsatisfied, so satellite build tasks remain gated.
-- On the project owner's instruction to start Rishav's software build, added `T-P1-SC-001` synthetic raster/time-series fixture generators under `tests/fixtures/`, based on the written `CON-03` while the separate `T-P1-SH-002` implementation is pending. These functions are explicitly test-only and provide no real source IDs, AOI, CRS, observations, model outputs, or validation evidence. Contract-schema validation and task acceptance remain pending the shared schema handoff and reviewer acceptance; this does not authorize P2 acquisition or production processing.
+- On the project owner's instruction to start Rishav's software build, added `T-P1-SC-001` synthetic raster/time-series fixture generators under `tests/fixtures/`. These are explicitly test-only and provide no real source IDs, AOI, CRS, observations, model outputs, or validation evidence. This 2026-10-24 note is superseded by the 2026-10-25 schema implementation checkpoint below.
+- Rishav workstream status at the 2026-10-24 checkpoint: `T-P1-SC-002` source-inventory research was complete as a feasibility deliverable, pending Member A/C review; fixture implementation awaited schema validation. The later checkpoint below records the schema and test integration. `T-P2-DE-002`, `T-P2-DE-003`, `T-P2-DE-005`, `T-P2-SC-002` through `T-P2-SC-004`, and downstream `T-P4`/`T-P5` work remain gated on the AOI, provider access, accepted data handoffs, source suitability, and scientific method approvals described above.
+
+## 8. Schema implementation checkpoint — 2026-10-25
+
+- Implemented Python dataclasses and JSON serialization/deserialization for the already-approved `CON-01`–`CON-09` contracts in `src/contracts/schemas.py`. The contract document was not amended and no regional fields were added.
+- Added software validation coverage for all nine contracts and strict checks for dates/times, GeoJSON structure and coordinate ranges, units/metadata, ranges, null-with-reason cases, and provenance requirements.
+- Updated the synthetic `CON-03` raster manifest to match the schema and added direct schema validation. Fixture values remain artificial software-test inputs only.
+- Full test discovery passes: 26 tests. This is software validation, not scientific validation. Reviewer handoff/acceptance for `T-P1-SH-002` and `T-P1-SC-001` is still pending; owner authorization to implement does not substitute for Member A/C technical review.
+- P1 entry/exit gates and Gate 1 remain open. No pilot AOI, study period, production data access, accepted source/label handoffs, or scientific method approvals were established here. P2 production acquisition/modelling remains gated.
 
 See [`docs/WORK_STATUS.md`](WORK_STATUS.md), [`docs/AOI_DECISION.md`](AOI_DECISION.md), and [`docs/DATA_SOURCES_AND_LICENCES.md`](DATA_SOURCES_AND_LICENCES.md) for details. The AOI evidence and reuse blockers remain open.
