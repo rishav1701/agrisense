@@ -3,7 +3,7 @@
 > **Last Updated:** 2026-10-25
 > **Current Phase:** **Phase P0 complete; P1 readiness research underway — production entry gate remains open**
 > **Phase P0 Status:** **APPROVED BY THE THREE-MEMBER TEAM (per project-owner confirmation, 2026-10-23); GUIDE SIGN-OFF WAIVED BY PROJECT OWNER FOR P0**
-> **Implementation Status:** **Foundation schemas and software-only fixtures implemented; scientific/application production implementation has not started.**
+> **Implementation Status:** **Reusable Sentinel-2 NDVI/EVI calculation implemented; source acquisition, AOI-specific processing, and scientific models have not started.**
 
 ---
 
@@ -106,7 +106,7 @@ Phase 0 is complete. P1 foundation tasks may begin when their own dependencies a
 - `T-P1-SH-002` — `CON-01`–`CON-09` schema implementation is now present; reviewer handoff/acceptance is pending. No regional fields were added.
 - `T-P1-SC-002` — Rishav: crop catalogue and label-feasibility inventory for evidence-supported candidate regions, including the TGRAC lead candidate in `DEC-14`.
 - `T-P1-DE-002` — Peter: weather, boundary and irrigation-data inventory for evidence-supported candidate regions, including the TGRAC lead candidate in `DEC-14`.
-- `T-P1-SC-001` — Rishav: explicitly synthetic software fixtures; schema integration now passes software validation, pending reviewer handoff/acceptance.
+- `T-P1-SC-001` — Rishav: synthetic raster/time-series fixture implementation complete; schema integration passes software validation. Member C review remains pending.
 - `T-P1-DE-001` — Peter: GEE setup only after the required account/project access is available.
 - All members: candidate-region evidence collection and independent satellite/ML learning. These do not count as scientific validation or phase completion.
 
@@ -139,7 +139,14 @@ Phase 0 is complete. Begin the unblocked P1 tasks above. Complete the region-spe
 - Implemented Python dataclasses and JSON serialization/deserialization for the already-approved `CON-01`–`CON-09` contracts in `src/contracts/schemas.py`. The contract document was not amended and no regional fields were added.
 - Added software validation coverage for all nine contracts and strict checks for dates/times, GeoJSON structure and coordinate ranges, units/metadata, ranges, null-with-reason cases, and provenance requirements.
 - Updated the synthetic `CON-03` raster manifest to match the schema and added direct schema validation. Fixture values remain artificial software-test inputs only.
-- Full test discovery passes: 26 tests. This is software validation, not scientific validation. Reviewer handoff/acceptance for `T-P1-SH-002` and `T-P1-SC-001` is still pending; owner authorization to implement does not substitute for Member A/C technical review.
+- Full test discovery passes: 26 tests; byte-compilation and `git diff --check` pass. This is software validation, not scientific validation. Member C review of `T-P1-SC-001` and reviewer handoff of `T-P1-SH-002` remain pending.
 - P1 entry/exit gates and Gate 1 remain open. No pilot AOI, study period, production data access, accepted source/label handoffs, or scientific method approvals were established here. P2 production acquisition/modelling remains gated.
+
+## 9. Rishav Sentinel-2 software checkpoint — 2026-10-25
+
+- Added `src/data/sentinel2.py` with reusable NDVI/EVI raster calculations using the equations documented in `docs/API_CONTRACTS.md` and `docs/PROCESSING_CONVENTIONS.md`.
+- The caller must pass reflectance-scaled B02/B04/B08 arrays and an explicit boolean validity mask. The helper does not infer scale, make cloud/shadow decisions, resample bands, download imagery, or impute invalid pixels; zero-denominator and non-finite inputs remain invalid (`NaN`).
+- Added four software-only tests. Full discovery passes 30 tests; byte-compilation and `git diff --check` pass. Test arrays are artificial and are not scientific validation.
+- This is a general numerical helper, not completion of `T-P2-DE-002`. AOI-specific ingestion, cloud masking, resampling, acquisition, and satellite feature handoff remain gated by the unresolved study area, period, provider access, and processing choices.
 
 See [`docs/WORK_STATUS.md`](WORK_STATUS.md), [`docs/AOI_DECISION.md`](AOI_DECISION.md), and [`docs/DATA_SOURCES_AND_LICENCES.md`](DATA_SOURCES_AND_LICENCES.md) for details. The AOI evidence and reuse blockers remain open.

@@ -23,7 +23,7 @@ service_account.json
 # ------------------------------------------------------------------------------
 # Local Data, Rasters & Model Artifacts
 # ------------------------------------------------------------------------------
-data/
+/data/
 data/cache/
 data/outputs/
 data/raw/
