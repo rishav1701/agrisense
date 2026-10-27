@@ -67,6 +67,8 @@ def readiness() -> dict[str, Any]:
         "capabilities": {
             "study_area_validation": True,
             "sentinel2_indices": True,
+            "sentinel2_preprocessing": True,
+            "sentinel1_backscatter_features": True,
             "sentinel1_ingestion": False,
             "weather_ingestion": False,
             "crop_classification": False,
