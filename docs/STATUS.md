@@ -149,4 +149,10 @@ Phase 0 is complete. Begin the unblocked P1 tasks above. Complete the region-spe
 - Added four software-only tests. Full discovery passes 30 tests; byte-compilation and `git diff --check` pass. Test arrays are artificial and are not scientific validation.
 - This is a general numerical helper, not completion of `T-P2-DE-002`. AOI-specific ingestion, cloud masking, resampling, acquisition, and satellite feature handoff remain gated by the unresolved study area, period, provider access, and processing choices.
 
+## 10. Member A source-inventory checkpoint — 2026-10-27
+
+- Added `docs/data_audit/region_sources.md` for `T-P1-DE-002`, covering weather, administrative boundaries, soil, crop-calendar/advisory, and irrigation/command sources across the Telangana lead candidate and the initial Punjab/Tamil Nadu evidence-review regions.
+- Recorded current official source documentation and access/reuse constraints, including IMD data access, ERA5-Land grid/attribution, Survey of India administrative boundaries, TNGIS sharing terms, Soil Health Card limitations, and unresolved TGRAC/NWIC command-boundary provenance/CRS/licensing.
+- Inventory is a desk-research deliverable, not source acquisition, AOI approval, or scientific validation. Review by Members B and C remains pending; region-dependent acquisition and water-balance implementation remain gated.
+
 See [`docs/WORK_STATUS.md`](WORK_STATUS.md), [`docs/AOI_DECISION.md`](AOI_DECISION.md), and [`docs/DATA_SOURCES_AND_LICENCES.md`](DATA_SOURCES_AND_LICENCES.md) for details. The AOI evidence and reuse blockers remain open.
