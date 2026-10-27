@@ -1,6 +1,6 @@
 # AgriSense Project Status & Progress Checkpoint
 
-> **Last Updated:** 2026-10-25
+> **Last Updated:** 2026-10-27
 > **Current Phase:** **Phase P0 complete; P1 readiness research underway — production entry gate remains open**
 > **Phase P0 Status:** **APPROVED BY THE THREE-MEMBER TEAM (per project-owner confirmation, 2026-10-23); GUIDE SIGN-OFF WAIVED BY PROJECT OWNER FOR P0**
 > **Implementation Status:** **Reusable Sentinel-2 NDVI/EVI calculation implemented; source acquisition, AOI-specific processing, and scientific models have not started.**
@@ -150,3 +150,10 @@ Phase 0 is complete. Begin the unblocked P1 tasks above. Complete the region-spe
 - This is a general numerical helper, not completion of `T-P2-DE-002`. AOI-specific ingestion, cloud masking, resampling, acquisition, and satellite feature handoff remain gated by the unresolved study area, period, provider access, and processing choices.
 
 See [`docs/WORK_STATUS.md`](WORK_STATUS.md), [`docs/AOI_DECISION.md`](AOI_DECISION.md), and [`docs/DATA_SOURCES_AND_LICENCES.md`](DATA_SOURCES_AND_LICENCES.md) for details. The AOI evidence and reuse blockers remain open.
+
+## 10. Member C tooling and fixture review checkpoint — 2026-10-27
+
+- Added the `T-P1-SH-001` dependency manifest (`requirements.txt`) with pinned NumPy and development-tool versions, plus `pyproject.toml` configuration for pytest, Black, isort, and Ruff. The setup does not alter scientific methods, shared contracts, or regional assumptions.
+- Installed the pinned requirements in the ignored `.venv` on Windows Python 3.11. Full test discovery passes (30 tests), the Member C-owned contract files pass Ruff and Black checks, and `git diff --check` passes. Python 3.10/Linux installation has not been exercised. Repository-wide Ruff still reports five findings in the TGRAC audit script, Member B's Sentinel-2 tests, the TGRAC audit tests, and the synthetic-fixture tests; repository-wide Black requests formatting in files outside Member C's ownership. `T-P1-SH-001` remains open pending owner reviews and cross-platform verification.
+- Member C reviewed the `T-P1-SC-001` synthetic fixture implementation and its schema-validation tests. The fixtures are visibly marked synthetic, keep modality timestamps separate, omit real AOI/CRS/source metadata, and validate the `CON-03` manifest. All nine fixture tests pass as part of the 30-test suite; this is software review only, not scientific validation.
+- `T-P1-SH-002` schemas remain implemented as recorded above; Member A and Member B reviewer handoff/acceptance remains pending. `T-P1-SH-003` and proposed `T-P1-SH-004` remain gated on team technical confirmation of `DEC-01` and the required profile/contract review. P1 gates remain open.

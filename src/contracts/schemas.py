@@ -127,10 +127,19 @@ def _validate_geojson_geometry(
         raise SchemaValidationError("geometry must be a GeoJSON object")
     kind = geometry.get("type")
     coordinates = geometry.get("coordinates")
-    allowed = {"Polygon", "MultiPolygon"} if polygon_only else {
-        "Point", "MultiPoint", "LineString", "MultiLineString", "Polygon",
-        "MultiPolygon", "GeometryCollection",
-    }
+    allowed = (
+        {"Polygon", "MultiPolygon"}
+        if polygon_only
+        else {
+            "Point",
+            "MultiPoint",
+            "LineString",
+            "MultiLineString",
+            "Polygon",
+            "MultiPolygon",
+            "GeometryCollection",
+        }
+    )
     if kind not in allowed:
         raise SchemaValidationError(f"geometry.type must be one of {sorted(allowed)}")
     if kind == "GeometryCollection":
@@ -161,8 +170,7 @@ def _validate_geojson_geometry(
             _validate_position(point, f"geometry.coordinates[{index}]")
     elif kind == "MultiLineString":
         if any(
-            not isinstance(line, (list, tuple)) or len(line) < 2
-            for line in coordinates
+            not isinstance(line, (list, tuple)) or len(line) < 2 for line in coordinates
         ):
             raise SchemaValidationError(
                 "each MultiLineString member needs two positions"
@@ -248,8 +256,7 @@ def _coerce(annotation: Any, value: Any, field_name: str) -> Any:
         if len(value) != len(args):
             raise SchemaValidationError(f"{field_name} has the wrong number of items")
         return tuple(
-            _coerce(item_type, item, field_name)
-            for item_type, item in zip(args, value)
+            _coerce(item_type, item, field_name) for item_type, item in zip(args, value)
         )
     if origin is dict:
         if not isinstance(value, dict):
@@ -426,7 +433,10 @@ class SourceMetadata(ContractModel):
     def __post_init__(self) -> None:
         _require_text("source_id", self.source_id)
         for name in (
-            "collection_id", "version", "native_grid", "quality_mask_reference"
+            "collection_id",
+            "version",
+            "native_grid",
+            "quality_mask_reference",
         ):
             value = getattr(self, name)
             if value is not None:
@@ -610,7 +620,10 @@ class CropClassificationResult(ContractModel):
 
     def __post_init__(self) -> None:
         for name in (
-            "model_id", "model_version", "class_raster", "feature_definition_version"
+            "model_id",
+            "model_version",
+            "class_raster",
+            "feature_definition_version",
         ):
             _require_text(name, getattr(self, name))
         _require_int("nodata_code", self.nodata_code)
@@ -628,7 +641,9 @@ class CropClassificationResult(ContractModel):
             "class_map", self.class_map, ClassDefinition, allow_empty=False
         )
         _require_model_list(
-            "training_label_sources", self.training_label_sources, ProvenanceReference,
+            "training_label_sources",
+            self.training_label_sources,
+            ProvenanceReference,
             allow_empty=False,
         )
         _require_instance("split_design", self.split_design, ProvenanceReference)
@@ -637,8 +652,10 @@ class CropClassificationResult(ContractModel):
                 "evaluation_metrics", self.evaluation_metrics, EvaluationMetric
             )
         _require_instance(
-            "probability_raster", self.probability_raster,
-            ProbabilityRaster, optional=True,
+            "probability_raster",
+            self.probability_raster,
+            ProbabilityRaster,
+            optional=True,
         )
 
 
@@ -660,7 +677,10 @@ class PhenologyEstimate(ContractModel):
 
     def __post_init__(self) -> None:
         for name in (
-            "spatial_reference", "stage_code", "quality_state", "method",
+            "spatial_reference",
+            "stage_code",
+            "quality_state",
+            "method",
             "method_version",
         ):
             _require_text(name, getattr(self, name))
@@ -715,7 +735,10 @@ class StressIndicator(ContractModel):
         if self.geometry is not None:
             _validate_geojson_geometry(self.geometry)
         for name in (
-            "unit", "spatial_reference", "reference_id", "stage_code",
+            "unit",
+            "spatial_reference",
+            "reference_id",
+            "stage_code",
             "baseline_reference",
         ):
             value = getattr(self, name)
@@ -780,8 +803,12 @@ class CropEvapotranspirationEstimate(ContractModel):
             else:
                 _require_number(name, value)
         for name in (
-            "kc_source", "et0_unit", "et0_source", "etc_unit",
-            "precipitation_unit", "precipitation_method",
+            "kc_source",
+            "et0_unit",
+            "et0_source",
+            "etc_unit",
+            "precipitation_unit",
+            "precipitation_method",
         ):
             value = getattr(self, name)
             if value is not None:
@@ -877,9 +904,9 @@ class FieldWaterBalanceEstimate(ContractModel):
                 raise SchemaValidationError("volume_m3 requires an explicit area_basis")
             _require_instance("area_basis", self.area_basis, AreaBasis)
         elif self.area_basis is not None:
-                raise SchemaValidationError(
-                    "area_basis is only used when volume_m3 is provided"
-                )
+            raise SchemaValidationError(
+                "area_basis is only used when volume_m3 is provided"
+            )
 
 
 @dataclass
@@ -905,7 +932,10 @@ class CanalCommandSummary(ContractModel):
 
     def __post_init__(self) -> None:
         for name in (
-            "command_id", "boundary_source", "statistic_name", "statistic_unit",
+            "command_id",
+            "boundary_source",
+            "statistic_name",
+            "statistic_unit",
             "aggregation_method_version",
         ):
             _require_text(name, getattr(self, name))
@@ -916,11 +946,15 @@ class CanalCommandSummary(ContractModel):
         _require_instance("interval", self.interval, TimeInterval)
         _validate_reason_map(self.missing_reasons)
         _require_model_list(
-            "source_estimate_references", self.source_estimate_references,
-            str, allow_empty=True,
+            "source_estimate_references",
+            self.source_estimate_references,
+            str,
+            allow_empty=True,
         )
         for name in (
-            "statistic_value", "contributing_area_value", "valid_data_area_value"
+            "statistic_value",
+            "contributing_area_value",
+            "valid_data_area_value",
         ):
             value = getattr(self, name)
             if value is None:

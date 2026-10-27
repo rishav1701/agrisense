@@ -1,0 +1,8 @@
+# Runtime dependency used by synthetic software fixtures and numerical helpers.
+numpy==2.2.6
+
+# Development and verification tools.
+pytest==9.1.1
+black==25.1.0
+isort==5.13.2
+ruff==0.8.4
