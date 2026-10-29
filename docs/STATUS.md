@@ -142,6 +142,12 @@ Continue the P1/P2 foundation handoffs and resolve the remaining AOI, source-qua
 - Software-only tests use explicitly synthetic fixtures. These checks verify implementation behavior only; they are not satellite observations, model validation, or scientific performance evidence.
 - `T-P2-DE-005` is not fully accepted: it still depends on upstream real Sentinel-1/2 outputs, a verified AOI and provider/data terms, and approved orbit/grid/time conventions. `DS-04`/`DS-09` remain open; no classifier, trained output, or irrigation estimate is claimed.
 
+## Next-stage research checkpoint — 2026-10-29
+
+- Follow-up review of TGRAC's official command-area methodology documents that boundaries may come from project field-office maps, or be demarcated from crop patterns, terrain, satellite interpretation, and drainage when maps are unavailable. The official statement does not establish which path produced I&CAD service layers 9/10, their vintage/authority, validation record, or reuse terms. Updated `docs/DS09_AOI_AUDIT.md`; SRSP Stage I remains an unselected candidate.
+- TGRAC describes its agricultural-condition monitoring as mandal-level seasonal monitoring using remote sensing and ancillary context, with ground-truth verification. It does not provide a demonstrated independent root-zone moisture target or irrigation recommendation outcome for this project.
+- The next model tasks remain gated: classifier implementation requires an accepted complete CON-03 handoff and verified crop labels (`DS-04`); phenology also requires region-specific crop-calendar evidence (`DS-06`); stress remains downstream of both. No synthetic prediction path was introduced.
+
 ## 8. Schema implementation checkpoint — 2026-10-25
 
 - Implemented Python dataclasses and JSON serialization/deserialization for the already-approved `CON-01`–`CON-09` contracts in `src/contracts/schemas.py`. The contract document was not amended and no regional fields were added.
