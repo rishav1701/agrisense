@@ -46,6 +46,15 @@ These notes support `T-P2-DE-002` and `T-P2-DE-003` research only. AOI-specific 
 
 **Sources:** [Copernicus Data Space STAC API documentation](https://documentation.dataspace.copernicus.eu/APIs/STAC.html), [Copernicus Data Space quotas and limitations](https://documentation.dataspace.copernicus.eu/Quotas.html), [GeoJSON RFC 7946](https://datatracker.ietf.org/doc/html/rfc7946).
 
+### Credentialless catalog fallback
+
+- `src/data/copernicus_stac.py` now supports Sentinel-2 L2A STAC discovery at a caller-selected HTTPS endpoint and metadata discovery for Planetary Computer's `sentinel-1-rtc` collection. The latter is an RTC product and is not asserted to be numerically interchangeable with `COPERNICUS/S1_GRD`.
+- Microsoft documents anonymous public STAC access and says most data downloads are anonymous but throttled. This offers a practical discovery/technical integration route without Google Earth Engine credentials; it does not clear asset-use terms, download capacity, AOI provenance, or weather access.
+- The live Planetary Computer Sentinel-2 collection record currently labels its collection license `proprietary` while linking to Copernicus Sentinel data terms. Resolve that metadata/terms relationship with the provider before relying on those hosted assets for a distributable or scientific production workflow. The client added here is catalog-only; it does not sign URLs, fetch assets, or transform imagery.
+- No ERA5-Land collection has been accepted through this fallback. Keep weather acquisition as a separate access and license check; do not replace ERA5-Land with a different weather product without review.
+
+**Sources:** [Planetary Computer public access documentation](https://planetarycomputer.microsoft.com/docs/), [Planetary Computer Sentinel-2 STAC collection record](https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a), [Planetary Computer STAC API](https://planetarycomputer.microsoft.com/docs/reference/stac/), [Copernicus data access](https://eu-space.europa.eu/earth-observation/copernicus/data-access).
+
 ## Sentinel-1 radar data
 
 - Candidate source: `COPERNICUS/S1_GRD`; record product IDs, acquisition time, relative orbit, pass direction, instrument mode, resolution and polarisation.

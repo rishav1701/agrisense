@@ -8,9 +8,12 @@ from unittest.mock import patch
 
 from src.data.copernicus_stac import (
     DEFAULT_STAC_URL,
+    PLANETARY_COMPUTER_STAC_URL,
+    SENTINEL1_RTC_COLLECTION,
     SENTINEL2_L2A_COLLECTION,
     STACCatalogError,
     _request_json,
+    search_sentinel1_rtc,
     search_sentinel2_l2a,
 )
 
@@ -186,6 +189,47 @@ class CopernicusStacTests(unittest.TestCase):
                 end_date="2023-04-01",
                 max_cloud_cover_percent=True,
             )
+
+    @patch("src.data.copernicus_stac._request_json")
+    def test_sentinel1_rtc_uses_public_planetary_computer_collection(
+        self, request_json
+    ) -> None:
+        request_json.return_value = {
+            "features": [item("rtc-one", "2023-02-02T00:00:00Z")],
+            "links": [],
+        }
+
+        result = search_sentinel1_rtc(
+            aoi_geometry=GEOMETRY,
+            start_date="2023-02-01",
+            end_date="2023-03-01",
+        )
+
+        self.assertEqual([record["id"] for record in result], ["rtc-one"])
+        request = request_json.call_args.kwargs
+        self.assertEqual(
+            request["url"], f"{PLANETARY_COMPUTER_STAC_URL}/search"
+        )
+        self.assertEqual(request["body"]["collections"], [SENTINEL1_RTC_COLLECTION])
+
+    @patch("src.data.copernicus_stac._request_json")
+    def test_sentinel2_can_use_compatible_alternative_stac_endpoint(
+        self, request_json
+    ) -> None:
+        request_json.return_value = {"features": [], "links": []}
+
+        search_sentinel2_l2a(
+            aoi_geometry=GEOMETRY,
+            start_date="2023-02-01",
+            end_date="2023-03-01",
+            stac_url=PLANETARY_COMPUTER_STAC_URL,
+        )
+
+        request = request_json.call_args.kwargs
+        self.assertEqual(
+            request["url"], f"{PLANETARY_COMPUTER_STAC_URL}/search"
+        )
+        self.assertEqual(request["body"]["collections"], [SENTINEL2_L2A_COLLECTION])
 
 
 if __name__ == "__main__":

@@ -1,8 +1,9 @@
-"""Search the public Copernicus Data Space STAC catalogue.
+"""Search public Copernicus and Planetary Computer STAC catalogues.
 
-This module discovers Sentinel-2 L2A item metadata only. It does not download
-assets, run atmospheric/cloud processing, or claim that a returned footprint
-contains usable pixels.
+This module discovers item metadata only. It does not download assets, run
+atmospheric/cloud processing, or claim that a returned footprint contains
+usable pixels. The generic search allows a caller-selected STAC endpoint and
+collection; provider access terms remain the caller's responsibility.
 """
 
 from __future__ import annotations
@@ -18,7 +19,9 @@ from urllib.request import Request, urlopen
 from src.contracts.schemas import SchemaValidationError, StudyAreaQuery
 
 DEFAULT_STAC_URL = "https://stac.dataspace.copernicus.eu/v1"
+PLANETARY_COMPUTER_STAC_URL = "https://planetarycomputer.microsoft.com/api/stac/v1"
 SENTINEL2_L2A_COLLECTION = "sentinel-2-l2a"
+SENTINEL1_RTC_COLLECTION = "sentinel-1-rtc"
 
 
 class STACCatalogError(RuntimeError):
@@ -57,18 +60,19 @@ def _request_json(
             except json.JSONDecodeError as exc:
                 content_type = response.headers.get("Content-Type", "unknown")
                 raise STACCatalogError(
-                    "Copernicus STAC returned a non-JSON response "
+                    "STAC catalog returned a non-JSON response "
                     f"(content type: {content_type})"
                 ) from exc
     except (HTTPError, URLError, TimeoutError) as exc:
-        raise STACCatalogError(f"Copernicus STAC request failed: {exc}") from exc
+        raise STACCatalogError(f"STAC catalog request failed: {exc}") from exc
     if not isinstance(payload, dict):
-        raise STACCatalogError("Copernicus STAC response must be a JSON object")
+        raise STACCatalogError("STAC catalog response must be a JSON object")
     return payload
 
 
-def search_sentinel2_l2a(
+def search_stac_collection(
     *,
+    collection_id: str,
     aoi_geometry: dict[str, Any],
     start_date: str,
     end_date: str,
@@ -76,9 +80,9 @@ def search_sentinel2_l2a(
     page_size: int = 100,
     max_items: int = 1000,
     timeout_seconds: float = 30.0,
-    stac_url: str = DEFAULT_STAC_URL,
+    stac_url: str,
 ) -> list[dict[str, Any]]:
-    """Return Sentinel-2 L2A STAC items intersecting a CON-01 query.
+    """Return STAC items for a selected collection and CON-01 query.
 
     The requested interval follows CON-01's start-inclusive/end-exclusive
     date convention. STAC search is issued with UTC day boundaries; returned
@@ -87,13 +91,14 @@ def search_sentinel2_l2a(
 
     Args:
         aoi_geometry: GeoJSON Polygon or MultiPolygon in longitude/latitude.
+        collection_id: Provider-specific STAC collection identifier.
         start_date: Inclusive ISO date in ``YYYY-MM-DD`` form.
         end_date: Exclusive ISO date in ``YYYY-MM-DD`` form.
         max_cloud_cover_percent: Optional scene-level cloud filter in [0, 100].
         page_size: Requested page size; must be between 1 and 500.
         max_items: Maximum number of item records to return; must be positive.
         timeout_seconds: Per-request timeout in seconds.
-        stac_url: Copernicus STAC API root; HTTPS is required.
+        stac_url: STAC API root; HTTPS is required.
 
     Returns:
         STAC Item dictionaries ordered as returned by the catalogue, with
@@ -103,6 +108,8 @@ def search_sentinel2_l2a(
         ValueError: If query parameters violate their declared constraints.
         STACCatalogError: If the service returns invalid metadata or pagination.
     """
+    if not isinstance(collection_id, str) or not collection_id.strip():
+        raise ValueError("collection_id must be a non-empty string")
     try:
         StudyAreaQuery(
             query_id="copernicus-stac-search",
@@ -142,7 +149,7 @@ def search_sentinel2_l2a(
     start = datetime.combine(date.fromisoformat(start_date), time.min, timezone.utc)
     end = datetime.combine(date.fromisoformat(end_date), time.min, timezone.utc)
     search_body: dict[str, Any] = {
-        "collections": [SENTINEL2_L2A_COLLECTION],
+        "collections": [collection_id],
         "intersects": aoi_geometry,
         "datetime": f"{start.isoformat().replace('+00:00', 'Z')}/"
         f"{end.isoformat().replace('+00:00', 'Z')}",
@@ -229,3 +236,55 @@ def search_sentinel2_l2a(
         current_body = next_body if current_method == "POST" else None
 
     return found[:max_items]
+
+
+def search_sentinel2_l2a(
+    *,
+    aoi_geometry: dict[str, Any],
+    start_date: str,
+    end_date: str,
+    max_cloud_cover_percent: float | None = None,
+    page_size: int = 100,
+    max_items: int = 1000,
+    timeout_seconds: float = 30.0,
+    stac_url: str = DEFAULT_STAC_URL,
+) -> list[dict[str, Any]]:
+    """Search Sentinel-2 L2A metadata in Copernicus or compatible STAC APIs."""
+    return search_stac_collection(
+        collection_id=SENTINEL2_L2A_COLLECTION,
+        aoi_geometry=aoi_geometry,
+        start_date=start_date,
+        end_date=end_date,
+        max_cloud_cover_percent=max_cloud_cover_percent,
+        page_size=page_size,
+        max_items=max_items,
+        timeout_seconds=timeout_seconds,
+        stac_url=stac_url,
+    )
+
+
+def search_sentinel1_rtc(
+    *,
+    aoi_geometry: dict[str, Any],
+    start_date: str,
+    end_date: str,
+    page_size: int = 100,
+    max_items: int = 1000,
+    timeout_seconds: float = 30.0,
+    stac_url: str = PLANETARY_COMPUTER_STAC_URL,
+) -> list[dict[str, Any]]:
+    """Search Planetary Computer Sentinel-1 RTC metadata only.
+
+    RTC products have processing semantics that differ from the existing
+    Sentinel-1 GRD helpers. This function does not infer or convert asset units.
+    """
+    return search_stac_collection(
+        collection_id=SENTINEL1_RTC_COLLECTION,
+        aoi_geometry=aoi_geometry,
+        start_date=start_date,
+        end_date=end_date,
+        page_size=page_size,
+        max_items=max_items,
+        timeout_seconds=timeout_seconds,
+        stac_url=stac_url,
+    )

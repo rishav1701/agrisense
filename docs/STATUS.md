@@ -148,6 +148,13 @@ Continue the P1/P2 foundation handoffs and resolve the remaining AOI, source-qua
 - TGRAC describes its agricultural-condition monitoring as mandal-level seasonal monitoring using remote sensing and ancillary context, with ground-truth verification. It does not provide a demonstrated independent root-zone moisture target or irrigation recommendation outcome for this project.
 - The next model tasks remain gated: classifier implementation requires an accepted complete CON-03 handoff and verified crop labels (`DS-04`); phenology also requires region-specific crop-calendar evidence (`DS-06`); stress remains downstream of both. No synthetic prediction path was introduced.
 
+## Provider fallback and presentation checkpoint — 2026-10-29
+
+- Generalized the existing metadata-only Sentinel-2 STAC search to allow a caller-selected compatible HTTPS catalog, and added Planetary Computer Sentinel-1 RTC metadata discovery. This is not asset retrieval or ingestion, and RTC products are not assumed interchangeable with the GRD numerical helper. Software tests use mocked STAC responses only.
+- Official Planetary Computer documentation says its STAC API is public and most assets can be downloaded anonymously subject to throttling. Its current Sentinel-2 STAC collection record reports `license: proprietary` while linking Copernicus Sentinel terms; reconcile that metadata/terms and verify access capacity before relying on it for actual asset use. No Sentinel pixels were downloaded. ERA5-Land access remains separate and unresolved.
+- Added `docs/GATE_REMEDIATION.md`, which maps the current AOI, label, provider, weather, calendar, soil, ownership, and downstream phase gates to evidence and closure actions. No external permission or source confirmation is inferred.
+- The existing no-data foundation demo on `main` remains unchanged by this feature branch. It continues to demonstrate readiness, authorized local GeoJSON preview, and structural study-request validation only.
+
 ## 8. Schema implementation checkpoint — 2026-10-25
 
 - Implemented Python dataclasses and JSON serialization/deserialization for the already-approved `CON-01`–`CON-09` contracts in `src/contracts/schemas.py`. The contract document was not amended and no regional fields were added.
