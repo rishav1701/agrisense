@@ -176,3 +176,9 @@ See [`docs/WORK_STATUS.md`](WORK_STATUS.md), [`docs/AOI_DECISION.md`](AOI_DECISI
 - Added five explicitly mocked STAC software tests. Full Python software discovery passes: 46 tests (plus 9 subtests); Ruff, isort, per-file Black checks, frontend `npm run build` (TypeScript and Vite production build), and `git diff --check` all pass. A local HTTP smoke test could not reach loopback sockets under the execution sandbox, so route behavior was verified by direct unit calls rather than a live browser/API session.
 - Scope remains foundation/prototype work. No STAC query was made for a study AOI, no imagery was downloaded, and no scientific output or validation evidence was created. `T-P2-DE-002` is not complete; AOI, source QA, reuse, GEE account/access, cloud-mask method, and team review gates remain open.
 - Member-side verification: not independently performed by other team members in this session. Automated software checks are reported separately and do not substitute for reviewer acceptance.
+
+## 13. P2 Sentinel-1 source research continuation — 2026-10-29
+
+- Continued the non-implementation research portion of `T-P2-DE-003` against the official Earth Engine Sentinel-1 guide and catalog. Documented the available acquisition metadata and the catalog's start/stop semantics for relative-orbit metadata in `docs/PROCESSING_CONVENTIONS.md`.
+- No orbit/pass strategy, relative-orbit filter, speckle filter, AOI, or date range was selected. No Earth Engine query or scene acquisition was run. The existing pure-array backscatter and linear-power ratio helper remains software-only; this research does not complete Sentinel-1 ingestion.
+- `T-P2-DE-003` production implementation remains gated on the verified AOI/period, P1 handoffs and Gate 0/Gate 1, provider project access, and reviewed processing choices. The user’s delegated member approval does not supply those missing inputs or source access.
