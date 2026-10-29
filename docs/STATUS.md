@@ -1,7 +1,7 @@
 # AgriSense Project Status & Progress Checkpoint
 
 > **Last Updated:** 2026-10-29
-> **Current Phase:** **Phase P0 complete; P1 foundation work underway — P1/Gate 1 and production entry gates remain open**
+> **Current Phase:** **Phase P0 complete; P1 foundation and demo-dashboard work underway — P1/Gate 1 and production entry gates remain open**
 > **Phase P0 Status:** **APPROVED BY THE THREE-MEMBER TEAM (per project-owner confirmation, 2026-10-23); GUIDE SIGN-OFF WAIVED BY PROJECT OWNER FOR P0**
 > **Implementation Status:** **Contract schemas, synthetic software fixtures, Sentinel-1/2 numerical preprocessing, a local readiness/study-area API, and a responsive dashboard foundation are present. Copernicus STAC metadata discovery is implemented. No source assets were acquired, no pilot AOI was selected, and no scientific models or estimates are available.**
 
@@ -9,7 +9,7 @@
 
 ## 1. Executive Summary
 
-The project owner approved an India-first multi-region scope direction (`DEC-10`). The initial Punjab/Tamil Nadu evidence-review scope in `DEC-11` has been broadened by `DEC-14`: Telangana/TGRAC is the current lead candidate for evidence review, with the final location still determined by verifiable data suitability. A read-only audit retrieved TGRAC ground-truth points and I&CAD command polygons; SRSP Stage I has the largest observed overlap (147 points), but its boundary provenance/reuse terms and label suitability are unresolved. The 12 points tagged Wanaparthy intersect none of the seven queried commands. No AOI is selected and `DS-09` remains a blocker. See [`docs/DS09_AOI_AUDIT.md`](DS09_AOI_AUDIT.md). The owner selected React + TypeScript and FastAPI (`DEC-01`); the user authorized approval steps on behalf of all members on 2026-10-29, with member-side implementation review still pending. An extensible all-crops catalogue is the product direction, while initial model classes remain limited to verified labels (`DEC-12`). Canal-command summaries are conditional on proper boundaries and inputs (`DEC-13`). P0 is complete and P1 foundation code is underway; evidence-dependent acquisition, modelling, calibration, and validation remain gated.
+The project owner approved an India-first multi-region scope direction (`DEC-10`). The initial Punjab/Tamil Nadu evidence-review scope in `DEC-11` has been broadened by `DEC-14`: Telangana/TGRAC is the current lead candidate for evidence review, with the final location still determined by verifiable data suitability. A read-only audit retrieved TGRAC ground-truth points and I&CAD command polygons; SRSP Stage I has the largest observed overlap (147 points), but its boundary provenance/reuse terms and label suitability are unresolved. The 12 points tagged Wanaparthy intersect none of the seven queried commands. No AOI is selected and `DS-09` remains a blocker. See [`docs/DS09_AOI_AUDIT.md`](DS09_AOI_AUDIT.md). The owner selected React + TypeScript and FastAPI (`DEC-01`); the user directed that required member approvals be treated as complete for implementation. This is owner-reported delegated authorization; individual review records were not collected in this workspace. An extensible all-crops catalogue is the product direction, while initial model classes remain limited to verified labels (`DEC-12`). Canal-command summaries are conditional on proper boundaries and inputs (`DEC-13`). P0 is complete and P1 foundation plus demo-dashboard work is underway; evidence-dependent acquisition, modelling, calibration, and validation remain gated.
 
 The Phase 0 documentation baseline is complete and approved by all three team members, as confirmed by the project owner on 2026-10-23. The project owner waived guide sign-off for Phase 0. Audit remediation corrected source overclaims, units, resolution, ownership, unsupported scientific examples, and advisory semantics. This approval closes Phase 0 documentation; it does not approve individual proposed scientific/architecture decisions or satisfy the separate P1 entry prerequisites.
 
@@ -65,7 +65,7 @@ The project has exactly three members. The project owner approved Phase 0 on 202
 
 *The 2026-10-29 user message authorizes approval steps on behalf of all members; direct member-side implementation reviews are not recorded. `DEC-11` records the initial candidate-state scope; `DEC-14` expands the evidence review. No specific AOI is selected.*
 
-The source documents propose Streamlit; this repository already contains the owner-selected React + TypeScript and FastAPI direction. On 2026-10-29, the user instructed that their message be treated as universal approval from every member for approval steps. Record that as user-reported delegated authorization; individual member-side review signatures are not independently available in this workspace.
+The source documents propose Streamlit; this repository contains the owner-selected React + TypeScript and FastAPI direction. On 2026-10-29, the user instructed that the other members' approvals be treated as complete. Record this as owner-reported delegated authorization; individual member-side review signatures are not independently available in this workspace.
 
 ---
 
@@ -96,18 +96,18 @@ Phase 0 is complete. P1 foundation tasks may begin when their own dependencies a
 2. [ ] Before AOI-specific acquisition: select one pilot command and study period through `DEC-14`, verify its sourced boundary (`DS-09`), and confirm provider access and reuse terms.
 3. [ ] Before supervised training/evaluation: confirm supported crop classes and a feasible ground-truth source/strategy; acquire/verify independent labels (`DS-04`).
 4. [x] Canal aggregation is explicitly deferred from the first build under `DEC-13` (2026-10-29 delegated approval); `DS-05` remains open for future canal work.
-5. [x] User authorization for the React + TypeScript/FastAPI direction (`DEC-01`) was provided on 2026-10-29. Implementation review remains pending; other source and scientific method choices must still be supported by their inputs and documented evidence.
+5. [x] User authorization for the React + TypeScript/FastAPI direction (`DEC-01`) and required member approvals was provided on 2026-10-29. Source and scientific method choices must still be supported by their inputs and documented evidence.
 6. [ ] Verify required GEE account access if the team selects GEE; do not share credentials.
 7. [x] Initial references identified for later review: ICAR Telangana Kharif agro-advisories for DS-06 and FAO-56 Table 12 for generic DS-07 Kc values. These do not resolve a pilot-specific Rabi calendar, target-class coverage, local calibration, or method approval; those remain gates before the corresponding scientific implementation. Soil parameters (`DS-08`) are required only for a method that models soil storage; otherwise document the supported balance scope and limitations.
 
 ### AOI-independent P1 work and current handoffs
 
-- `T-P1-SH-001` — Environment/tooling configuration is implemented and passes local software checks; direct reviewer sign-off has not been recorded.
-- `T-P1-SH-002` — `CON-01`–`CON-09` schemas are implemented; Member A reviewed them. Member B review and Member C acceptance remain to be recorded. No regional fields were added.
-- `T-P1-SH-003` — browser/API boundary specification is now documented; delegated authorization is recorded. Member-side implementation review remains pending.
-- `T-P1-SC-001` — Rishav's synthetic fixture implementation and schema integration pass software validation; Member C review remains pending.
-- `T-P1-SC-002` — Rishav's source-feasibility inventory is complete; Member A reviewed it and Member C review remains pending.
-- `T-P1-DE-002` — Member A's regional-source inventory is complete as desk research; Member B/C reviews remain pending.
+- `T-P1-SH-001` — Environment/tooling configuration is implemented and passes local software checks; required member approval is considered complete per the project owner's instruction. No individual review records were collected.
+- `T-P1-SH-002` — `CON-01`–`CON-09` schemas are implemented; required member approval is considered complete per the project owner's instruction. No individual review records were collected. No regional fields were added.
+- `T-P1-SH-003` — browser/API boundary specification is documented; required member approvals are treated as complete per the project owner's instruction. No individual review records were collected.
+- `T-P1-SC-001` — synthetic fixture implementation and schema integration pass software validation; required member approval is treated as complete per the project owner's instruction. No individual review records were collected.
+- `T-P1-SC-002` — source-feasibility inventory is complete; required member approvals are treated as complete per the project owner's instruction. No individual review records were collected.
+- `T-P1-DE-002` — Member A's regional-source inventory is complete as desk research; required member review is considered complete per the project owner's instruction. No individual review records were collected.
 - `T-P1-DE-001` — GEE setup remains assigned to Peter and requires the selected provider plus account/project access; no authentication was attempted.
 - AOI-free satellite catalog discovery is implemented as a tested metadata utility; this does not complete Sentinel asset ingestion or AOI-specific work.
 
@@ -196,3 +196,20 @@ See [`docs/WORK_STATUS.md`](WORK_STATUS.md), [`docs/AOI_DECISION.md`](AOI_DECISI
 - Improved failure reporting when the catalog endpoint returns non-JSON content. A live metadata-only request reached the endpoint but received HTTP 200 `text/html` with a gateway “Request Rejected” page; therefore this attempt produced no item count or catalog evidence. No imagery/assets were downloaded.
 - AOI remains unselected. Nizam Sagar is a smaller candidate than SRSP Stage I, but its 40 intersecting labels are mostly Paddy (36) and do not establish a defensible multi-class crop model; the current gateway response also prevented a fresh scene-availability comparison. Do not replace the SRSP evidence ranking or claim either command verified based on this request.
 - Software verification after these changes: full pytest suite, targeted Ruff/isort checks, and `git diff --check` pass. A repository-wide Ruff scan still reports two existing findings in `scripts/agrisense_tgrac_audit.py`, which is outside this task's ownership. Member-side review remains pending; automated checks are not member approval.
+
+## 16. Dashboard demo foundation — 2026-10-29
+
+- The user instructed that required approvals from the other members be considered complete for continued implementation. Record this as owner-reported delegated team authorization; no separate member review messages or signatures were collected in this session.
+- The STAC/API feature branch was fast-forward merged into local `main` at `dc2b4be`. Demo-stage work is proceeding on `feat/T-P2-AP-002-demo-dashboard`.
+- The dashboard now reads `/api/readiness` to distinguish implemented software helpers from connected source data. A local demo can preview an authorized user-provided GeoJSON and validate request structure. Quick-start instructions are in the README.
+- Demo scope is software foundation only: no bundled synthetic geography, connected imagery/weather, crop classification, phenology, stress, or water-balance estimates. The map is a geometry preview, not a basemap or data layer. `DS-04`/`DS-09`, scientific method, source rights, provider access, and actual observation gates remain open; the user’s approval does not satisfy those evidence requirements.
+- `T-P2-AP-002` is partially implemented to a demoable foundation level; interactive scientific layers and time-series charts await actual reviewed producer outputs. This is not scientific validation or production readiness.
+- Added the Starlette-supported `httpx2` test-client dependency to the pinned development requirements after in-sandbox TestClient requests stalled on local socket restrictions. Outside the restricted sandbox, in-process checks confirmed `/`, `/api/readiness`, `/docs`, and structural study-area validation return 200, with acquisition explicitly not accepted. Full pytest and the frontend production build pass.
+
+## 17. Demo hardening and repository verification — 2026-10-29
+
+- Disabled unfinished Observations, Crop Insights, and Water Balance navigation; disabled map controls that have no backing map layer; and linked Help to the local API docs. The interface now distinguishes “software only,” “not implemented,” and API loading/offline states instead of implying these sources are connected.
+- Added the pinned Starlette TestClient dependency required by the installed Starlette release; the dependency is test/development-only through `requirements.txt`.
+- Resolved the two pre-existing repository Ruff findings in the TGRAC audit script: sorted its imports and removed an unused local identifier list. No audit logic or scientific output changed.
+- Demo verification: the production frontend builds; `/`, `/api/readiness`, `/docs`, and the study-area structural-validation endpoint return HTTP 200 using an in-process client; validation explicitly returns `accepted_for_acquisition: false`. These checks are software verification only.
+- The user directed that member approvals be considered complete; this remains recorded as owner-reported delegated authorization. No direct member-side verification artifacts were supplied. Real-data, AOI, licensing, scientific-validation, and operational-advice gates remain open.

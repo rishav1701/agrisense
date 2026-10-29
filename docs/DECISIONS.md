@@ -77,7 +77,7 @@ The user instructed that their message be treated as universal approval from eve
 ### `DEC-01`: Application Architecture & Technology Stack
 
 - **Topic:** High-level web application and backend architecture.
-- **Status:** **React + TypeScript / FastAPI implementation direction authorized under the 2026-10-29 delegated approval; implementation review remains pending.**
+- **Status:** **React + TypeScript / FastAPI implementation direction approved per the project owner's 2026-10-29 instruction to treat member approvals as complete; no individual review records were collected in this workspace.**
 - **Context:** The source documents request an interactive GIS-enabled dashboard with nominal 10 m crop outputs, growth stage estimates, stress indicators, and canal-boundary summaries. Two architectural options were evaluated:
   1. *Streamlit Monolith (Python-only):* Single-process Python application utilizing `streamlit-folium` for interactive maps and `plotly` for temporal graphs; this is the source documents' implementation proposal.
   2. *Responsive Web Frontend + Python API:* React + TypeScript and FastAPI are candidate technologies. No PostGIS/GeoServer requirement has been established.
@@ -92,7 +92,7 @@ The user instructed that their message be treated as universal approval from eve
   - *Potential benefits:* Custom responsive layouts and clear separation between browser presentation and Python scientific processing.
   - *Costs and open questions:* Frontend/API integration, separate tooling, deployment topology, and mapping/chart library choices must be decided before implementation.
 - **Evidence / Source:** `IDP_Review_1_AgriSense (1).pdf` p. 23; `mava.pdf` p. 9.
-- **Required Approver Role:** Project owner and all three members. Delegated authorization was provided in the 2026-10-29 user message; member-side implementation review is still pending. No guide approval is assumed or recorded.
+- **Required Approver Role:** Project owner and all three members. The owner directed that approval from the other members be considered complete for implementation. This is recorded as owner-reported delegated authorization, not as individual member review artifacts. No guide approval is assumed or recorded.
 
 ---
 

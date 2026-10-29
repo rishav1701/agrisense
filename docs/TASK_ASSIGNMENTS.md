@@ -339,7 +339,8 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Contract Dependencies:** `CON-04`, `CON-05`, `CON-06`, `CON-09`.
 - **Acceptance Criteria:** Adaptive layouts work across phone, tablet, and desktop viewport sizes; map layers and date filters operate through the approved API; loading, empty, error, and data-quality states are clear; displayed estimates include provenance/limitations; no scientific output is fabricated.
 - **Testing Requirements:** Browser/component and API integration checks appropriate to the approved stack; exact tools TBD in DEC-01. Use only explicitly labeled synthetic fixtures for software testing.
-- **Blockers:** The user authorized the React + TypeScript/FastAPI direction on 2026-10-29 and the current foundation boundary is documented. Product-layer, date-filter, chart, and export behavior still depends on real producer outputs and reviewed handoffs. Do not populate these interfaces with fabricated estimates; member-side task acceptance remains pending.
+- **Blockers:** The owner has directed that member approvals be treated as complete for this work. Product-layer, date-filter, chart, and export behavior still depends on real producer outputs and accepted handoffs. Do not populate these interfaces with fabricated estimates.
+- **Status (2026-10-29):** A foundation-level local demo now includes API-backed capability status, an AOI GeoJSON preview, and structural date/geometry request validation. This is not completion of interactive scientific map layers or a data-connected dashboard; those remain dependent on real, reviewed producer outputs.
 
 #### `T-P2-AP-003`: Temporal Analytics Charts & Tabular Export Module
 - **Objective:** Implement field analytics displaying available NDVI/EVI/SAR trajectories, estimated growth-stage transition markers, and downloadable CSV summary tables. Chart library and browser interaction patterns follow approved DEC-01 architecture.

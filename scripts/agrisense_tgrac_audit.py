@@ -22,7 +22,6 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
-
 AGRI_ROOT = (
     "https://tgrac.telangana.gov.in/arcgis/rest/services/Agri2/"
     "Agriculture2_CropAnalysis_Layers/MapServer"
@@ -76,11 +75,20 @@ def request_json(url: str, params: dict[str, Any], retries: int = 3) -> dict[str
             if "error" in payload:
                 raise RuntimeError(json.dumps(payload["error"], ensure_ascii=False))
             return payload
-        except (HTTPError, URLError, TimeoutError, json.JSONDecodeError, ValueError, RuntimeError) as exc:
+        except (
+            HTTPError,
+            URLError,
+            TimeoutError,
+            json.JSONDecodeError,
+            ValueError,
+            RuntimeError,
+        ) as exc:
             last_error = exc
             if attempt + 1 < retries:
                 time.sleep(0.5 * (attempt + 1))
-    raise RuntimeError(f"Request failed after {retries} attempts: {url}: {last_error}") from last_error
+    raise RuntimeError(
+        f"Request failed after {retries} attempts: {url}: {last_error}"
+    ) from last_error
 
 
 def fetch_layer(
@@ -164,7 +172,11 @@ def fetch_layer(
                 f"Layer {layer_id} returned {len(features)} features for "
                 f"{len(batch_ids)} requested object IDs in batch {page_number - 1}"
             )
-    ids = [feature.get("attributes", {}).get(oid_field) for feature in all_features] if oid_field else []
+    ids = (
+        [feature.get("attributes", {}).get(oid_field) for feature in all_features]
+        if oid_field
+        else []
+    )
     valid_ids = [value for value in ids if value is not None]
     duplicate_count = len(valid_ids) - len(set(valid_ids))
     stats = {
@@ -174,10 +186,14 @@ def fetch_layer(
         "records_received": len(all_features),
         "unique_object_ids": len(set(valid_ids)) if valid_ids else None,
         "duplicate_object_ids": duplicate_count,
-        "missing_geometry": sum(feature.get("geometry") is None for feature in all_features),
+        "missing_geometry": sum(
+            feature.get("geometry") is None for feature in all_features
+        ),
         "malformed_geometry": sum(
             feature.get("geometry") is not None
-            and not geometry_is_well_formed(feature.get("geometry"), meta.get("geometryType"))
+            and not geometry_is_well_formed(
+                feature.get("geometry"), meta.get("geometryType")
+            )
             for feature in all_features
         ),
         "page_count": page_number,
@@ -201,20 +217,27 @@ def field_value(feature: dict[str, Any], aliases: tuple[str, ...]) -> Any:
 
 def _ring_area(ring: list[list[float]]) -> float:
     """Return signed planar ring area."""
-    return sum(
-        ring[index][0] * ring[(index + 1) % len(ring)][1]
-        - ring[(index + 1) % len(ring)][0] * ring[index][1]
-        for index in range(len(ring))
-    ) / 2
+    return (
+        sum(
+            ring[index][0] * ring[(index + 1) % len(ring)][1]
+            - ring[(index + 1) % len(ring)][0] * ring[index][1]
+            for index in range(len(ring))
+        )
+        / 2
+    )
 
 
-def geometry_is_well_formed(geometry: dict[str, Any] | None, geometry_type: str | None) -> bool:
+def geometry_is_well_formed(
+    geometry: dict[str, Any] | None, geometry_type: str | None
+) -> bool:
     """Check whether point or polygon coordinates have a usable basic structure."""
     if not isinstance(geometry, dict):
         return False
     if geometry_type == "esriGeometryPoint":
         try:
-            return math.isfinite(float(geometry["x"])) and math.isfinite(float(geometry["y"]))
+            return math.isfinite(float(geometry["x"])) and math.isfinite(
+                float(geometry["y"])
+            )
         except (KeyError, TypeError, ValueError):
             return False
     if geometry_type == "esriGeometryPolygon":
@@ -236,7 +259,9 @@ def geometry_is_well_formed(geometry: dict[str, Any] | None, geometry_type: str 
     return False
 
 
-def polygon_bounds(polygon: dict[str, Any] | None) -> tuple[float, float, float, float] | None:
+def polygon_bounds(
+    polygon: dict[str, Any] | None,
+) -> tuple[float, float, float, float] | None:
     """Return an Esri polygon's coordinate bounds for a safe overlap prefilter."""
     coordinates = []
     for ring in (polygon or {}).get("rings", []):
@@ -259,9 +284,10 @@ def _on_segment(point: tuple[float, float], a: list[float], b: list[float]) -> b
     cross = (x - a[0]) * (b[1] - a[1]) - (y - a[1]) * (b[0] - a[0])
     if abs(cross) > 1e-10:
         return False
-    return min(a[0], b[0]) - 1e-10 <= x <= max(a[0], b[0]) + 1e-10 and min(
-        a[1], b[1]
-    ) - 1e-10 <= y <= max(a[1], b[1]) + 1e-10
+    return (
+        min(a[0], b[0]) - 1e-10 <= x <= max(a[0], b[0]) + 1e-10
+        and min(a[1], b[1]) - 1e-10 <= y <= max(a[1], b[1]) + 1e-10
+    )
 
 
 def _ring_relation(point: tuple[float, float], ring: list[list[float]]) -> int:
@@ -279,9 +305,16 @@ def _ring_relation(point: tuple[float, float], ring: list[list[float]]) -> int:
     return 1 if inside else 0
 
 
-def point_in_arcgis_polygon(point_geometry: dict[str, Any] | None, polygon: dict[str, Any] | None) -> bool:
+def point_in_arcgis_polygon(
+    point_geometry: dict[str, Any] | None, polygon: dict[str, Any] | None
+) -> bool:
     """Test an ArcGIS point against an Esri rings polygon, including holes."""
-    if not point_geometry or not polygon or "x" not in point_geometry or "y" not in point_geometry:
+    if (
+        not point_geometry
+        or not polygon
+        or "x" not in point_geometry
+        or "y" not in point_geometry
+    ):
         return False
     point = (float(point_geometry["x"]), float(point_geometry["y"]))
     rings = polygon.get("rings") or []
@@ -300,8 +333,14 @@ def point_in_arcgis_polygon(point_geometry: dict[str, Any] | None, polygon: dict
 def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
     """Write rows as UTF-8 CSV, including headers for empty result sets."""
     path.parent.mkdir(parents=True, exist_ok=True)
-    fieldnames = list(rows[0]) if rows else (
-        ["source", "error", "retrieved_at_utc"] if path.name == "failures.csv" else []
+    fieldnames = (
+        list(rows[0])
+        if rows
+        else (
+            ["source", "error", "retrieved_at_utc"]
+            if path.name == "failures.csv"
+            else []
+        )
     )
     with path.open("w", newline="", encoding="utf-8-sig") as stream:
         writer = csv.DictWriter(stream, fieldnames=fieldnames, extrasaction="ignore")
@@ -310,7 +349,9 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
             writer.writerows(rows)
 
 
-def feature_collection(features: list[dict[str, Any]], spatial_reference: Any) -> dict[str, Any]:
+def feature_collection(
+    features: list[dict[str, Any]], spatial_reference: Any
+) -> dict[str, Any]:
     """Build a GeoJSON-like collection while preserving ArcGIS source CRS metadata."""
     return {
         "type": "FeatureCollection",
@@ -348,14 +389,16 @@ def crop_field(features: list[dict[str, Any]]) -> str | None:
     aliases = ("crop", "Crop", "CROP", "purecrop_n", "purecrop_1")
     for feature in features:
         attrs = feature.get("attributes") or {}
-        match = next((key for key in attrs if key.lower() in {a.lower() for a in aliases}), None)
+        match = next(
+            (key for key in attrs if key.lower() in {a.lower() for a in aliases}), None
+        )
         if match:
             return match
     return None
 
 
 def build_summaries(
-    datasets: dict[str, tuple[dict[str, Any], list[dict[str, Any]], dict[str, Any]]]
+    datasets: dict[str, tuple[dict[str, Any], list[dict[str, Any]], dict[str, Any]]],
 ) -> dict[str, list[dict[str, Any]]]:
     """Create feature, missing-value, crop, district, mandal and overlap summaries."""
     feature_rows = []
@@ -366,7 +409,9 @@ def build_summaries(
     point_wkids = {}
     point_denominators: dict[str, int] = {}
     for name, (meta, features, stats) in datasets.items():
-        sr = meta.get("extent", {}).get("spatialReference") or meta.get("sourceSpatialReference")
+        sr = meta.get("extent", {}).get("spatialReference") or meta.get(
+            "sourceSpatialReference"
+        )
         wkid = (sr or {}).get("latestWkid") or (sr or {}).get("wkid")
         feature_rows.append(
             {
@@ -378,14 +423,21 @@ def build_summaries(
                 **stats,
             }
         )
-        keys = sorted({key for feature in features for key in (feature.get("attributes") or {})})
+        keys = sorted(
+            {key for feature in features for key in (feature.get("attributes") or {})}
+        )
         for key in keys:
             missing = sum(
                 (feature.get("attributes") or {}).get(key) in (None, "")
                 for feature in features
             )
             missing_rows.append(
-                {"dataset": name, "field": key, "missing_count": missing, "record_count": len(features)}
+                {
+                    "dataset": name,
+                    "field": key,
+                    "missing_count": missing,
+                    "record_count": len(features),
+                }
             )
         if name in MONTH_LAYERS:
             point_sets[name] = features
@@ -394,41 +446,77 @@ def build_summaries(
             cfield = crop_field(features)
             if cfield:
                 counts = Counter(
-                    MISSING if feature.get("attributes", {}).get(cfield) in (None, "")
-                    else str(feature["attributes"][cfield])
+                    (
+                        MISSING
+                        if feature.get("attributes", {}).get(cfield) in (None, "")
+                        else str(feature["attributes"][cfield])
+                    )
                     for feature in features
                 )
                 crop_rows.extend(
-                    {"month_layer": name, "crop_field": cfield, "crop_label": label, "count": count}
+                    {
+                        "month_layer": name,
+                        "crop_field": cfield,
+                        "crop_label": label,
+                        "count": count,
+                    }
                     for label, count in sorted(counts.items())
                 )
             for dimension, aliases in (
                 ("district", ("districtname", "district")),
                 ("mandal", ("mandalname", "mandal")),
             ):
-                counts = Counter(str(field_value(feature, aliases)) for feature in features)
+                counts = Counter(
+                    str(field_value(feature, aliases)) for feature in features
+                )
                 admin_rows.extend(
-                    {"month_layer": name, "admin_level": dimension, "name": label, "count": count}
+                    {
+                        "month_layer": name,
+                        "admin_level": dimension,
+                        "name": label,
+                        "count": count,
+                    }
                     for label, count in sorted(counts.items())
                 )
 
     overlap_rows = []
-    polygons = [(name, features) for name, (_, features, _) in datasets.items() if name.endswith("candidate") or name in {"icad_layer9", "icad_layer10"}]
+    polygons = [
+        (name, features)
+        for name, (_, features, _) in datasets.items()
+        if name.endswith("candidate") or name in {"icad_layer9", "icad_layer10"}
+    ]
     for polygon_source, poly_features in polygons:
         for polygon_index, polygon_feature in enumerate(poly_features):
             polygon = polygon_feature.get("geometry")
             bounds = polygon_bounds(polygon)
             label = field_value(
                 polygon_feature,
-                ("Irrigation_L_3", "Irrigation_L_2", "D_Name", "M_Name", "V_Name", "name"),
+                (
+                    "Irrigation_L_3",
+                    "Irrigation_L_2",
+                    "D_Name",
+                    "M_Name",
+                    "V_Name",
+                    "name",
+                ),
             )
             if label == MISSING:
-                label = str(polygon_feature.get("attributes", {}).get("OBJECTID", polygon_index))
+                label = str(
+                    polygon_feature.get("attributes", {}).get("OBJECTID", polygon_index)
+                )
             for month, points in point_sets.items():
                 polygon_meta = datasets[polygon_source][0]
-                polygon_sr = polygon_meta.get("extent", {}).get("spatialReference") or polygon_meta.get("sourceSpatialReference") or {}
+                polygon_sr = (
+                    polygon_meta.get("extent", {}).get("spatialReference")
+                    or polygon_meta.get("sourceSpatialReference")
+                    or {}
+                )
                 polygon_wkid = polygon_sr.get("latestWkid") or polygon_sr.get("wkid")
-                if not polygon_wkid or not point_wkids[month] or str(polygon_wkid) != str(point_wkids[month]):
+                if (
+                    not polygon_wkid
+                    or not point_wkids[month]
+                    or str(polygon_wkid) != str(point_wkids[month])
+                ):
                     overlap_rows.append(
                         {
                             "polygon_source": polygon_source,
@@ -479,7 +567,8 @@ def build_summaries(
                     )
                 for crop, count in sorted(crop_counts.items()):
                     all_crop = sum(
-                        str(field_value(point, ("crop", "purecrop_n", "purecrop_1"))) == crop
+                        str(field_value(point, ("crop", "purecrop_n", "purecrop_1")))
+                        == crop
                         for point in points
                     )
                     overlap_rows.append(
@@ -489,10 +578,14 @@ def build_summaries(
                             "month_layer": month,
                             "crop_label": crop,
                             "point_count": count,
-                            "percent_of_month_points": round(
-                                100 * count / point_denominators[month], 6
-                            ) if point_denominators[month] else 0.0,
-                            "percent_of_month_crop": round(100 * count / all_crop, 6) if all_crop else 0.0,
+                            "percent_of_month_points": (
+                                round(100 * count / point_denominators[month], 6)
+                                if point_denominators[month]
+                                else 0.0
+                            ),
+                            "percent_of_month_crop": (
+                                round(100 * count / all_crop, 6) if all_crop else 0.0
+                            ),
                             "authoritative_command_verified": False,
                             "overlap_status": "Computed; descriptive candidate intersection",
                         }
@@ -517,17 +610,28 @@ def run_audit(outdir: Path, page_size: int | None = None) -> int:
             metadata = request_json(root, {"f": "pjson"})
             path = outdir / "raw" / "services"
             path.mkdir(parents=True, exist_ok=True)
-            (path / f"{'agri2' if root == AGRI_ROOT else 'icad'}_service.json").write_text(
+            (
+                path / f"{'agri2' if root == AGRI_ROOT else 'icad'}_service.json"
+            ).write_text(
                 json.dumps(metadata, ensure_ascii=False, indent=2), encoding="utf-8"
             )
         except Exception as exc:
-            failures.append({"source": root, "error": str(exc), "retrieved_at_utc": utc_now()})
+            failures.append(
+                {"source": root, "error": str(exc), "retrieved_at_utc": utc_now()}
+            )
             print(f"ERROR service metadata {root}: {exc}", file=sys.stderr)
     layer_catalogues = {}
     for root in service_roots:
-        catalogue_file = outdir / "raw" / "services" / f"{'agri2' if root == AGRI_ROOT else 'icad'}_service.json"
+        catalogue_file = (
+            outdir
+            / "raw"
+            / "services"
+            / f"{'agri2' if root == AGRI_ROOT else 'icad'}_service.json"
+        )
         if catalogue_file.exists():
-            layer_catalogues[root] = json.loads(catalogue_file.read_text(encoding="utf-8"))
+            layer_catalogues[root] = json.loads(
+                catalogue_file.read_text(encoding="utf-8")
+            )
     for name, root, layer_id, role in LAYERS:
         print(f"Fetching {name} ({root}/{layer_id}; role={role})")
         try:
@@ -546,7 +650,9 @@ def run_audit(outdir: Path, page_size: int | None = None) -> int:
                 candidate_meta = request_json(f"{root}/{layer_id}", {"f": "pjson"})
                 extent = candidate_meta.get("extent") or {}
                 spatial_reference = extent.get("spatialReference") or {}
-                wkid = spatial_reference.get("latestWkid") or spatial_reference.get("wkid")
+                wkid = spatial_reference.get("latestWkid") or spatial_reference.get(
+                    "wkid"
+                )
                 if str(wkid) != "4326":
                     raise RuntimeError(
                         f"Candidate layer 18 CRS is {wkid}; point-filtered query currently requires EPSG:4326."
@@ -557,14 +663,17 @@ def run_audit(outdir: Path, page_size: int | None = None) -> int:
                     feature
                     for month in MONTH_LAYERS
                     for feature in datasets.get(month, (None, [], None))[1]
-                    if feature.get("geometry") and geometry_is_well_formed(
+                    if feature.get("geometry")
+                    and geometry_is_well_formed(
                         feature.get("geometry"), "esriGeometryPoint"
                     )
                     and xmin <= feature["geometry"]["x"] <= xmax
                     and ymin <= feature["geometry"]["y"] <= ymax
                 ]
                 if not ground_truth:
-                    print("No ground-truth points fall inside the live layer 18 extent.")
+                    print(
+                        "No ground-truth points fall inside the live layer 18 extent."
+                    )
                 # Keep each encoded multipoint query short enough for ArcGIS GET.
                 # This host returns 404 for long POST queries, although small GET
                 # multipoint queries work. Union IDs across batches before storing.
@@ -602,7 +711,16 @@ def run_audit(outdir: Path, page_size: int | None = None) -> int:
                     for _, part_features, part_stats in candidate_parts:
                         for feature in part_features:
                             oid = (feature.get("attributes") or {}).get(oid_name)
-                            by_id[oid if oid is not None else (len(by_id), json.dumps(feature, sort_keys=True))] = feature
+                            by_id[
+                                (
+                                    oid
+                                    if oid is not None
+                                    else (
+                                        len(by_id),
+                                        json.dumps(feature, sort_keys=True),
+                                    )
+                                )
+                            ] = feature
                     features = list(by_id.values())
                     stats = dict(candidate_parts[0][2])
                     stats.update(
@@ -610,8 +728,14 @@ def run_audit(outdir: Path, page_size: int | None = None) -> int:
                         object_ids_returned=len(features),
                         records_received=len(features),
                         unique_object_ids=len(features) if oid_name else None,
-                        duplicate_object_ids=sum(part[2].get("records_received", 0) for part in candidate_parts) - len(features),
-                        page_count=sum(part[2].get("page_count", 0) for part in candidate_parts),
+                        duplicate_object_ids=sum(
+                            part[2].get("records_received", 0)
+                            for part in candidate_parts
+                        )
+                        - len(features),
+                        page_count=sum(
+                            part[2].get("page_count", 0) for part in candidate_parts
+                        ),
                         point_filter_batches=len(candidate_parts),
                         retrieved_at_utc=utc_now(),
                     )
@@ -644,14 +768,22 @@ def run_audit(outdir: Path, page_size: int | None = None) -> int:
             data_path = outdir / "data"
             data_path.mkdir(parents=True, exist_ok=True)
             (data_path / f"{name}.json").write_text(
-                json.dumps(feature_collection(features, spatial_reference), ensure_ascii=False),
+                json.dumps(
+                    feature_collection(features, spatial_reference), ensure_ascii=False
+                ),
                 encoding="utf-8",
             )
             summary_features = deduplicate_features(features, stats["object_id_field"])
             stats["records_used_for_summaries"] = len(summary_features)
             datasets[name] = (meta, summary_features, stats)
         except Exception as exc:
-            failures.append({"source": f"{root}/{layer_id}", "error": str(exc), "retrieved_at_utc": utc_now()})
+            failures.append(
+                {
+                    "source": f"{root}/{layer_id}",
+                    "error": str(exc),
+                    "retrieved_at_utc": utc_now(),
+                }
+            )
             print(f"ERROR layer {name}: {exc}", file=sys.stderr)
     if datasets:
         summaries = build_summaries(datasets)
@@ -686,7 +818,9 @@ def run_audit(outdir: Path, page_size: int | None = None) -> int:
                 for row in crop_rows
             )
         else:
-            report_lines.append("No crop-count rows were available; inspect retrieval failures and source schemas.")
+            report_lines.append(
+                "No crop-count rows were available; inspect retrieval failures and source schemas."
+            )
         report_lines.extend(
             [
                 "",
@@ -757,19 +891,22 @@ def summarize_existing_sources(outdir: Path) -> int:
         meta_path = raw_dir / f"layer_{layer_id}_metadata.json"
         features_path = raw_dir / f"layer_{layer_id}_features.json"
         if not meta_path.exists() or not features_path.exists():
-            raise FileNotFoundError(f"Required saved source files missing for {name}: {raw_dir}")
+            raise FileNotFoundError(
+                f"Required saved source files missing for {name}: {raw_dir}"
+            )
         meta = json.loads(meta_path.read_text(encoding="utf-8"))
-        features = json.loads(features_path.read_text(encoding="utf-8")).get("features", [])
+        features = json.loads(features_path.read_text(encoding="utf-8")).get(
+            "features", []
+        )
         digest = hashlib.sha256(features_path.read_bytes()).hexdigest()
         oid_field = next(
-            (field["name"] for field in meta.get("fields", []) if field.get("type") == "esriFieldTypeOID"),
+            (
+                field["name"]
+                for field in meta.get("fields", [])
+                if field.get("type") == "esriFieldTypeOID"
+            ),
             None,
         )
-        valid_ids = [
-            (feature.get("attributes") or {}).get(oid_field)
-            for feature in features
-            if oid_field and (feature.get("attributes") or {}).get(oid_field) is not None
-        ]
         received_features = features
         page_count = None
         if name == "layer18_candidate":
@@ -779,7 +916,9 @@ def summarize_existing_sources(outdir: Path) -> int:
                 batch_file = batch_dir / f"layer_{layer_id}_features.json"
                 if batch_file.exists():
                     batch_features.extend(
-                        json.loads(batch_file.read_text(encoding="utf-8")).get("features", [])
+                        json.loads(batch_file.read_text(encoding="utf-8")).get(
+                            "features", []
+                        )
                     )
                 batch_pages.extend(batch_dir.glob(f"layer_{layer_id}_page_*.json"))
             received_features = batch_features or features
@@ -787,20 +926,27 @@ def summarize_existing_sources(outdir: Path) -> int:
         received_ids = [
             (feature.get("attributes") or {}).get(oid_field)
             for feature in received_features
-            if oid_field and (feature.get("attributes") or {}).get(oid_field) is not None
+            if oid_field
+            and (feature.get("attributes") or {}).get(oid_field) is not None
         ]
         summary_features = deduplicate_features(features, oid_field)
         stats = {
             "expected_count": len(features),
-            "service_total_count": 1131404 if name == "layer18_candidate" else len(features),
+            "service_total_count": (
+                1131404 if name == "layer18_candidate" else len(features)
+            ),
             "object_ids_returned": len(features),
             "records_received": len(received_features),
             "unique_object_ids": len(set(received_ids)) if received_ids else None,
             "duplicate_object_ids": len(received_ids) - len(set(received_ids)),
-            "missing_geometry": sum(feature.get("geometry") is None for feature in features),
+            "missing_geometry": sum(
+                feature.get("geometry") is None for feature in features
+            ),
             "malformed_geometry": sum(
                 feature.get("geometry") is not None
-                and not geometry_is_well_formed(feature.get("geometry"), meta.get("geometryType"))
+                and not geometry_is_well_formed(
+                    feature.get("geometry"), meta.get("geometryType")
+                )
                 for feature in features
             ),
             # This is intentionally unknown: interrupted earlier runs may leave
@@ -808,7 +954,9 @@ def summarize_existing_sources(outdir: Path) -> int:
             "page_count": page_count,
             "exceeded_transfer_limit": False,
             "object_id_field": oid_field,
-            "retrieved_at_utc": datetime.fromtimestamp(features_path.stat().st_mtime, timezone.utc).isoformat(),
+            "retrieved_at_utc": datetime.fromtimestamp(
+                features_path.stat().st_mtime, timezone.utc
+            ).isoformat(),
             "records_used_for_summaries": len(summary_features),
         }
         if name == "layer18_candidate":
@@ -828,7 +976,10 @@ def summarize_existing_sources(outdir: Path) -> int:
         data_dir = outdir / "data"
         data_dir.mkdir(parents=True, exist_ok=True)
         (data_dir / f"{name}.json").write_text(
-            json.dumps(feature_collection(features, spatial_reference), ensure_ascii=False), encoding="utf-8"
+            json.dumps(
+                feature_collection(features, spatial_reference), ensure_ascii=False
+            ),
+            encoding="utf-8",
         )
     summaries = build_summaries(datasets)
     for filename, rows in summaries.items():
@@ -849,12 +1000,18 @@ def summarize_existing_sources(outdir: Path) -> int:
             "All project polygons are candidate geometries only; no boundary authority, licence, label validity, or AOI selection is asserted."
         ),
     }
-    (outdir / "manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8")
+    (outdir / "manifest.json").write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
     report = [
-        "# TGRAC Crop and Candidate-Polygon Audit", "",
-        f"> Generated from saved source files: {utc_now()}", "",
-        "> This is a descriptive source audit. Layer 18 and I&CAD polygons remain candidate geometries; no authority, licence, label validity, or AOI selection is asserted.", "",
-        "## Retrieval summary", "",
+        "# TGRAC Crop and Candidate-Polygon Audit",
+        "",
+        f"> Generated from saved source files: {utc_now()}",
+        "",
+        "> This is a descriptive source audit. Layer 18 and I&CAD polygons remain candidate geometries; no authority, licence, label validity, or AOI selection is asserted.",
+        "",
+        "## Retrieval summary",
+        "",
         "| Source | Layer | Name | Records in saved source | CRS | Missing geometry | Malformed geometry | Duplicate object IDs |",
         "|---|---:|---|---:|---:|---:|---:|---:|",
     ]
@@ -863,21 +1020,37 @@ def summarize_existing_sources(outdir: Path) -> int:
             f"| {row['dataset']} | {row['layer_id']} | {row['layer_name']} | {row['records_received']} | "
             f"{row['wkid']} | {row['missing_geometry']} | {row['malformed_geometry']} | {row['duplicate_object_ids']} |"
         )
-    report.extend(["", "## Crop counts by month", "", "| Month layer | Crop label | Count |", "|---|---|---:|"])
+    report.extend(
+        [
+            "",
+            "## Crop counts by month",
+            "",
+            "| Month layer | Crop label | Count |",
+            "|---|---|---:|",
+        ]
+    )
     report.extend(
         f"| {row['month_layer']} | {row['crop_label']} | {row['count']} |"
         for row in summaries["crop_counts_by_month.csv"]
     )
-    report.extend([
-        "", "## Overlap", "",
-        "See derived/overlap_by_source_project_month_crop.csv for source, project, month, crop and percentage details. "
-        "Points on polygon boundaries are included. Percentages use the original monthly source-layer denominator; "
-        "the same source points are not deduplicated across month layers.", "",
-        "## Failures and caveats", "",
-        "All configured source records needed for these summaries were present in the saved downloads. Layer 18 is only the subset of parcel polygons intersecting a point-filter batch; it is not an irrigation-command boundary. "
-        "Service terms, boundary provenance, label validity and AOI suitability remain unresolved.",
-    ])
-    (outdir / "DATA_AUDIT_REPORT.md").write_text("\n".join(report) + "\n", encoding="utf-8")
+    report.extend(
+        [
+            "",
+            "## Overlap",
+            "",
+            "See derived/overlap_by_source_project_month_crop.csv for source, project, month, crop and percentage details. "
+            "Points on polygon boundaries are included. Percentages use the original monthly source-layer denominator; "
+            "the same source points are not deduplicated across month layers.",
+            "",
+            "## Failures and caveats",
+            "",
+            "All configured source records needed for these summaries were present in the saved downloads. Layer 18 is only the subset of parcel polygons intersecting a point-filter batch; it is not an irrigation-command boundary. "
+            "Service terms, boundary provenance, label validity and AOI suitability remain unresolved.",
+        ]
+    )
+    (outdir / "DATA_AUDIT_REPORT.md").write_text(
+        "\n".join(report) + "\n", encoding="utf-8"
+    )
     return 0
 
 

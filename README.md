@@ -43,7 +43,7 @@ ERA5-Land (Met) ──────┘                                         �
 
 ## Recommended Architecture *(Provisional — Pending Approval)*
 
-**User-authorized direction:** a responsive React + TypeScript browser dashboard with a FastAPI Python API. Member-side implementation reviews remain pending. The source documents propose Streamlit. GEE, scikit-learn, and SciPy remain proposed scientific stack elements. See `docs/ARCHITECTURE.md` and `docs/DECISIONS.md` for current decisions.
+**User-authorized direction:** a responsive React + TypeScript browser dashboard with a FastAPI Python API. The project owner directed that required member approvals be treated as complete for implementation; individual review records were not collected in this workspace. The source documents propose Streamlit. GEE, scikit-learn, and SciPy remain proposed scientific stack elements. See `docs/ARCHITECTURE.md` and `docs/DECISIONS.md` for current decisions.
 
 ## Project Documentation
 
@@ -66,6 +66,7 @@ ERA5-Land (Met) ──────┘                                         �
 ## Development Prerequisites
 
 - Python 3.10+
+- Node.js with npm for the React dashboard
 - Google Earth Engine account with API access, if GEE is selected at the Phase 0 gate
 - Git
 
@@ -83,6 +84,29 @@ py -3.10 -m venv .venv
 ```
 
 On Linux/macOS, use `python3 -m venv .venv` and `.venv/bin/python` in place of the Windows commands.
+
+## Run the Local Foundation Demo
+
+The current demo shows the responsive research workspace, API/data readiness, local GeoJSON preview, and structural study-request validation. It does **not** load satellite/weather observations or generate crop, stress, growth-stage, or irrigation estimates. Bring a boundary file you are authorized to use; the repository does not bundle a synthetic or unverified AOI.
+
+From the repository root, install the frontend dependencies and build the browser app:
+
+```powershell
+cd frontend
+npm ci
+npm run build
+cd ..
+```
+
+Start the local API, which serves the built frontend when `frontend/dist` exists:
+
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn src.api.main:app --host 127.0.0.1 --port 8000
+```
+
+Open [http://127.0.0.1:8000](http://127.0.0.1:8000). To demonstrate the supported flow, upload an authorized GeoJSON `Polygon` or `MultiPolygon` in longitude/latitude order, choose an inclusive start and exclusive end date, and select **Validate study request**. The response confirms request structure only; it does not select an AOI, query a provider, or acquire data. The interactive API schema is available at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs).
+
+For frontend hot reload during development, run `npm run dev` from `frontend` and start the API in a second terminal with the command above. Vite proxies `/api` requests to the local API.
 
 ## Finding Your Tasks
 
