@@ -156,3 +156,11 @@ Phase 0 is complete. Begin the unblocked P1 tasks above. Complete the region-spe
 - Inventory is a desk-research deliverable, not source acquisition, AOI approval, or scientific validation. Review by Members B and C remains pending; region-dependent acquisition and water-balance implementation remain gated.
 
 See [`docs/WORK_STATUS.md`](WORK_STATUS.md), [`docs/AOI_DECISION.md`](AOI_DECISION.md), and [`docs/DATA_SOURCES_AND_LICENCES.md`](DATA_SOURCES_AND_LICENCES.md) for details. The AOI evidence and reuse blockers remain open.
+
+## 11. Member A review checkpoint — 2026-10-28
+
+- Refreshed the `T-P1-DE-002` candidate-region source inventory with official-source details on ERA5-Land daily-band semantics and known accumulated-variable issues, IMD data-supply conditions, SoI boundary product scale, Soil Health Card scope, TGRAC/NWIC command-source limitations, TNGIS terms, and Earth Engine project requirements.
+- Member A reviewed `T-P1-SH-002`: no blocking mismatch was found between the implemented schemas and approved `CON-01`–`CON-09` meanings. This is not final handoff acceptance; Member B review and Member C acceptance remain pending. Schema checks do not validate source truth, topology, reuse rights or scientific methods.
+- Member A reviewed Rishav's `T-P1-SC-002` crop/label feasibility inventory: no blocking omission for the research deliverable. Candidate labels and products remain unapproved for training or validation; provider terms/lineage, CRS/topology, AOI/time match and independent evaluation suitability remain open. Member C review remains pending.
+- GEE remains owner-preferred under `DEC-02`, with team technical confirmation open. No authentication was attempted. Preserve local-only credentials and defer `T-P1-DE-001` verification until the team selects GEE and the required project/account access is available.
+- `T-P1-DE-002` is complete as a desk-research inventory and Member A review checkpoint only. The task's Member B/C reviews, pilot AOI selection, boundary authority/reuse verification, study period and P1 gates remain open.
