@@ -135,6 +135,13 @@ Continue the P1/P2 foundation handoffs and resolve the remaining AOI, source-qua
 - On the project owner's instruction to start Rishav's software build, added `T-P1-SC-001` synthetic raster/time-series fixture generators under `tests/fixtures/`. These are explicitly test-only and provide no real source IDs, AOI, CRS, observations, model outputs, or validation evidence. This 2026-10-24 note is superseded by the 2026-10-25 schema implementation checkpoint below.
 - Rishav workstream status at the 2026-10-24 checkpoint: `T-P1-SC-002` source-inventory research was complete as a feasibility deliverable, pending Member A/C review; fixture implementation awaited schema validation. The later checkpoint below records the schema and test integration. `T-P2-DE-002`, `T-P2-DE-003`, `T-P2-DE-005`, `T-P2-SC-002` through `T-P2-SC-004`, and downstream `T-P4`/`T-P5` work remain gated on the AOI, provider access, accepted data handoffs, source suitability, and scientific method approvals described above.
 
+## Scientific foundation checkpoint — 2026-10-29
+
+- On branch `feat/T-P2-SC-002-scientific-foundation`, added a generic satellite-array assembler for the satellite portion of `CON-03`. It carries per-variable source metadata and irregular timestamps, checks timestamp ordering/window and spatial-array shape agreement, and turns non-finite cells into explicit missing values. It does not fetch, reproject, resample, composite, interpolate, or geospatially validate data.
+- Hardened Sentinel-1 dB-to-linear conversion so values that overflow the float32 output representation are marked invalid instead of retaining a true validity flag beside an infinite/NaN derived feature.
+- Software-only tests use explicitly synthetic fixtures. These checks verify implementation behavior only; they are not satellite observations, model validation, or scientific performance evidence.
+- `T-P2-DE-005` is not fully accepted: it still depends on upstream real Sentinel-1/2 outputs, a verified AOI and provider/data terms, and approved orbit/grid/time conventions. `DS-04`/`DS-09` remain open; no classifier, trained output, or irrigation estimate is claimed.
+
 ## 8. Schema implementation checkpoint — 2026-10-25
 
 - Implemented Python dataclasses and JSON serialization/deserialization for the already-approved `CON-01`–`CON-09` contracts in `src/contracts/schemas.py`. The contract document was not amended and no regional fields were added.

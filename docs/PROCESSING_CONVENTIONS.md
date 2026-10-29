@@ -23,6 +23,15 @@ These notes support `T-P2-DE-002` and `T-P2-DE-003` research only. AOI-specific 
 
 ## Sentinel-2 optical data
 
+### Satellite stack assembly software boundary (`T-P2-DE-005`)
+
+- `src/data/preprocessing.py` accepts already prepared numeric arrays and explicit validity masks shaped `(time, row, column)`, plus caller-supplied CON-03 source/variable metadata. This implements a software handoff boundary; it is not a sensor ingestion workflow or scientific validation.
+- Each variable retains its own ordered acquisition timestamps. Sentinel-1 and Sentinel-2 are not forced onto a shared timestamp axis, and this module performs no compositing, interpolation, gap filling, reprojection, resampling, or CRS-registration check.
+- The caller must provide matching spatial array shapes and the declared analysis CRS/affine transform. The manifest records grid shape and limits; metadata declarations do not prove that upstream rasters actually share the declared grid.
+- Timestamps are checked against the requested start-inclusive/end-exclusive interval and must match their source record. Non-finite array values are converted to NaN and marked invalid. A missing AOI may be used for AOI-independent software work and is explicitly recorded as missing; it does not create a study-area product.
+- The returned software object includes per-variable valid-data fractions over all time and spatial cells. These are QA coverage summaries for the supplied arrays, not a sensor-quality score or evidence of adequate scientific coverage.
+- Before real-source use, the project must resolve the AOI, provider/access and reuse terms, acquisition filters, analysis-grid and resampling conventions, and temporal aggregation choices described in the open gates. Preserve native/effective resolution and source-specific QA in the supplied metadata.
+
 - Candidate source: `COPERNICUS/S2_SR_HARMONIZED`; record collection, product IDs, processing baseline and retrieval window.
 - Mask clouds and shadows using scene classification and/or cloud probability with a documented, tested rule; preserve mask provenance and per-pixel valid-observation counts. Do not choose a cloud-probability threshold until it is assessed for the pilot and validated against inspection.
 - Apply the catalog's reflectance scaling/offset convention consistently before computing indices; store units and scaling in metadata. Do not mix scaled and integer reflectance silently.

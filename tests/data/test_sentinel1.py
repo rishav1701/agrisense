@@ -41,6 +41,19 @@ class Sentinel1BackscatterTests(unittest.TestCase):
                 validity_mask=np.ones((2, 2), dtype=np.uint8),
             )
 
+    def test_overflowed_linear_values_are_marked_invalid(self):
+        vv = np.array([[-1000.0, 0.0]], dtype=np.float32)
+        vh = np.array([[1000.0, 1000.0]], dtype=np.float32)
+        result = compute_dual_pol_features(
+            vv_db=vv,
+            vh_db=vh,
+            validity_mask=np.ones(vv.shape, dtype=np.bool_),
+        )
+
+        self.assertFalse(result.valid_mask[0, 0])
+        self.assertFalse(result.valid_mask[0, 1])
+        self.assertTrue(np.isnan(result.vh_to_vv_linear_ratio).all())
+
 
 if __name__ == "__main__":
     unittest.main()

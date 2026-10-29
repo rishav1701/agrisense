@@ -222,6 +222,7 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Acceptance Criteria:** Features preserve common-grid metadata and native/effective resolution; SAR remains complementary to optical; valid-data fractions and provenance are recorded. No 8-day interval is assumed until approved.
 - **Testing Requirements:** Verify spatial alignment, CRS consistency, feature calculations, missing-data handling, and temporal metadata.
 - **Blockers:** Approved grid/temporal conventions and the pending AOI/orbit decisions.
+- **Status (2026-10-29):** Generic `CON-03` satellite-array assembly and software-only checks are implemented on `feat/T-P2-SC-002-scientific-foundation`. It preserves per-variable timestamps and provenance and rejects shape/time mismatches; it does not acquire or align real imagery. Full task acceptance and handoff remain blocked on upstream Sentinel-1/2 outputs and approved AOI/grid/time conventions.
 
 ---
 
