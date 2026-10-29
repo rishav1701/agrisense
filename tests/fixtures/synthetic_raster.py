@@ -67,8 +67,7 @@ def make_synthetic_raster_fixture(
     """
     dimensions = (time_steps, height, width)
     if any(
-        not isinstance(value, int) or isinstance(value, bool)
-        for value in dimensions
+        not isinstance(value, int) or isinstance(value, bool) for value in dimensions
     ):
         raise ValueError("time_steps, height, and width must be integers")
     if any(value <= 0 for value in dimensions):

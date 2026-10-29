@@ -4,7 +4,6 @@ type Geometry = {
   type: "Polygon" | "MultiPolygon";
   coordinates: number[][][] | number[][][][];
 };
-type GeoJSONDocument = Geometry | { type: "Feature"; geometry: Geometry | null };
 
 type ValidationResult = {
   query_id: string;
@@ -13,7 +12,73 @@ type ValidationResult = {
   accepted_for_acquisition: boolean;
 };
 
+type ReadinessResponse = {
+  status: string;
+  capabilities: Record<string, boolean>;
+  limitations: string[];
+};
+
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "";
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function isPosition(value: unknown): value is number[] {
+  return (
+    Array.isArray(value) &&
+    value.length >= 2 &&
+    value.every((coordinate) => typeof coordinate === "number" && Number.isFinite(coordinate)) &&
+    value[0] >= -180 && value[0] <= 180 &&
+    value[1] >= -90 && value[1] <= 90
+  );
+}
+
+function isRing(value: unknown): value is number[][] {
+  return (
+    Array.isArray(value) &&
+    value.length >= 4 &&
+    value.every(isPosition) &&
+    value[0].length === value[value.length - 1].length &&
+    value[0].every((coordinate, index) => coordinate === value[value.length - 1][index])
+  );
+}
+
+function isPolygonCoordinates(value: unknown): value is number[][][] {
+  return Array.isArray(value) && value.length > 0 && value.every(isRing);
+}
+
+function parseGeometry(value: unknown): Geometry {
+  if (!isRecord(value) || !Array.isArray(value.coordinates)) {
+    throw new Error("Choose a GeoJSON Polygon or MultiPolygon with coordinates.");
+  }
+  if (value.type === "Polygon" && isPolygonCoordinates(value.coordinates)) {
+    return value as Geometry;
+  }
+  if (
+    value.type === "MultiPolygon" &&
+    value.coordinates.length > 0 &&
+    value.coordinates.every(isPolygonCoordinates)
+  ) {
+    return value as Geometry;
+  }
+  throw new Error("The boundary must contain closed Polygon or MultiPolygon rings in longitude/latitude order.");
+}
+
+function parseBoundaryDocument(value: unknown): Geometry {
+  if (!isRecord(value)) throw new Error("Choose a valid GeoJSON boundary file.");
+  if (value.type === "FeatureCollection") {
+    if (!Array.isArray(value.features) || value.features.length !== 1) {
+      throw new Error("Choose a FeatureCollection containing exactly one boundary feature.");
+    }
+    value = value.features[0];
+  }
+  if (isRecord(value) && value.type === "Feature") {
+    if (!value.geometry) throw new Error("The GeoJSON feature has no geometry.");
+    return parseGeometry(value.geometry);
+  }
+  return parseGeometry(value);
+}
 
 function getPositions(geometry: Geometry): number[][] {
   const polygons = geometry.type === "Polygon" ? [geometry.coordinates] : geometry.coordinates;
@@ -55,6 +120,7 @@ function App() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [apiOnline, setApiOnline] = useState<boolean | null>(null);
+  const [readiness, setReadiness] = useState<ReadinessResponse | null>(null);
   const [noticeVisible, setNoticeVisible] = useState(true);
   const path = useMemo(() => (geometry ? geometryPath(geometry) : ""), [geometry]);
 
@@ -66,22 +132,59 @@ function App() {
     try {
       const response = await fetch(`${API_BASE}/api/health`);
       setApiOnline(response.ok);
+      if (!response.ok) {
+        setReadiness(null);
+        return;
+      }
+      try {
+        const readinessResponse = await fetch(`${API_BASE}/api/readiness`);
+        setReadiness(
+          readinessResponse.ok
+            ? ((await readinessResponse.json()) as ReadinessResponse)
+            : null,
+        );
+      } catch {
+        setReadiness(null);
+      }
     } catch {
       setApiOnline(false);
+      setReadiness(null);
     }
   }
+
+  const sourceRows = [
+    {
+      name: "Sentinel-2",
+      detail: "Optical imagery",
+      icon: <SatelliteIcon />,
+      available: readiness
+        ? readiness.capabilities.sentinel2_indices === true &&
+          readiness.capabilities.sentinel2_preprocessing === true
+        : null,
+    },
+    {
+      name: "Sentinel-1",
+      detail: "Radar observations",
+      icon: <RadarIcon />,
+      available: readiness
+        ? readiness.capabilities.sentinel1_backscatter_features === true
+        : null,
+    },
+    {
+      name: "ERA5-Land",
+      detail: "Weather reanalysis",
+      icon: <CloudIcon />,
+      available: readiness ? readiness.capabilities.weather_ingestion === true : null,
+    },
+  ];
 
   async function handleFile(file?: File) {
     setError("");
     setMessage("");
     if (!file) return;
     try {
-      const parsed = JSON.parse(await file.text()) as GeoJSONDocument;
-      const candidate = parsed.type === "Feature" ? parsed.geometry : parsed;
-      if (!candidate || !["Polygon", "MultiPolygon"].includes(candidate.type)) {
-        throw new Error("Choose a GeoJSON Polygon or MultiPolygon file.");
-      }
-      setGeometry(candidate as Geometry);
+      const candidate = parseBoundaryDocument(JSON.parse(await file.text()) as unknown);
+      setGeometry(candidate);
       setAreaName(file.name.replace(/\.geojson$|\.json$/i, ""));
     } catch (caught) {
       setGeometry(null);
@@ -94,6 +197,10 @@ function App() {
     setMessage("");
     if (!geometry || !startDate || !endDate) {
       setError("Add a Polygon/MultiPolygon GeoJSON and choose a complete date interval.");
+      return;
+    }
+    if (startDate >= endDate) {
+      setError("The end date must be later than the start date.");
       return;
     }
     setBusy(true);
@@ -124,11 +231,17 @@ function App() {
         <div className="workspace-switch"><span className="workspace-dot">A</span><span><b>Research workspace</b><small>Academic project</small></span><span className="chevron">⌄</span></div>
         <div className="nav-label">WORKSPACE</div>
         <nav aria-label="Main navigation">
-          {["Overview", "Field setup", "Observations", "Crop insights", "Water balance"].map((item, index) => (
+          {["Overview", "Field setup"].map((item, index) => (
             <button className={`nav-item ${active === item ? "selected" : ""}`} key={item} onClick={() => setActive(item)}>
-              <span className="nav-icon">{[<GridIcon />, <PinIcon />, <SatelliteIcon />, <SproutIcon />, <DropIcon />][index]}</span>
+              <span className="nav-icon">{index === 0 ? <GridIcon /> : <PinIcon />}</span>
               {item}
-              {index > 1 && <span className="nav-lock">·</span>}
+            </button>
+          ))}
+          {["Observations", "Crop insights", "Water balance"].map((item, index) => (
+            <button className="nav-item unavailable" key={item} disabled title="Available after source data and reviewed analysis outputs are connected">
+              <span className="nav-icon">{[<SatelliteIcon />, <SproutIcon />, <DropIcon />][index]}</span>
+              {item}
+              <span className="nav-lock">LOCKED</span>
             </button>
           ))}
         </nav>
@@ -141,7 +254,7 @@ function App() {
       <main className="main-content">
         <header className="topbar">
           <div className="breadcrumb">Workspace <span>/</span> <b>{active}</b></div>
-          <div className="top-actions"><span className="environment"><i /> DEVELOPMENT</span><button className="icon-button" aria-label="Check API status" onClick={checkApi}><RefreshIcon /></button><button className="help-button">Help <span>↗</span></button></div>
+          <div className="top-actions"><span className="environment"><i /> LOCAL DEMO</span><button className="icon-button" aria-label="Check API status" onClick={() => void checkApi()}><RefreshIcon /></button><a className="help-button" href={`${API_BASE}/docs`} target="_blank" rel="noreferrer">API docs <span>↗</span></a></div>
         </header>
 
         <div className="page-wrap">
@@ -164,7 +277,7 @@ function App() {
               <div className="panel-heading"><div><div className="section-kicker">STUDY AREA</div><h2>Spatial workspace</h2></div><button className="subtle-button" onClick={() => setActive("Field setup")}>Set up area <span>→</span></button></div>
               <div className={`map-canvas ${geometry ? "has-geometry" : ""}`}>
                 <div className="map-grid" />
-                <div className="map-controls"><button aria-label="Zoom in">＋</button><button aria-label="Zoom out">−</button><button aria-label="Reset view">⌖</button></div>
+                <div className="map-controls"><button disabled title="Map zoom is unavailable in the boundary preview" aria-label="Zoom in">＋</button><button disabled title="Map zoom is unavailable in the boundary preview" aria-label="Zoom out">−</button><button disabled title="No map layer is loaded" aria-label="Reset view">⌖</button></div>
                 {geometry ? <svg className="aoi-preview" viewBox="0 0 400 240" role="img" aria-label="Uploaded AOI geometry preview"><path d={path} /></svg> : <div className="map-empty"><span className="map-empty-icon"><MapIcon /></span><b>Your study area will appear here</b><span>Upload a GeoJSON boundary to preview its shape</span><button className="map-upload" onClick={() => setActive("Field setup")}>Add boundary <span>→</span></button></div>}
                 <div className="map-attribution">AOI preview only · EPSG:4326 coordinates</div>
               </div>
@@ -187,7 +300,7 @@ function App() {
           </section>
 
           <section className="bottom-grid">
-            <article className="panel source-panel"><div className="panel-heading"><div><div className="section-kicker">PIPELINE STATUS</div><h2>Data sources</h2></div><button className="text-link" onClick={checkApi}>Refresh <RefreshIcon /></button></div><div className="source-list">{[["Sentinel-2", "Optical imagery", "SatelliteIcon"], ["Sentinel-1", "Radar observations", "RadarIcon"], ["ERA5-Land", "Weather reanalysis", "CloudIcon"]].map(([name, detail, icon]) => <div className="source-row" key={name}><span className="source-symbol">{icon === "SatelliteIcon" ? <SatelliteIcon /> : icon === "RadarIcon" ? <RadarIcon /> : <CloudIcon />}</span><span className="source-name"><b>{name}</b><small>{detail}</small></span><span className="source-pill"><i />Not connected</span><span className="row-chevron">›</span></div>)}</div></article>
+            <article className="panel source-panel"><div className="panel-heading"><div><div className="section-kicker">PIPELINE STATUS</div><h2>Data sources</h2></div><button className="text-link" onClick={() => void checkApi()}>Refresh <RefreshIcon /></button></div><div className="source-list">{sourceRows.map(({ name, detail, icon, available }) => <div className="source-row" key={name}><span className="source-symbol">{icon}</span><span className="source-name"><b>{name}</b><small>{detail}</small></span><span className={`source-pill ${available === true ? "implemented" : "unavailable"}`}><i />{available === true ? "Software only" : readiness ? "Not implemented" : apiOnline === false ? "API offline" : "Checking API"}</span></div>)}</div><p className="source-footnote">Software capability does not mean a provider is connected or observations are available.</p></article>
             <article className="panel outputs-panel"><div className="panel-heading"><div><div className="section-kicker">ANALYSIS</div><h2>Latest insights</h2></div><span className="empty-badge">No outputs</span></div><div className="outputs-empty"><span className="insight-icon"><ChartIcon /></span><b>Insights will show up here</b><p>Connect source data and complete a study setup before analysis products are available.</p></div></article>
           </section>
 

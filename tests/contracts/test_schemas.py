@@ -7,7 +7,6 @@ real observation, source record, model result, or scientific measurement.
 import unittest
 
 from src.contracts.schemas import (
-    AreaBasis,
     CanalCommandSummary,
     ClassDefinition,
     ContractModel,
@@ -29,7 +28,6 @@ from src.contracts.schemas import (
     deserialize_contract,
     serialize_contract,
 )
-
 
 SYNTHETIC_POLYGON = {
     "type": "Polygon",
@@ -182,9 +180,7 @@ def _contract_samples() -> list[ContractModel]:
             assumptions=["Artificial test object only."],
             quality_state="insufficient_data",
             limitations=["No field water balance is calculated."],
-            missing_reasons={
-                "valid_data_coverage": "No observations are present."
-            },
+            missing_reasons={"valid_data_coverage": "No observations are present."},
         ),
         CanalCommandSummary(
             command_id="synthetic-command",
