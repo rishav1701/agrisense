@@ -51,8 +51,16 @@ def _request_json(
         request.add_header("Content-Type", "application/json")
     try:
         with urlopen(request, timeout=timeout_seconds) as response:
-            payload = json.loads(response.read())
-    except (HTTPError, URLError, TimeoutError, json.JSONDecodeError) as exc:
+            response_body = response.read()
+            try:
+                payload = json.loads(response_body)
+            except json.JSONDecodeError as exc:
+                content_type = response.headers.get("Content-Type", "unknown")
+                raise STACCatalogError(
+                    "Copernicus STAC returned a non-JSON response "
+                    f"(content type: {content_type})"
+                ) from exc
+    except (HTTPError, URLError, TimeoutError) as exc:
         raise STACCatalogError(f"Copernicus STAC request failed: {exc}") from exc
     if not isinstance(payload, dict):
         raise STACCatalogError("Copernicus STAC response must be a JSON object")
@@ -150,7 +158,7 @@ def search_sentinel2_l2a(
     current_body: dict[str, Any] | None = search_body
     found: list[dict[str, Any]] = []
     seen_item_ids: set[str] = set()
-    seen_page_urls: set[str] = set()
+    seen_page_requests: set[tuple[str, str, str]] = set()
     while current_url and len(found) < max_items:
         page_parts = urlsplit(current_url)
         if (page_parts.scheme, page_parts.netloc) != (
@@ -158,9 +166,14 @@ def search_sentinel2_l2a(
             endpoint_parts.netloc,
         ):
             raise STACCatalogError("STAC pagination link changed the endpoint origin")
-        if current_url in seen_page_urls:
+        page_request_key = (
+            current_url,
+            current_method,
+            json.dumps(current_body, sort_keys=True, separators=(",", ":")),
+        )
+        if page_request_key in seen_page_requests:
             raise STACCatalogError("STAC pagination repeated a page link")
-        seen_page_urls.add(current_url)
+        seen_page_requests.add(page_request_key)
 
         page = _request_json(
             url=current_url,

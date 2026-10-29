@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import unittest
+import unittest.mock
 from unittest.mock import patch
 
 from src.data.copernicus_stac import (
     DEFAULT_STAC_URL,
     SENTINEL2_L2A_COLLECTION,
     STACCatalogError,
+    _request_json,
     search_sentinel2_l2a,
 )
 
@@ -25,6 +27,21 @@ def item(item_id: str, acquisition_time: str) -> dict[str, object]:
 
 class CopernicusStacTests(unittest.TestCase):
     """Verify query construction, time semantics, and pagination controls."""
+
+    @patch("src.data.copernicus_stac.urlopen")
+    def test_request_reports_non_json_gateway_response(self, urlopen) -> None:
+        response = unittest.mock.MagicMock()
+        response.read.return_value = b"<html>Request Rejected</html>"
+        response.headers.get.return_value = "text/html; charset=utf-8"
+        urlopen.return_value.__enter__.return_value = response
+
+        with self.assertRaisesRegex(STACCatalogError, "non-JSON response"):
+            _request_json(
+                url="https://stac.example/search",
+                method="POST",
+                body={"limit": 1},
+                timeout_seconds=1,
+            )
 
     @patch("src.data.copernicus_stac._request_json")
     def test_search_uses_public_collection_and_exclusive_end_date(
@@ -77,6 +94,65 @@ class CopernicusStacTests(unittest.TestCase):
             [f"{DEFAULT_STAC_URL}/search", f"{DEFAULT_STAC_URL}/search?page=2"],
         )
         self.assertEqual(request_json.call_args_list[1].kwargs["method"], "GET")
+
+    @patch("src.data.copernicus_stac._request_json")
+    def test_post_pagination_uses_body_cursor_on_same_url(self, request_json) -> None:
+        request_json.side_effect = [
+            {
+                "features": [item("one", "2023-02-02T00:00:00Z")],
+                "links": [
+                    {
+                        "rel": "next",
+                        "href": "/v1/search",
+                        "method": "POST",
+                        "body": {"token": "page-2"},
+                    }
+                ],
+            },
+            {"features": [item("two", "2023-03-02T00:00:00Z")], "links": []},
+        ]
+
+        result = search_sentinel2_l2a(
+            aoi_geometry=GEOMETRY,
+            start_date="2023-02-01",
+            end_date="2023-04-01",
+        )
+
+        self.assertEqual([record["id"] for record in result], ["one", "two"])
+        self.assertEqual(
+            request_json.call_args_list[1].kwargs["url"], f"{DEFAULT_STAC_URL}/search"
+        )
+        self.assertEqual(request_json.call_args_list[1].kwargs["method"], "POST")
+        self.assertEqual(
+            request_json.call_args_list[1].kwargs["body"], {"token": "page-2"}
+        )
+
+    @patch("src.data.copernicus_stac._request_json")
+    def test_post_pagination_rejects_repeated_cursor(self, request_json) -> None:
+        repeated_next = {
+            "rel": "next",
+            "href": "/v1/search",
+            "method": "POST",
+            "body": {"token": "page-2"},
+        }
+        request_json.side_effect = [
+            {
+                "features": [item("one", "2023-02-02T00:00:00Z")],
+                "links": [repeated_next],
+            },
+            {
+                "features": [item("two", "2023-03-02T00:00:00Z")],
+                "links": [repeated_next],
+            },
+        ]
+
+        with self.assertRaisesRegex(STACCatalogError, "repeated a page link"):
+            search_sentinel2_l2a(
+                aoi_geometry=GEOMETRY,
+                start_date="2023-02-01",
+                end_date="2023-04-01",
+            )
+        self.assertEqual(request_json.call_count, 2)
 
     @patch("src.data.copernicus_stac._request_json")
     def test_search_rejects_cross_origin_pagination(self, request_json) -> None:
