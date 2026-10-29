@@ -20,7 +20,7 @@
 | **`DEC-10`** | India-first Multi-Region Scope and Regional Configuration | **Project-owner approved; team implementation review open** | 2026-10-23 | Project Owner; team review for implementation |
 | **`DEC-11`** | Initial Multi-Region Candidate AOIs: Punjab and Tamil Nadu | **Initial candidate review; broadened by DEC-14; AOIs open** | 2026-10-23 | Project Owner + all 3 Members |
 | **`DEC-12`** | Initial Crop Catalogue and Model Class Scope | **Owner direction; model classes depend on verified labels** | 2026-10-23 | Project Owner; team review |
-| **`DEC-13`** | Canal Aggregation Scope | **Owner-approved conditional descriptive scope** | 2026-10-23 | Project Owner; Peter/Ashwanth method review |
+| **`DEC-13`** | Canal Aggregation Scope | **Deferred from first build; may be reconsidered with licensed boundaries and approved inputs** | 2026-10-29 | Project Owner under delegated member approval |
 | **`DEC-14`** | Evidence-Led First Pilot: TGRAC Agriculture2 and I&CAD Command Boundaries | **Owner-approved evidence audit; SRSP Stage I is a lead candidate only; final AOI open** | 2026-10-23 | Project Owner; team review before final AOI/data use |
 
 ## Approval Record — 2026-10-29
@@ -57,9 +57,10 @@ The user instructed that their message be treated as universal approval from eve
 ### `DEC-13`: Canal Aggregation Scope
 
 - **Topic:** Canal-command summaries in the initial deliverable.
-- **Status:** **Owner-approved conditional scope; data/method approval remains open.**
+- **Status:** **Deferred from the first build on 2026-10-29 under the user's delegated approval on behalf of all members.**
 - **Decision direction:** Retain descriptive canal-command aggregation only when authoritative, licensed command boundaries and suitable estimates exist. Defer it for any AOI lacking those inputs. Administrative or district boundaries must never be relabeled as canal commands. No operational release, gate-control, or irrigation schedule recommendation is implied.
-- **Required approvers:** Project owner and all three members for the chosen pilot; guide approval is not assumed as a prerequisite unless the team later requests it.
+- **Effect:** DS-05 is no longer an entry blocker for the first build because the canal-aggregation deliverable is out of the first-build scope. It remains a prerequisite before any later canal-command aggregation. This decision does not authorize use or redistribution of any TGRAC or NWIC geometry.
+- **Required approvers:** User's 2026-10-29 delegated approval covers member approval for this scope decision; guide approval is not assumed as a prerequisite unless the team later requests it.
 
 ### `DEC-14`: Evidence-Led First Pilot: TGRAC Agriculture2 and I&CAD Command Boundaries
 

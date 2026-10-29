@@ -323,7 +323,8 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Contract Dependencies:** `CON-08`, `CON-09`.
 - **Acceptance Criteria:** Correct zonal aggregation and unit conversion, with valid-area accounting and documented coverage. Operational releases remain out of scope unless hydraulic and delivery data are available and approved.
 - **Testing Requirements:** Spatial geometry tests using synthetic mock polygons and uniform deficit grids.
-- **Blockers:** Acquiring or digitizing canal boundary shapefiles (`DS-05`).
+- **Status:** Deferred from the first build under `DEC-13` (2026-10-29 delegated member approval). Do not acquire or digitize a command boundary for this task until the scope is reopened and `DS-05` is resolved.
+- **Blockers:** `DS-05` remains a blocker only if this task is reactivated for a later canal phase.
 
 #### Stage 5 — Member C (Ashwanth C): API and Dashboard
 

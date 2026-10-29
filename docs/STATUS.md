@@ -60,7 +60,7 @@ The project has exactly three members. The project owner approved Phase 0 on 202
 | **`DEC-10`** | India-first multi-region scope and regional configuration | Shared pipeline with region-specific profiles; no transferability claims without evaluation | **Approved by project owner; implementation/schema review remains open** |
 | **`DEC-11`** | Initial multi-region AOIs | Initial Punjab/Tamil Nadu evidence comparison, broadened by `DEC-14`; exact AOI unset | **Initial candidate review; AOI evidence review open** |
 | **`DEC-12`** | Crop catalogue and model class scope | Broad catalogue; initial model limited to verified labels | **Owner direction; evidence review open** |
-| **`DEC-13`** | Canal aggregation scope | Conditional descriptive aggregation only with sourced command boundaries | **Owner-approved conditional scope** |
+| **`DEC-13`** | Canal aggregation scope | Conditional descriptive aggregation only with sourced command boundaries | **Deferred from first build under delegated approval (2026-10-29)** |
 | **`DEC-14`** | Evidence-led first pilot | TGRAC/Telangana is a leading candidate; SRSP Stage I has the strongest queried overlap, not a verified AOI | **Owner-approved audit direction; final AOI open** |
 
 *The 2026-10-29 user message authorizes approval steps on behalf of all members; direct member-side implementation reviews are not recorded. `DEC-11` records the initial candidate-state scope; `DEC-14` expands the evidence review. No specific AOI is selected.*
@@ -78,9 +78,9 @@ The source documents propose Streamlit; this repository already contains the own
 2. **`BLOCKER-02`: Ground-Truth Suitability Unverified (`DS-04`)**
    - *Impact:* TGRAC layers provide candidate georeferenced point labels (2,446 across February–April 2023), but survey lineage, date semantics, positional accuracy, class validity, domain inconsistencies, reuse terms, and independent evaluation suitability are unconfirmed.
    - *Action Required:* Obtain source metadata/terms and quality details; define a spatially grouped evaluation design. Do not fit or report accuracy until labels and data-use conditions are accepted.
-3. **`BLOCKER-03`: Command-Boundary Authority and Reuse Unverified (`DS-05`)**
+3. **`DS-05`: Command-boundary authority and reuse unverified; deferred for the first build (`DEC-13`)**
    - *Impact:* TGRAC I&CAD layers 9 and 10 each return the same seven command polygons with coordinate-identical geometries, but metadata does not explain the duplicate layers or identify vintage, responsible authority, or reuse terms.
-   - *Action Required:* Confirm the authoritative layer/version, topology, area attributes, source lineage, and permission. Keep command aggregation gated until verified.
+   - *Action Required:* None for the first build because canal aggregation is explicitly deferred. Before any later canal aggregation, confirm authoritative layer/version, topology, area attributes, source lineage, and permission.
 
 ### Open Questions Awaiting Confirmation
 - **`Q-01` Role Mapping:** Member assignments were approved with the Phase 0 baseline, per project-owner confirmation.
@@ -95,14 +95,14 @@ Phase 0 is complete. P1 foundation tasks may begin when their own dependencies a
 1. [x] All three members approved the Phase 0 baseline (reported by the project owner, 2026-10-23); guide sign-off waived by the owner for P0.
 2. [ ] Before AOI-specific acquisition: select one pilot command and study period through `DEC-14`, verify its sourced boundary (`DS-09`), and confirm provider access and reuse terms.
 3. [ ] Before supervised training/evaluation: confirm supported crop classes and a feasible ground-truth source/strategy; acquire/verify independent labels (`DS-04`).
-4. [ ] Before canal aggregation: record a licensed canal-boundary source (`DS-05`) or explicitly defer canal aggregation.
+4. [x] Canal aggregation is explicitly deferred from the first build under `DEC-13` (2026-10-29 delegated approval); `DS-05` remains open for future canal work.
 5. [x] User authorization for the React + TypeScript/FastAPI direction (`DEC-01`) was provided on 2026-10-29. Implementation review remains pending; other source and scientific method choices must still be supported by their inputs and documented evidence.
 6. [ ] Verify required GEE account access if the team selects GEE; do not share credentials.
 7. [x] Initial references identified for later review: ICAR Telangana Kharif agro-advisories for DS-06 and FAO-56 Table 12 for generic DS-07 Kc values. These do not resolve a pilot-specific Rabi calendar, target-class coverage, local calibration, or method approval; those remain gates before the corresponding scientific implementation. Soil parameters (`DS-08`) are required only for a method that models soil storage; otherwise document the supported balance scope and limitations.
 
 ### AOI-independent P1 work and current handoffs
 
-- `T-P1-SH-001` — Ashwanth C: environment/tooling foundation remains assigned.
+- `T-P1-SH-001` — Environment/tooling configuration is implemented and passes local software checks; direct reviewer sign-off has not been recorded.
 - `T-P1-SH-002` — `CON-01`–`CON-09` schemas are implemented; Member A reviewed them. Member B review and Member C acceptance remain to be recorded. No regional fields were added.
 - `T-P1-SH-003` — browser/API boundary specification is now documented; delegated authorization is recorded. Member-side implementation review remains pending.
 - `T-P1-SC-001` — Rishav's synthetic fixture implementation and schema integration pass software validation; Member C review remains pending.
@@ -115,7 +115,7 @@ Phase 0 is complete. P1 foundation tasks may begin when their own dependencies a
 
 ## 6. Next Recommended Action
 
-Continue P1 foundation and evidence tasks. Keep asset acquisition, AOI-specific processing, model fitting, stress/advisory validation, and canal aggregation gated until the evidence and access items in Section 4 are resolved. A user approval can authorize technical choices; it cannot establish third-party data reuse rights, source lineage, credentials, or scientific validity.
+Continue the P1/P2 foundation handoffs and resolve the remaining AOI, source-quality, study-period, and provider-access blockers before asset acquisition or scientific work. Canal aggregation is deferred from the first build under `DEC-13`. User approval can authorize technical choices; it cannot establish third-party data reuse rights, source lineage, credentials, or scientific validity.
 
 ---
 
@@ -182,3 +182,10 @@ See [`docs/WORK_STATUS.md`](WORK_STATUS.md), [`docs/AOI_DECISION.md`](AOI_DECISI
 - Continued the non-implementation research portion of `T-P2-DE-003` against the official Earth Engine Sentinel-1 guide and catalog. Documented the available acquisition metadata and the catalog's start/stop semantics for relative-orbit metadata in `docs/PROCESSING_CONVENTIONS.md`.
 - No orbit/pass strategy, relative-orbit filter, speckle filter, AOI, or date range was selected. No Earth Engine query or scene acquisition was run. The existing pure-array backscatter and linear-power ratio helper remains software-only; this research does not complete Sentinel-1 ingestion.
 - `T-P2-DE-003` production implementation remains gated on the verified AOI/period, P1 handoffs and Gate 0/Gate 1, provider project access, and reviewed processing choices. The user’s delegated member approval does not supply those missing inputs or source access.
+
+## 14. Gate audit continuation — 2026-10-29
+
+- `DEC-13`: canal aggregation is explicitly deferred from the first build under the user's delegated member approval. `DS-05` remains open only for a later canal phase; no TGRAC/NWIC geometry reuse is authorized by this scope decision.
+- `DS-04`: official FAIR Forward documentation describes the source dataset as WRMS field visits and farmer surveys from 2022–2024 and lists CC BY 4.0; the Zindi challenge rules explicitly allow challenge-copy research/education use and sharing under CC-BY-SA 4.0. A 2025 paper using the source reports more than 10,608 source records and says its satellite-training selection retained 601 parcels after metadata-completeness, spatial-boundary-accuracy, and satellite-availability filters. This corroborates source context and shows filtering is material; it does not validate the separate 7,888-row mirror copy's individual labels or positional accuracy. Its WKT coordinate range looks geographically plausible for Telangana, but there is no declared CRS, so no CRS assignment or spatial match was made.
+- Earth Engine access preflight found no repository `.env`, configured `GEE_PROJECT_ID`, local Earth Engine auth store, or `gcloud` executable. No authentication was attempted and no credentials were accessed. Provider access therefore remains unavailable in this environment.
+- `DS-09` remains open: no boundary source with verified authority, vintage, CRS/topology and reuse terms was found. No final AOI or study interval was selected. These are external evidence/access blockers, not member-approval blockers, so the prior universal approval cannot clear them.
