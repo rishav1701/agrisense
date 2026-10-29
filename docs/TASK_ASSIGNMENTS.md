@@ -269,6 +269,7 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Class scope:** The crop catalogue may be broad, but this classifier supports only classes with verified, traceable labels for its AOIs and seasons; unavailable classes are not emitted as predictions.
 - **Testing Requirements:** Unit test on synthetic arrays; verify model persistence (`joblib`) and inference reproducibility.
 - **Blockers:** Sourcing ground-truth labels (`DS-04`) for study area.
+- **Status (2026-10-29):** Added the gated model adapter and optional scientific dependency set on `feat/T-P2-SC-002-scientific-foundation`. It requires declared label provenance, verified-label attestation, exact train/validation/test partition coverage with spatial groups isolated, and stable feature order. Synthetic-only software checks cover fitting, nodata, uncertainty semantics, and persistence. No study labels were used; production fit, scientific validation, reviewer acceptance, and `CON-03` handoff remain open.
 
 #### `T-P2-SC-003`: Time-Series Phenology Tracker & Inflection Extractor
 - **Objective:** Evaluate a documented time-series smoothing and transition-detection method against available crop-specific references. Inflection dates are estimates; do not equate a greenness peak directly with flowering without validation.

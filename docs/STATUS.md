@@ -154,6 +154,7 @@ Continue the P1/P2 foundation handoffs and resolve the remaining AOI, source-qua
 - Official Planetary Computer documentation says its STAC API is public and most assets can be downloaded anonymously subject to throttling. Its current Sentinel-2 STAC collection record reports `license: proprietary` while linking Copernicus Sentinel terms; reconcile that metadata/terms and verify access capacity before relying on it for actual asset use. No Sentinel pixels were downloaded. ERA5-Land access remains separate and unresolved.
 - Added `docs/GATE_REMEDIATION.md`, which maps the current AOI, label, provider, weather, calendar, soil, ownership, and downstream phase gates to evidence and closure actions. No external permission or source confirmation is inferred.
 - The existing no-data foundation demo on `main` remains unchanged by this feature branch. It continues to demonstrate readiness, authorized local GeoJSON preview, and structural study-request validation only.
+- Added a gated Random Forest software adapter and isolated `requirements-science.txt`; the presentation environment does not install these optional dependencies by default. The adapter enforces caller-declared label provenance and spatially separate train/validation/test blocks, persists trusted local artifacts, checks feature order, and labels maximum class probability as uncalibrated. Tests use synthetic fixtures only. No real labels or imagery were used, and no trained output or metric is available.
 
 ## 8. Schema implementation checkpoint — 2026-10-25
 

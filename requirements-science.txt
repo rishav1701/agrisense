@@ -1,0 +1,4 @@
+# Optional scientific modeling dependencies; not installed by the presentation demo.
+# scikit-learn 1.7 supports Python 3.10+; see its official install documentation.
+scikit-learn==1.7.2
+joblib==1.4.2
