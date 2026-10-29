@@ -19,9 +19,7 @@ class Sentinel1BackscatterTests(unittest.TestCase):
         vh = np.array([[-20.0, -10.0, -20.0]], dtype=np.float32)
         mask = np.array([[True, False, True]], dtype=np.bool_)
 
-        result = compute_dual_pol_features(
-            vv_db=vv, vh_db=vh, validity_mask=mask
-        )
+        result = compute_dual_pol_features(vv_db=vv, vh_db=vh, validity_mask=mask)
 
         np.testing.assert_allclose(result.vh_to_vv_linear_ratio[0, 0], 0.1)
         self.assertFalse(result.valid_mask[0, 1])

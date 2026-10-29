@@ -57,8 +57,7 @@ def make_synthetic_timeseries_fixture(
     """
     dimensions = (entities, time_steps, features)
     if any(
-        not isinstance(value, int) or isinstance(value, bool)
-        for value in dimensions
+        not isinstance(value, int) or isinstance(value, bool) for value in dimensions
     ):
         raise ValueError("entities, time_steps, and features must be integers")
     if any(value <= 0 for value in dimensions):

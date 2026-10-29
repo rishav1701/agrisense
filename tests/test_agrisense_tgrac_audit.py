@@ -3,18 +3,18 @@
 These fixtures verify code behavior only and are not scientific observations.
 """
 
-import unittest
 import json
 import tempfile
+import unittest
 from pathlib import Path
 from unittest.mock import patch
 
 from scripts.agrisense_tgrac_audit import (
     build_summaries,
-    point_in_arcgis_polygon,
-    fetch_layer,
     deduplicate_features,
+    fetch_layer,
     geometry_is_well_formed,
+    point_in_arcgis_polygon,
     polygon_bounds,
 )
 
@@ -48,9 +48,7 @@ class GeometryTests(unittest.TestCase):
 
     def test_malformed_point_and_polygon_are_flagged(self):
         self.assertFalse(
-            geometry_is_well_formed(
-                {"x": float("nan"), "y": 2}, "esriGeometryPoint"
-            )
+            geometry_is_well_formed({"x": float("nan"), "y": 2}, "esriGeometryPoint")
         )
         self.assertFalse(
             geometry_is_well_formed(
@@ -70,7 +68,10 @@ class SummaryTests(unittest.TestCase):
             "extent": {"spatialReference": {"wkid": 4326}},
         }
         points = [
-            {"geometry": {"x": 5, "y": 5}, "attributes": {"crop": "Rice", "districtname": "D1"}},
+            {
+                "geometry": {"x": 5, "y": 5},
+                "attributes": {"crop": "Rice", "districtname": "D1"},
+            },
             {"geometry": None, "attributes": {"crop": None, "districtname": None}},
         ]
         polygon_meta = {
@@ -84,8 +85,16 @@ class SummaryTests(unittest.TestCase):
             "attributes": {"Irrigation_L_3": "candidate"},
         }
         data = {
-            "february_2023": (meta, points, {"missing_geometry": 1, "records_received": 2}),
-            "layer18_candidate": (polygon_meta, [polygon], {"missing_geometry": 0, "records_received": 1}),
+            "february_2023": (
+                meta,
+                points,
+                {"missing_geometry": 1, "records_received": 2},
+            ),
+            "layer18_candidate": (
+                polygon_meta,
+                [polygon],
+                {"missing_geometry": 0, "records_received": 1},
+            ),
         }
         result = build_summaries(data)
         self.assertEqual(result["feature_counts.csv"][0]["missing_geometry"], 1)
@@ -96,18 +105,26 @@ class SummaryTests(unittest.TestCase):
 
     def test_fetch_layer_paginates_and_counts_duplicate_ids(self):
         replies = [
-            {"id": 10, "name": "synthetic", "maxRecordCount": 2,
-             "fields": [{"name": "OBJECTID", "type": "esriFieldTypeOID"}]},
+            {
+                "id": 10,
+                "name": "synthetic",
+                "maxRecordCount": 2,
+                "fields": [{"name": "OBJECTID", "type": "esriFieldTypeOID"}],
+            },
             {"count": 3},
             {"count": 3},
             {"objectIdFieldName": "OBJECTID", "objectIds": [1, 2, 3]},
-            {"features": [
-                {"attributes": {"OBJECTID": 1}, "geometry": {"x": 1, "y": 1}},
-                {"attributes": {"OBJECTID": 2}, "geometry": None},
-            ]},
-            {"features": [
-                {"attributes": {"OBJECTID": 2}, "geometry": {"x": 2, "y": 2}},
-            ]},
+            {
+                "features": [
+                    {"attributes": {"OBJECTID": 1}, "geometry": {"x": 1, "y": 1}},
+                    {"attributes": {"OBJECTID": 2}, "geometry": None},
+                ]
+            },
+            {
+                "features": [
+                    {"attributes": {"OBJECTID": 2}, "geometry": {"x": 2, "y": 2}},
+                ]
+            },
         ]
 
         class FakeResponse:

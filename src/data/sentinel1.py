@@ -42,9 +42,9 @@ def db_to_linear_power(backscatter_db: NDArray[np.floating]) -> FloatArray:
     values = np.asarray(backscatter_db, dtype=np.float32)
     with np.errstate(over="ignore", invalid="ignore"):
         linear = np.power(np.float32(10.0), values / np.float32(10.0))
-    return np.where(
-        np.isfinite(values) & np.isfinite(linear), linear, np.nan
-    ).astype(np.float32, copy=False)
+    return np.where(np.isfinite(values) & np.isfinite(linear), linear, np.nan).astype(
+        np.float32, copy=False
+    )
 
 
 def compute_dual_pol_features(

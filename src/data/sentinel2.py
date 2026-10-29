@@ -80,9 +80,7 @@ def compute_vegetation_indices(
     red_array = bands["red"]
     nir_array = bands["nir"]
     finite_inputs = (
-        np.isfinite(blue_array)
-        & np.isfinite(red_array)
-        & np.isfinite(nir_array)
+        np.isfinite(blue_array) & np.isfinite(red_array) & np.isfinite(nir_array)
     )
     numerator = nir_array - red_array
 

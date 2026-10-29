@@ -4,7 +4,6 @@ type Geometry = {
   type: "Polygon" | "MultiPolygon";
   coordinates: number[][][] | number[][][][];
 };
-type GeoJSONDocument = Geometry | { type: "Feature"; geometry: Geometry | null };
 
 type ValidationResult = {
   query_id: string;
@@ -14,6 +13,66 @@ type ValidationResult = {
 };
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL ?? "";
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+function isPosition(value: unknown): value is number[] {
+  return (
+    Array.isArray(value) &&
+    value.length >= 2 &&
+    value.every((coordinate) => typeof coordinate === "number" && Number.isFinite(coordinate)) &&
+    value[0] >= -180 && value[0] <= 180 &&
+    value[1] >= -90 && value[1] <= 90
+  );
+}
+
+function isRing(value: unknown): value is number[][] {
+  return (
+    Array.isArray(value) &&
+    value.length >= 4 &&
+    value.every(isPosition) &&
+    value[0].length === value[value.length - 1].length &&
+    value[0].every((coordinate, index) => coordinate === value[value.length - 1][index])
+  );
+}
+
+function isPolygonCoordinates(value: unknown): value is number[][][] {
+  return Array.isArray(value) && value.length > 0 && value.every(isRing);
+}
+
+function parseGeometry(value: unknown): Geometry {
+  if (!isRecord(value) || !Array.isArray(value.coordinates)) {
+    throw new Error("Choose a GeoJSON Polygon or MultiPolygon with coordinates.");
+  }
+  if (value.type === "Polygon" && isPolygonCoordinates(value.coordinates)) {
+    return value as Geometry;
+  }
+  if (
+    value.type === "MultiPolygon" &&
+    value.coordinates.length > 0 &&
+    value.coordinates.every(isPolygonCoordinates)
+  ) {
+    return value as Geometry;
+  }
+  throw new Error("The boundary must contain closed Polygon or MultiPolygon rings in longitude/latitude order.");
+}
+
+function parseBoundaryDocument(value: unknown): Geometry {
+  if (!isRecord(value)) throw new Error("Choose a valid GeoJSON boundary file.");
+  if (value.type === "FeatureCollection") {
+    if (!Array.isArray(value.features) || value.features.length !== 1) {
+      throw new Error("Choose a FeatureCollection containing exactly one boundary feature.");
+    }
+    value = value.features[0];
+  }
+  if (isRecord(value) && value.type === "Feature") {
+    if (!value.geometry) throw new Error("The GeoJSON feature has no geometry.");
+    return parseGeometry(value.geometry);
+  }
+  return parseGeometry(value);
+}
 
 function getPositions(geometry: Geometry): number[][] {
   const polygons = geometry.type === "Polygon" ? [geometry.coordinates] : geometry.coordinates;
@@ -76,12 +135,8 @@ function App() {
     setMessage("");
     if (!file) return;
     try {
-      const parsed = JSON.parse(await file.text()) as GeoJSONDocument;
-      const candidate = parsed.type === "Feature" ? parsed.geometry : parsed;
-      if (!candidate || !["Polygon", "MultiPolygon"].includes(candidate.type)) {
-        throw new Error("Choose a GeoJSON Polygon or MultiPolygon file.");
-      }
-      setGeometry(candidate as Geometry);
+      const candidate = parseBoundaryDocument(JSON.parse(await file.text()) as unknown);
+      setGeometry(candidate);
       setAreaName(file.name.replace(/\.geojson$|\.json$/i, ""));
     } catch (caught) {
       setGeometry(null);
@@ -94,6 +149,10 @@ function App() {
     setMessage("");
     if (!geometry || !startDate || !endDate) {
       setError("Add a Polygon/MultiPolygon GeoJSON and choose a complete date interval.");
+      return;
+    }
+    if (startDate >= endDate) {
+      setError("The end date must be later than the start date.");
       return;
     }
     setBusy(true);

@@ -23,6 +23,10 @@
 | **`DEC-13`** | Canal Aggregation Scope | **Owner-approved conditional descriptive scope** | 2026-10-23 | Project Owner; Peter/Ashwanth method review |
 | **`DEC-14`** | Evidence-Led First Pilot: TGRAC Agriculture2 and I&CAD Command Boundaries | **Owner-approved evidence audit; SRSP Stage I is a lead candidate only; final AOI open** | 2026-10-23 | Project Owner; team review before final AOI/data use |
 
+## Approval Record — 2026-10-29
+
+The user instructed that their message be treated as universal approval from every member for approval steps needed to continue this work. This grants delegated authorization for implementation and technical choices within the request. It is recorded as user-reported authorization; it is not an individual member's post-implementation verification and does not establish third-party data rights, provider credentials, source provenance, or scientific validity. Those evidence requirements remain open.
+
 ---
 
 ## Detailed Decision Records
@@ -72,14 +76,14 @@
 ### `DEC-01`: Application Architecture & Technology Stack
 
 - **Topic:** High-level web application and backend architecture.
-- **Status:** **OWNER-SELECTED DIRECTION — team technical confirmation pending**
+- **Status:** **React + TypeScript / FastAPI implementation direction authorized under the 2026-10-29 delegated approval; implementation review remains pending.**
 - **Context:** The source documents request an interactive GIS-enabled dashboard with nominal 10 m crop outputs, growth stage estimates, stress indicators, and canal-boundary summaries. Two architectural options were evaluated:
   1. *Streamlit Monolith (Python-only):* Single-process Python application utilizing `streamlit-folium` for interactive maps and `plotly` for temporal graphs; this is the source documents' implementation proposal.
   2. *Responsive Web Frontend + Python API:* React + TypeScript and FastAPI are candidate technologies. No PostGIS/GeoServer requirement has been established.
 - **Alternatives Considered:**
   - *Option 1 (Streamlit Monolith):* Native Python, fast iteration, minimal boilerplate, and directly proposed in reference documents.
   - *Option 2 (Responsive Web Frontend + Python API):* Supports a custom responsive interface and separates UI from scientific services, but introduces frontend tooling, API integration, and deployment coordination.
-- **Recommendation:** Use **Option 2: React + TypeScript responsive browser frontend with a FastAPI Python API** as the owner-selected implementation direction. This follows the user's explicit delegation to choose the dashboard approach. The three-member team should confirm the stack and evaluate setup/deployment fit before implementation; no guide response is recorded.
+- **Recommendation:** Use **Option 2: React + TypeScript responsive browser frontend with a FastAPI Python API**. The user has explicitly authorized approval steps on behalf of all members for this work. Reviewers still need to verify the implementation and deployment fit; no guide response is recorded.
 - **Rationale:**
   - The reference documents propose Streamlit (IDP PDF Sub-Objective O3, page 23; `mava.pdf` Feature F8 and Tech Stack, page 9); they do not prevent the team from selecting another implementation for the same dashboard objective.
   - The owner prioritizes a polished, adaptive dashboard experience. The selected stack direction remains subject to team technical confirmation; deployment and libraries remain open.
@@ -87,7 +91,7 @@
   - *Potential benefits:* Custom responsive layouts and clear separation between browser presentation and Python scientific processing.
   - *Costs and open questions:* Frontend/API integration, separate tooling, deployment topology, and mapping/chart library choices must be decided before implementation.
 - **Evidence / Source:** `IDP_Review_1_AgriSense (1).pdf` p. 23; `mava.pdf` p. 9.
-- **Required Approver Role:** Project owner and all three members; no guide approval is assumed or recorded.
+- **Required Approver Role:** Project owner and all three members. Delegated authorization was provided in the 2026-10-29 user message; member-side implementation review is still pending. No guide approval is assumed or recorded.
 
 ---
 

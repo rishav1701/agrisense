@@ -5,15 +5,12 @@ import unittest
 import numpy as np
 
 from src.contracts.schemas import ObservationStackManifest
-
-from tests.fixtures.synthetic_raster import (
-    SYNTHETIC_ONLY as RASTER_SYNTHETIC_ONLY,
-    make_synthetic_raster_fixture,
-)
+from tests.fixtures.synthetic_raster import SYNTHETIC_ONLY as RASTER_SYNTHETIC_ONLY
+from tests.fixtures.synthetic_raster import make_synthetic_raster_fixture
 from tests.fixtures.synthetic_timeseries import (
     SYNTHETIC_ONLY as TIMESERIES_SYNTHETIC_ONLY,
-    make_synthetic_timeseries_fixture,
 )
+from tests.fixtures.synthetic_timeseries import make_synthetic_timeseries_fixture
 
 
 class SyntheticRasterFixtureTests(unittest.TestCase):
@@ -30,22 +27,21 @@ class SyntheticRasterFixtureTests(unittest.TestCase):
         self.assertEqual(fixture.weather["weather_variable_01"].shape, expected_shape)
         self.assertTrue(
             all(
-                mask.shape == expected_shape
-                for mask in fixture.validity_masks.values()
+                mask.shape == expected_shape for mask in fixture.validity_masks.values()
             )
         )
         self.assertTrue(
-            all(
-                mask.dtype == np.bool_
-                for mask in fixture.validity_masks.values()
-            )
+            all(mask.dtype == np.bool_ for mask in fixture.validity_masks.values())
         )
         self.assertEqual(fixture.metadata["fixture_status"], RASTER_SYNTHETIC_ONLY)
         self.assertEqual(fixture.manifest["limitations"][0], RASTER_SYNTHETIC_ONLY)
         self.assertIsNone(fixture.manifest["analysis_crs"])
         self.assertIsNone(fixture.manifest["aoi_geometry"])
         self.assertTrue(
-            all(source["source_id"].startswith("synthetic_test_fixture:") for source in fixture.manifest["sources"])
+            all(
+                source["source_id"].startswith("synthetic_test_fixture:")
+                for source in fixture.manifest["sources"]
+            )
         )
 
     def test_modalities_use_separate_fabricated_time_support(self):
@@ -80,7 +76,12 @@ class SyntheticRasterFixtureTests(unittest.TestCase):
         )
         self.assertEqual(manifest.stack_id, "synthetic-test-only")
         self.assertEqual(len(manifest.sources), 3)
-        self.assertTrue(all("synthetic_test_fixture" in source.source_id for source in manifest.sources))
+        self.assertTrue(
+            all(
+                "synthetic_test_fixture" in source.source_id
+                for source in manifest.sources
+            )
+        )
 
     def test_seed_reproduces_values(self):
         left = make_synthetic_raster_fixture(seed=23)

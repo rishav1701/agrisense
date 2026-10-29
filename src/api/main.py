@@ -8,8 +8,8 @@ from uuid import uuid4
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, ConfigDict, Field
 from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel, ConfigDict, Field
 
 from src.contracts.schemas import SchemaValidationError, StudyAreaQuery
 
@@ -20,10 +20,10 @@ class StudyAreaRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     aoi_geometry: dict[str, Any]
-    start_date: str = Field(min_length=10, max_length=10)
-    end_date: str = Field(min_length=10, max_length=10)
+    start_date: str = Field(min_length=10, max_length=10, strict=True)
+    end_date: str = Field(min_length=10, max_length=10, strict=True)
     target_crs: str | None = None
-    buffer_meters: float | None = Field(default=None, ge=0)
+    buffer_meters: float | None = Field(default=None, ge=0, strict=True)
 
 
 class ValidationResponse(BaseModel):

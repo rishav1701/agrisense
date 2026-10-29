@@ -4,7 +4,7 @@
 
 > **Phase 0: COMPLETE — approved by the three-member team; guide sign-off waived by the project owner.**
 >
-> **Phase 1 has not started.** Project-specific data prerequisites and individual architecture/scientific decisions remain open. No implementation has been performed.
+> **P1 foundation work is underway.** Contract schemas, synthetic software fixtures, selected Sentinel-1/2 preprocessing, a local API/dashboard foundation, and metadata-only Sentinel-2 catalogue discovery are implemented. The pilot AOI, source-use approvals, real data connections, and scientific outputs remain unresolved.
 
 ## Project Purpose
 
@@ -43,7 +43,7 @@ ERA5-Land (Met) ──────┘                                         �
 
 ## Recommended Architecture *(Provisional — Pending Approval)*
 
-**Owner-selected direction:** a responsive React + TypeScript browser dashboard with a FastAPI Python API; team technical confirmation remains open. The source documents propose Streamlit. GEE, scikit-learn, and SciPy remain proposed scientific stack elements. See `docs/ARCHITECTURE.md` and `docs/DECISIONS.md` for current decisions.
+**User-authorized direction:** a responsive React + TypeScript browser dashboard with a FastAPI Python API. Member-side implementation reviews remain pending. The source documents propose Streamlit. GEE, scikit-learn, and SciPy remain proposed scientific stack elements. See `docs/ARCHITECTURE.md` and `docs/DECISIONS.md` for current decisions.
 
 ## Project Documentation
 
@@ -69,7 +69,20 @@ ERA5-Land (Met) ──────┘                                         �
 - Google Earth Engine account with API access, if GEE is selected at the Phase 0 gate
 - Git
 
-> **Setup status:** Not yet configured. See `docs/STATUS.md`.
+> **Setup:** Use the pinned root dependency set in `requirements.txt`. See `docs/STATUS.md` for toolchain and data-readiness checkpoints.
+
+Create a local environment and install the application and development tools:
+
+```powershell
+py -3.10 -m venv .venv
+.\.venv\Scripts\python -m pip install -r requirements.txt
+.\.venv\Scripts\python -m pytest
+.\.venv\Scripts\python -m ruff check src tests
+.\.venv\Scripts\python -m black --check src tests
+.\.venv\Scripts\python -m isort --check-only src tests
+```
+
+On Linux/macOS, use `python3 -m venv .venv` and `.venv/bin/python` in place of the Windows commands.
 
 ## Finding Your Tasks
 

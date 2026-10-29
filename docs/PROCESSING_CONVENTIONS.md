@@ -27,6 +27,15 @@ These notes support `T-P2-DE-002` and `T-P2-DE-003` research only. AOI-specific 
 - Apply the catalog's reflectance scaling/offset convention consistently before computing indices; store units and scaling in metadata. Do not mix scaled and integer reflectance silently.
 - Compute indices only from documented bands and retain source bands. Vegetation-index values alone are not ground truth for moisture stress.
 
+### Catalogue discovery implementation
+
+- `src/data/copernicus_stac.py` searches the Copernicus Data Space STAC API's `sentinel-2-l2a` collection by a caller-supplied GeoJSON geometry and date interval. It returns catalogue item metadata only; it does not download assets, establish clear-pixel coverage, or replace a verified AOI.
+- The client applies the CON-01 start-inclusive/end-exclusive date rule after the catalogue search and only follows pagination links on the configured HTTPS origin. An optional scene-level cloud percentage is a catalogue filter, not a pixel-level cloud mask or a guarantee of clear observations.
+- This is a discovery fallback alongside the owner-preferred GEE direction in `DEC-02`; it does not change the provider decision or establish access to any restricted product. No AOI-specific STAC search or asset download has been run.
+- Official provider documentation lists the `/v1/` STAC endpoint, Sentinel-2 L2A collection, geometry/time search, and query extensions. Check the live catalogue and product access terms when a study area is approved.
+
+**Sources:** [Copernicus Data Space STAC API documentation](https://documentation.dataspace.copernicus.eu/APIs/STAC.html), [Copernicus Data Space quotas and limitations](https://documentation.dataspace.copernicus.eu/Quotas.html), [GeoJSON RFC 7946](https://datatracker.ietf.org/doc/html/rfc7946).
+
 ## Sentinel-1 radar data
 
 - Candidate source: `COPERNICUS/S1_GRD`; record product IDs, acquisition time, relative orbit, pass direction, instrument mode, resolution and polarisation.

@@ -69,6 +69,7 @@ To prevent merge conflicts, strict file boundaries govern ownership. Work procee
 - **Acceptance Criteria:** `pip install -r requirements.txt` succeeds; `pytest` runs without error on Windows and Linux.
 - **Testing Requirements:** Test that ruff and black execute cleanly in CI / local terminal.
 - **Blockers:** None.
+- **Status (2026-10-29):** Dependency pins and pytest/Black/isort/Ruff configuration are implemented. Python 3.12 environment installation succeeded; 46 tests and 9 subtests pass, and Ruff, isort, and Black checks pass. Direct Member A/B review has not been recorded.
 
 **Start condition:** This foundation task may start as independent setup; completion does not declare P1 or the project phase complete.
 
@@ -94,7 +95,8 @@ To prevent merge conflicts, strict file boundaries govern ownership. Work procee
 - **Outputs:** Reviewed API boundary specification for `T-P2-AP-002` and `T-P2-AP-003`.
 - **Dependencies:** Gate 0; team technical confirmation of owner-selected DEC-01 before framework-specific implementation choices are recorded. The project owner has stated that guide sign-off is unavailable; no guide approval is recorded or assumed.
 - **Acceptance Criteria:** Request/response shapes, error/loading/empty/data-quality semantics, provenance, and mapping to approved output contracts are documented; reviewers approve; shared-contract changes have explicit unanimous approval.
-- **Blockers:** Team technical confirmation of DEC-01 remains open.
+- **Status:** The boundary specification is documented in `docs/ARCHITECTURE.md` under `T-P1-SH-003`; the user authorized approval steps on behalf of all members on 2026-10-29. Member-side review of the deliverable remains to be recorded.
+- **Blockers:** Reviewer acceptance of the specification is pending; no shared contract was changed.
 
 #### `T-P1-DE-001`: Google Earth Engine Authentication & Project Initializer
 - **Objective:** Set up GEE authentication flow, project binding, and connection verification helper.
@@ -336,7 +338,7 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Contract Dependencies:** `CON-04`, `CON-05`, `CON-06`, `CON-09`.
 - **Acceptance Criteria:** Adaptive layouts work across phone, tablet, and desktop viewport sizes; map layers and date filters operate through the approved API; loading, empty, error, and data-quality states are clear; displayed estimates include provenance/limitations; no scientific output is fabricated.
 - **Testing Requirements:** Browser/component and API integration checks appropriate to the approved stack; exact tools TBD in DEC-01. Use only explicitly labeled synthetic fixtures for software testing.
-- **Blockers:** DEC-01 approval and framework/tooling selection, and an approved browser/API request-response boundary. Synthetic fixtures are permitted only for labelled software tests.
+- **Blockers:** The user authorized the React + TypeScript/FastAPI direction on 2026-10-29 and the current foundation boundary is documented. Product-layer, date-filter, chart, and export behavior still depends on real producer outputs and reviewed handoffs. Do not populate these interfaces with fabricated estimates; member-side task acceptance remains pending.
 
 #### `T-P2-AP-003`: Temporal Analytics Charts & Tabular Export Module
 - **Objective:** Implement field analytics displaying available NDVI/EVI/SAR trajectories, estimated growth-stage transition markers, and downloadable CSV summary tables. Chart library and browser interaction patterns follow approved DEC-01 architecture.
