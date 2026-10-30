@@ -3,6 +3,7 @@
 > **P0 baseline approved by the three-member team per project-owner confirmation (2026-10-23); guide sign-off waived by the project owner for P0. P1 execution remains subject to the listed entry prerequisites and task dependencies.**
 > **Team Allocation:** Exactly three human student members. The project owner approved the proposed allocation and sequential handoff plan; this records the approved Phase 0 baseline and role plan, not approval of individual scientific decisions. Member A is Peter Livins (weather, water-balance support, geospatial); Member B is Rishav Raj (satellite data, ML, scientific modelling); Member C is Ashwanth C (application, dashboard, integration).
 > **Execution mode:** Sequential, non-overlapping stage handoffs are preferred. A member can work from an accepted handoff package without monitoring another member's day-to-day progress. This does not waive formal phase gates or shared-contract approval.
+> **Member C continuation approval (reaffirmed 2026-10-31):** The project owner reports that all three members approved and gave a green light to complete Member C's assigned work, and has authorized committing/pushing the reviewed changes. This is owner-reported team approval, not a set of individual signatures. It does not waive dependencies or evidence gates, and any shared-contract change still requires an explicit unanimous approval record for that proposed change.
 > **Scope direction:** The project owner approved an India-first multi-region design direction and evidence-led pilot review on 2026-10-23 (`DEC-10`, `DEC-14`). Telangana/TGRAC is currently a lead candidate; SRSP Stage I is not a selected AOI. Existing task IDs, primary owners, reviewers, and file boundaries are retained. Region-dependent scientific work remains gated by sourced AOI/data/method inputs; independent foundation, learning, and source-inventory work may proceed without a pilot.
 > **Academic Project:** BACSE291 — Innovative Design Project, VIT Vellore (Fall 2026).
 > **Guide:** Dr. Muthuraja S, Assistant Professor Sr. Grade 1.
@@ -95,8 +96,8 @@ To prevent merge conflicts, strict file boundaries govern ownership. Work procee
 - **Outputs:** Reviewed API boundary specification for `T-P2-AP-002` and `T-P2-AP-003`.
 - **Dependencies:** Gate 0; team technical confirmation of owner-selected DEC-01 before framework-specific implementation choices are recorded. The project owner has stated that guide sign-off is unavailable; no guide approval is recorded or assumed.
 - **Acceptance Criteria:** Request/response shapes, error/loading/empty/data-quality semantics, provenance, and mapping to approved output contracts are documented; reviewers approve; shared-contract changes have explicit unanimous approval.
-- **Status:** The boundary specification is documented in `docs/ARCHITECTURE.md` under `T-P1-SH-003`; the user authorized approval steps on behalf of all members on 2026-10-29. Member-side review of the deliverable remains to be recorded.
-- **Blockers:** Reviewer acceptance of the specification is pending; no shared contract was changed.
+- **Status:** The boundary specification is documented in `docs/ARCHITECTURE.md` under `T-P1-SH-003` and was checked against the implemented health/readiness/study-area routes and browser states. The project owner authorized delegated approval steps on behalf of all members; no direct member review artifacts are represented here.
+- **Blockers:** Product routes remain dependent on real producer modules and handoffs. No shared contract was changed.
 
 #### `T-P1-DE-001`: Google Earth Engine Authentication & Project Initializer
 - **Objective:** Set up GEE authentication flow, project binding, and connection verification helper.
@@ -145,14 +146,14 @@ To prevent merge conflicts, strict file boundaries govern ownership. Work procee
 - **Blockers:** None for research; supervised training remains blocked until suitable verified labels and AOIs are selected.
 
 #### `T-P1-SH-004`: Regional Profile and Provenance Specification
-- **Status:** Proposed addition; team confirmation required before work begins.
+- **Status:** Specification completed in `docs/ARCHITECTURE.md`; it references existing contracts without amending them. The project owner's delegated approval instruction covers implementation review, but no individual review artifacts are represented here.
 - **Objective:** Specify how AOI, crop/season support, region-specific references, profile versioning, and provenance will be represented without embedding regional assumptions in shared modules.
 - **Primary Owner:** Member C (Ashwanth C; contract custodian).
 - **Reviewers:** Member A (Peter) and Member B (Rishav); all three members approve any shared-contract change.
 - **File Ownership:** Proposed profile section in `docs/ARCHITECTURE.md`; proposed schema amendments in `docs/API_CONTRACTS.md` only after unanimous approval.
 - **Dependencies:** `T-P1-SH-002`; `DEC-10` scope direction.
 - **Acceptance Criteria:** Profile fields, versioning, missing-input behavior, data provenance, region/season identifiers, and separation of generic versus regional parameters are documented; compatibility with `CON-01`–`CON-09` is reviewed; any contract amendment records unanimous approval.
-- **Blockers:** The profile is specified, not populated with an unselected AOI. Do not create regional values or a boundary file by assumption.
+- **Blockers:** No pilot AOI or region-specific values are selected. Do not create regional values or a boundary file by assumption; any future shared-contract amendment still requires unanimous approval.
 
 ---
 
@@ -223,6 +224,7 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Testing Requirements:** Verify spatial alignment, CRS consistency, feature calculations, missing-data handling, and temporal metadata.
 - **Blockers:** Approved grid/temporal conventions and the pending AOI/orbit decisions.
 - **Status (2026-10-29):** Generic `CON-03` satellite-array assembly and software-only checks are implemented on `feat/T-P2-SC-002-scientific-foundation`. It preserves per-variable timestamps and provenance and rejects shape/time mismatches; it does not acquire or align real imagery. Full task acceptance and handoff remain blocked on upstream Sentinel-1/2 outputs and approved AOI/grid/time conventions.
+- **Member C review (2026-10-30):** Software boundary review found the generic assembler preserves source references, per-variable timestamps, masks, valid-data fractions, and declared shared-grid metadata. Focused tests pass. It does not independently verify source CRS/transform registration or perform alignment; full producer handoff remains unaccepted pending real imagery and approved grid/time/orbit conventions.
 
 ---
 
@@ -373,7 +375,7 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Contract Dependencies:** `CON-01` through `CON-09`.
 - **Acceptance Criteria:** Pipeline runs without type errors or schema violations from raw query to dashboard data bindings.
 - **Testing Requirements:** Integration test covering data ingestion -> classification -> phenology -> stress -> water balance -> canal aggregation.
-- **Blockers:** Module interface mismatches must be resolved via contract amendments.
+- **Blockers:** The required upstream P2 producer modules and accepted CON-03–CON-09 handoffs are not available in this workspace. Implementing an end-to-end runner now would require placeholder behavior or invented outputs. Resolve real module interfaces first; any shared-contract amendment requires unanimous approval.
 
 ---
 
@@ -403,7 +405,7 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Contract Dependencies:** `CON-04`, `CON-05`, `CON-06`, `CON-07`, `CON-08`.
 - **Acceptance Criteria:** Model completes inference without out-of-memory errors; predictions fall within valid physical bounds.
 - **Testing Requirements:** Check outputs against bounds justified by the approved method and sourced parameters; do not use unverified numeric ranges as scientific acceptance criteria.
-- **Blockers:** Uncalibrated model producing nonsensical classifications.
+- **Blockers:** Requires cached real seasonal inputs, accepted upstream model implementations, calibrated/sourced parameters, and verified provenance. Member C's review cannot proceed until Member B supplies actual inference artifacts.
 
 ---
 
@@ -433,7 +435,7 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Contract Dependencies:** `CON-06`.
 - **Acceptance Criteria:** Explicitly documents uncertain/ambiguous conditions, regional/season limits, and whether cross-region evidence exists. Classification metrics do not stand in for stress or advisory validation.
 - **Testing Requirements:** Select an evaluation method appropriate to the available independent reference data and sample size; do not require significance testing without a defensible design.
-- **Blockers:** None.
+- **Blockers:** Depends on actual stage-aware and baseline stress outputs plus independent reference evidence and an accepted evaluation design. Member C's review cannot proceed until the comparison and uncertainty report exist.
 
 ---
 
@@ -443,14 +445,14 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Objective:** Polish UI styling, optimize map rendering speed, package demonstration sample data, and verify clean-clone execution.
 - **Primary Owner:** Member C (Ashwanth C)
 - **Reviewer:** Member A (Peter) & Member B (Rishav)
-- **File Ownership:** `app.py`, `docs/USER_GUIDE.md`
+- **File Ownership:** `frontend/`, `src/api/`, `docs/USER_GUIDE.md` (React + TypeScript and FastAPI implementation selected under DEC-01).
 - **Inputs:** Final integrated system and validation findings.
 - **Outputs:** Fully functional, reliable demonstration web application.
 - **Dependencies:** Phase P5 completion.
 - **Contract Dependencies:** All.
 - **Acceptance Criteria:** Dashboard starts from cached inputs and presents only implemented, traceable outputs; measure performance rather than assuming a target.
 - **Testing Requirements:** Fresh clone test in an isolated Python virtual environment.
-- **Blockers:** None.
+- **Blockers:** Depends on completed integration and Phase P5 validation findings; no final producer-backed outputs or validation report are available yet.
 
 #### `T-P6-SH-003`: Final Academic Slide Deck & IDP Presentation Delivery
 - **Objective:** Synthesize project results, literature gap resolution (G1–G5), architecture, and validation metrics into final IDP review presentation.
@@ -464,7 +466,7 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Contract Dependencies:** None.
 - **Acceptance Criteria:** Formal approval from Dr. Muthuraja S.
 - **Testing Requirements:** Rehearsal demonstration.
-- **Blockers:** None.
+- **Blockers:** Depends on the final dashboard and accepted validation results; formal guide approval and university submission cannot be completed from this repository workspace.
 
 ---
 

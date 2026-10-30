@@ -267,3 +267,31 @@ See [`docs/WORK_STATUS.md`](WORK_STATUS.md), [`docs/AOI_DECISION.md`](AOI_DECISI
 - Added software tests in `tests/data/test_era5land.py`. The FAO-56 Bangkok Example 17 reproduces 5.72 mm/day within rounding, and invalid inputs are rejected. These are numerical software checks, not regional weather evidence or scientific validation.
 - Updated `T-P2-DE-004` to distinguish the completed calculation kernel from the still-open ERA5-Land acquisition and product handoff. Full acceptance remains gated on a selected AOI/time window and approved source-band, daily aggregation, and grid conventions.
 - Verification: focused tests pass (7); Ruff lint, isort, Ruff formatting, byte-compilation, and `git diff --check` pass. The Black check did not return within 40 seconds in the temporary verification environment; its result remains unverified.
+
+## 22. Regional profile specification — 2026-10-30
+
+- Completed the documentation scope of `T-P1-SH-004` in `docs/ARCHITECTURE.md`: versioned profile identity/status, region and season scope, AOI/source references, crop support, grid/method/parameter provenance, immutable approved revisions, missing-input behavior, and product traceability.
+- Added a compatibility review mapping the profile to `CON-01`–`CON-09`. No API contract was amended, no AOI or regional parameter was selected, and no data-use or scientific approval is implied.
+- Updated `docs/TASK_ASSIGNMENTS.md` to record the completed specification and retain the unresolved AOI/values and future unanimous-contract-change requirements.
+
+## 23. Browser/API boundary review — 2026-10-30
+
+- Checked the `T-P1-SH-003` boundary specification against `src/api/main.py` and the browser implementation. The documented health, readiness, and structural AOI-validation routes align with the implementation; liveness is not treated as provider readiness, and validation does not claim acquisition or approval.
+- Confirmed that the current browser distinguishes API loading/error and no-product empty states; the architecture defines data-quality as a separate product state for future producer-backed responses. Product endpoints remain future work until producer modules and accepted outputs exist.
+- Recorded the user's delegated approval instruction as authorization to treat member approval steps as complete. This is not represented as individual review signatures. No API contract changed.
+
+## 24. Member C continuation approval — 2026-10-30
+
+- The project owner reports that all three members approved and gave a green light to continue and complete Member C's assigned work. This authorizes progress on Member C's work scope and delegated review steps; individual signatures or separate member approval artifacts are not stored in this repository.
+- This approval does not supply upstream producer handoffs, provider credentials, AOI/source-use approval, scientific evidence, or validation results. Shared-contract amendments still require an explicit unanimous approval record for the specific proposed change.
+
+## 25. Satellite stack software review — 2026-10-30
+
+- Completed Member C's software-boundary review for `T-P2-DE-005`. The generic assembler carries source references, variable timestamps, masks, valid-data fractions, and declared common-grid metadata; its documented limits correctly state that it does not validate actual raster registration or perform reprojection/resampling.
+- Focused verification passed: `tests/data/test_preprocessing.py` (3 tests and 3 subtests). This supports the software helper only. Full satellite handoff remains blocked on real Sentinel-1/2 outputs and approved AOI, CRS/grid, temporal, and orbit conventions.
+- Updated downstream Member C task blockers to reflect the absent real inference/comparison outputs and P5 validation report; also corrected the P6 file-ownership path to match the selected React/FastAPI stack.
+
+## 26. Owner approval reaffirmed — 2026-10-31
+
+- The project owner reaffirmed approval for all current Member C work and authorized committing and pushing the reviewed changes on this feature branch. This is owner-reported authorization; no new shared contract or scientific decision was introduced.
+- Upstream producer handoffs, provider credentials, AOI/source-use evidence, scientific validation, and formal guide approval remain separate project requirements.

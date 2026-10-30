@@ -67,6 +67,57 @@ Maintain an extensible crop catalogue independently from the model's supported c
 
 The regional configuration boundary is a configuration/provenance layer consumed by shared acquisition, feature, modelling, water-balance, aggregation, and presentation modules. It selects region-specific references and supported domains; it must not silently tune models, substitute missing labels, or supply unsourced agronomic defaults.
 
+### Regional profile and provenance specification (`T-P1-SH-004`)
+
+A regional profile is a versioned manifest that identifies evidence and configuration for one named region and an explicitly supported season or period. It is a reference/configuration layer, not a scientific result, AOI approval, or automatic default source. Profiles may be drafted with unresolved fields; a production run must not consume unresolved required fields.
+
+#### Profile record
+
+Each profile revision should record:
+
+| Field | Meaning and rule |
+|---|---|
+| `profile_id` | Stable, lowercase identifier that does not change when a display name changes. Do not infer a final pilot ID from a candidate region. |
+| `profile_version` | Immutable semantic version for the profile contents. Any change to referenced sources, supported domain, parameters, or spatial/time conventions creates a new version. |
+| `status` | `draft`, `reviewed`, `approved_for_named_scope`, or `retired`. Approval is limited to the named geography, season, products, and purpose; a status does not certify scientific validity or third-party rights. |
+| `region` | Stable region identifier, display name, country code, and optional administrative identifiers with their authority/source. Administrative IDs must not stand in for irrigation-command IDs. |
+| `season_support` | Stable season identifier, display label, and explicit inclusive-start/exclusive-end dates or a reference to a sourced calendar. Do not encode assumed month ranges in shared code. |
+| `aoi_reference` | Reference to an externally maintained geometry, its checksum, declared CRS, source/version, retrieval date, terms/attribution, and review state. A missing or unapproved AOI means acquisition is unavailable. The profile does not embed a guessed polygon. |
+| `crop_support` | Catalogue identifiers and aliases plus source references and the geography/season to which each label applies. Listing a crop does not make it a trained or supported model class. |
+| `spatial_conventions` | Approved analysis CRS, grid transform/alignment, spatial resolution, and resampling rules, each with rationale and evidence reference. Unset conventions block grid-dependent processing. |
+| `method_references` | Method/version references for processing, stage interpretation, stress indicators, and water-balance calculations. Method parameters remain absent until explicitly sourced and approved. |
+| `parameters` | Optional region/season-specific values, each paired with quantity/unit, source and version, method, applicability, uncertainty/limitations, and approval state. Generic parameters and regional adjustments remain distinguishable. |
+| `sources` | Referenced source records with publisher, stable URL/DOI or item ID, source version/vintage, retrieval date, spatial/temporal support, licence/terms, attribution, checksum where applicable, and known limitations. |
+| `provenance` | Profile authoring/update date, profile schema version, change summary, and review/approval record. Product provenance records the exact `profile_id`, `profile_version`, and content checksum used. |
+
+Identifiers and references must be stable and machine-readable; display names are for users. A profile revision is immutable after approval. Corrections produce a new revision and retain the prior revision for reproducibility. Source records may be shared across profiles by reference, but the profile must state why each source applies to its region and period.
+
+#### Missing, unresolved, and out-of-scope inputs
+
+- A required input that is absent, unverified, expired, or outside its documented geography/time support makes the dependent operation unavailable. Do not substitute a default, silently broaden the time window, or infer a source from a region name.
+- A profile may remain `draft` with explicit unresolved items. Its unresolved state must propagate to readiness and product status; it must not be represented as a successful empty estimate or a zero-valued input.
+- Optional inputs may be omitted only where the selected method explicitly permits omission. The output records the omission, method-defined handling, and resulting limitations.
+- A profile may support multiple seasons only when each season has an explicit identifier and separate temporal, crop/calendar, and source applicability. Do not generalize a parameter or validation result to an unlisted region/season.
+- Credentials and access tokens never belong in a profile. Store credentials through local/provider mechanisms and record only the non-secret project or provider identity needed for reproducibility.
+
+#### Compatibility with existing contracts
+
+The profile wraps and references existing contract data; it does not add fields to `CON-01`–`CON-09` in this specification. At execution, the selected profile supplies or references values already represented by the contracts:
+
+| Contract | Profile relationship |
+|---|---|
+| `CON-01` | Supplies a reviewed AOI reference and selected interval; request serialization still follows the existing contract. |
+| `CON-02` | Identifies candidate source collections and source-specific query conventions; provider queries still use their documented fields. |
+| `CON-03` | References source/variable metadata, spatial grid conventions, units, time support, and provenance used to assemble observations. |
+| `CON-04` | Lists candidate catalogue IDs and aliases; the actual class map and model support remain tied to verified labels and model provenance. |
+| `CON-05` | References applicable crop-calendar evidence and a separately approved stage-estimation method; it does not prescribe stage dates. |
+| `CON-06` | References a separately approved candidate-indicator method and scope; it does not supply unvalidated thresholds or claim measured moisture stress. |
+| `CON-07` | References sourced Kc and ET0 method/input applicability; it does not create regional coefficients. |
+| `CON-08` | References the approved water-balance method and required soil/initial-state inputs; missing required evidence makes the estimate unavailable. |
+| `CON-09` | References a command boundary only when its authority, provenance, geometry, terms, and scope are approved; it does not convert an administrative boundary into a command. |
+
+Any future field added to a shared contract requires a separate proposal, compatibility review, and unanimous member approval under the contract change process. This specification itself makes no contract amendment and creates no regional profile values.
+
 ### Option A: Streamlit Monolith *(Source-proposed option)*
 
 | Aspect | Assessment |
