@@ -123,3 +123,4 @@ The two project reference PDFs (`IDP_Review_1_AgriSense (1).pdf` and `mava.pdf`)
 ## License
 
 Academic project — VIT Vellore, BACSE291, Fall Semester 2026.
+..
