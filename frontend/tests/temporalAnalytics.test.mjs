@@ -5,7 +5,7 @@ import {
   buildChartModel,
   serializeTemporalCsv,
   validateTemporalView,
-} from "../src/dashboard/temporalAnalytics.mjs";
+} from "../src/dashboard/temporalAnalyticsData.mjs";
 
 // Artificial values exist only to verify browser software behavior.
 const softwareFixture = {

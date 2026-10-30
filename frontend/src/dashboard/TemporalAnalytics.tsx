@@ -2,11 +2,11 @@ import {
   buildChartModel,
   serializeTemporalCsv,
   validateTemporalView,
-} from "./temporalAnalytics.mjs";
+} from "./temporalAnalyticsData.mjs";
 import type {
   TemporalAnalyticsView,
   TemporalSeries,
-} from "./temporalAnalytics.mjs";
+} from "./temporalAnalyticsData.mjs";
 
 type Props = {
   view: TemporalAnalyticsView | null;
