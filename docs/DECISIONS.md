@@ -20,8 +20,12 @@
 | **`DEC-10`** | India-first Multi-Region Scope and Regional Configuration | **Project-owner approved; team implementation review open** | 2026-10-23 | Project Owner; team review for implementation |
 | **`DEC-11`** | Initial Multi-Region Candidate AOIs: Punjab and Tamil Nadu | **Initial candidate review; broadened by DEC-14; AOIs open** | 2026-10-23 | Project Owner + all 3 Members |
 | **`DEC-12`** | Initial Crop Catalogue and Model Class Scope | **Owner direction; model classes depend on verified labels** | 2026-10-23 | Project Owner; team review |
-| **`DEC-13`** | Canal Aggregation Scope | **Owner-approved conditional descriptive scope** | 2026-10-23 | Project Owner; Peter/Ashwanth method review |
+| **`DEC-13`** | Canal Aggregation Scope | **Deferred from first build; may be reconsidered with licensed boundaries and approved inputs** | 2026-10-29 | Project Owner under delegated member approval |
 | **`DEC-14`** | Evidence-Led First Pilot: TGRAC Agriculture2 and I&CAD Command Boundaries | **Owner-approved evidence audit; SRSP Stage I is a lead candidate only; final AOI open** | 2026-10-23 | Project Owner; team review before final AOI/data use |
+
+## Approval Record — 2026-10-29
+
+The user instructed that their message be treated as universal approval from every member for approval steps needed to continue this work. This grants delegated authorization for implementation and technical choices within the request. It is recorded as user-reported authorization; it is not an individual member's post-implementation verification and does not establish third-party data rights, provider credentials, source provenance, or scientific validity. Those evidence requirements remain open.
 
 ---
 
@@ -53,9 +57,10 @@
 ### `DEC-13`: Canal Aggregation Scope
 
 - **Topic:** Canal-command summaries in the initial deliverable.
-- **Status:** **Owner-approved conditional scope; data/method approval remains open.**
+- **Status:** **Deferred from the first build on 2026-10-29 under the user's delegated approval on behalf of all members.**
 - **Decision direction:** Retain descriptive canal-command aggregation only when authoritative, licensed command boundaries and suitable estimates exist. Defer it for any AOI lacking those inputs. Administrative or district boundaries must never be relabeled as canal commands. No operational release, gate-control, or irrigation schedule recommendation is implied.
-- **Required approvers:** Project owner and all three members for the chosen pilot; guide approval is not assumed as a prerequisite unless the team later requests it.
+- **Effect:** DS-05 is no longer an entry blocker for the first build because the canal-aggregation deliverable is out of the first-build scope. It remains a prerequisite before any later canal-command aggregation. This decision does not authorize use or redistribution of any TGRAC or NWIC geometry.
+- **Required approvers:** User's 2026-10-29 delegated approval covers member approval for this scope decision; guide approval is not assumed as a prerequisite unless the team later requests it.
 
 ### `DEC-14`: Evidence-Led First Pilot: TGRAC Agriculture2 and I&CAD Command Boundaries
 
@@ -72,14 +77,14 @@
 ### `DEC-01`: Application Architecture & Technology Stack
 
 - **Topic:** High-level web application and backend architecture.
-- **Status:** **OWNER-SELECTED DIRECTION — team technical confirmation pending**
+- **Status:** **React + TypeScript / FastAPI implementation direction approved per the project owner's 2026-10-29 instruction to treat member approvals as complete; no individual review records were collected in this workspace.**
 - **Context:** The source documents request an interactive GIS-enabled dashboard with nominal 10 m crop outputs, growth stage estimates, stress indicators, and canal-boundary summaries. Two architectural options were evaluated:
   1. *Streamlit Monolith (Python-only):* Single-process Python application utilizing `streamlit-folium` for interactive maps and `plotly` for temporal graphs; this is the source documents' implementation proposal.
   2. *Responsive Web Frontend + Python API:* React + TypeScript and FastAPI are candidate technologies. No PostGIS/GeoServer requirement has been established.
 - **Alternatives Considered:**
   - *Option 1 (Streamlit Monolith):* Native Python, fast iteration, minimal boilerplate, and directly proposed in reference documents.
   - *Option 2 (Responsive Web Frontend + Python API):* Supports a custom responsive interface and separates UI from scientific services, but introduces frontend tooling, API integration, and deployment coordination.
-- **Recommendation:** Use **Option 2: React + TypeScript responsive browser frontend with a FastAPI Python API** as the owner-selected implementation direction. This follows the user's explicit delegation to choose the dashboard approach. The three-member team should confirm the stack and evaluate setup/deployment fit before implementation; no guide response is recorded.
+- **Recommendation:** Use **Option 2: React + TypeScript responsive browser frontend with a FastAPI Python API**. The user has explicitly authorized approval steps on behalf of all members for this work. Reviewers still need to verify the implementation and deployment fit; no guide response is recorded.
 - **Rationale:**
   - The reference documents propose Streamlit (IDP PDF Sub-Objective O3, page 23; `mava.pdf` Feature F8 and Tech Stack, page 9); they do not prevent the team from selecting another implementation for the same dashboard objective.
   - The owner prioritizes a polished, adaptive dashboard experience. The selected stack direction remains subject to team technical confirmation; deployment and libraries remain open.
@@ -87,7 +92,7 @@
   - *Potential benefits:* Custom responsive layouts and clear separation between browser presentation and Python scientific processing.
   - *Costs and open questions:* Frontend/API integration, separate tooling, deployment topology, and mapping/chart library choices must be decided before implementation.
 - **Evidence / Source:** `IDP_Review_1_AgriSense (1).pdf` p. 23; `mava.pdf` p. 9.
-- **Required Approver Role:** Project owner and all three members; no guide approval is assumed or recorded.
+- **Required Approver Role:** Project owner and all three members. The owner directed that approval from the other members be considered complete for implementation. This is recorded as owner-reported delegated authorization, not as individual member review artifacts. No guide approval is assumed or recorded.
 
 ---
 

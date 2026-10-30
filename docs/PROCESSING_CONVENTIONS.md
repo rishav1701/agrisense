@@ -16,20 +16,53 @@ These notes support `T-P2-DE-002` and `T-P2-DE-003` research only. AOI-specific 
 ### Sentinel-1 GRD facts checked against the Earth Engine catalog and guide
 
 - Earth Engine `COPERNICUS/S1_GRD` values are calibrated backscatter in dB, with preprocessing including orbit-file application, border/thermal-noise handling, radiometric calibration, and terrain correction. The collection is heterogeneous; polarization, instrument mode, pass direction, and resolution metadata support filtering, but the pilot's orbit and relative-orbit strategy remains open.
+- The Earth Engine catalog exposes `instrumentMode`, `transmitterReceiverPolarisation`, `orbitProperties_pass`, `resolution_meters`, and `relativeOrbitNumber_start` / `relativeOrbitNumber_stop`. The pass and relative-orbit properties are described for the oldest/newest data in a product; retain the scene metadata and validate the catalog's property semantics before using them as hard scene filters. A relative-orbit restriction can improve acquisition-geometry consistency but may reduce temporal coverage; its suitability cannot be assessed without the selected AOI and period.
 - If a cross-polarization ratio is retained as a feature, calculate it in linear power: `VH_linear / VV_linear = 10**((VH_dB - VV_dB)/10)`. Dividing the stored dB values is not a physical power ratio. Whether to include this feature, which orbit/pass to use, and whether any additional speckle filtering is justified remain review questions.
 
 **Sources:** [Earth Engine Sentinel-2 SR Harmonized catalog](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S2_SR_HARMONIZED), [Earth Engine Sentinel-1 guide](https://developers.google.com/earth-engine/guides/sentinel1), [Earth Engine Sentinel-1 GRD catalog](https://developers.google.com/earth-engine/datasets/catalog/COPERNICUS_S1_GRD), [McFeeters (1996)](https://doi.org/10.1080/01431169608948714), [Gao (1996)](https://doi.org/10.1016/S0034-4257(96)00067-3).
 
 ## Sentinel-2 optical data
 
+### Satellite stack assembly software boundary (`T-P2-DE-005`)
+
+- `src/data/preprocessing.py` accepts already prepared numeric arrays and explicit validity masks shaped `(time, row, column)`, plus caller-supplied CON-03 source/variable metadata. This implements a software handoff boundary; it is not a sensor ingestion workflow or scientific validation.
+- Each variable retains its own ordered acquisition timestamps. Sentinel-1 and Sentinel-2 are not forced onto a shared timestamp axis, and this module performs no compositing, interpolation, gap filling, reprojection, resampling, or CRS-registration check.
+- The caller must provide matching spatial array shapes and the declared analysis CRS/affine transform. The manifest records grid shape and limits; metadata declarations do not prove that upstream rasters actually share the declared grid.
+- Timestamps are checked against the requested start-inclusive/end-exclusive interval and must match their source record. Non-finite array values are converted to NaN and marked invalid. A missing AOI may be used for AOI-independent software work and is explicitly recorded as missing; it does not create a study-area product.
+- The returned software object includes per-variable valid-data fractions over all time and spatial cells. These are QA coverage summaries for the supplied arrays, not a sensor-quality score or evidence of adequate scientific coverage.
+- Before real-source use, the project must resolve the AOI, provider/access and reuse terms, acquisition filters, analysis-grid and resampling conventions, and temporal aggregation choices described in the open gates. Preserve native/effective resolution and source-specific QA in the supplied metadata.
+
 - Candidate source: `COPERNICUS/S2_SR_HARMONIZED`; record collection, product IDs, processing baseline and retrieval window.
 - Mask clouds and shadows using scene classification and/or cloud probability with a documented, tested rule; preserve mask provenance and per-pixel valid-observation counts. Do not choose a cloud-probability threshold until it is assessed for the pilot and validated against inspection.
 - Apply the catalog's reflectance scaling/offset convention consistently before computing indices; store units and scaling in metadata. Do not mix scaled and integer reflectance silently.
 - Compute indices only from documented bands and retain source bands. Vegetation-index values alone are not ground truth for moisture stress.
 
+### Catalogue discovery and public extraction implementation
+
+- `src/data/copernicus_stac.py` searches the Copernicus Data Space STAC API's `sentinel-2-l2a` collection by a caller-supplied GeoJSON geometry and date interval. It returns catalogue item metadata only; it does not establish clear-pixel coverage or replace a verified AOI.
+- The client applies the CON-01 start-inclusive/end-exclusive date rule after the catalogue search and only follows pagination links on the configured HTTPS origin. An optional scene-level cloud percentage is a catalogue filter, not a pixel-level cloud mask or a guarantee of clear observations.
+- This is a discovery fallback alongside the owner-preferred GEE direction in `DEC-02`; it does not change the provider decision or establish access to any restricted product. The extraction trial used Earth Search and Planetary Computer, not this Copernicus Data Space endpoint.
+- Official provider documentation lists the `/v1/` STAC endpoint, Sentinel-2 L2A collection, geometry/time search, and query extensions. Check the live catalogue and product access terms when a study area is approved.
+
+**Sources:** [Copernicus Data Space STAC API documentation](https://documentation.dataspace.copernicus.eu/APIs/STAC.html), [Copernicus Data Space quotas and limitations](https://documentation.dataspace.copernicus.eu/Quotas.html), [GeoJSON RFC 7946](https://datatracker.ietf.org/doc/html/rfc7946).
+
+### Credentialless catalog fallback
+
+- `src/data/copernicus_stac.py` now supports Sentinel-2 L2A STAC discovery at a caller-selected HTTPS endpoint and metadata discovery for Planetary Computer's `sentinel-1-rtc` collection. The latter is an RTC product and is not asserted to be numerically interchangeable with `COPERNICUS/S1_GRD`.
+- Microsoft documents anonymous public STAC access and says most data downloads are anonymous but throttled. This offers a practical discovery/technical integration route without Google Earth Engine credentials; it does not clear asset-use terms, download capacity, AOI provenance, or weather access.
+- The live Planetary Computer Sentinel-2 collection record labels its collection license `proprietary` while linking to Copernicus Sentinel data terms. The technical extraction trial therefore uses Earth Search's Sentinel-2 COGs, whose collection also links to the Copernicus terms; the legal notice permits lawful reuse and modification with source attribution. Record the inconsistent STAC license string in provenance and do not treat it as a separate proprietary restriction without provider clarification.
+- `src/data/sentinel_stac_assets.py` and `scripts/acquire_sentinel2_aoi.py` support explicit-AOI searches and small native-grid COG reads from Earth Search. Outputs retain STAC scale/offset metadata, exact polygon masks, and SCL's separate 20 m grid; scene cloud cover is not a pixel QA measure.
+- `src/data/sentinel1_rtc.py` and `scripts/acquire_sentinel1_rtc_aoi.py` support Planetary Computer's `sentinel-1-rtc` items. The public SAS API issues temporary anonymous read URLs. The collection is CC-BY-4.0 and the manifest records both that license and Copernicus attribution. Microsoft AI4G documents the RTC values as gamma0 power; the STAC assets omit a unit field, so the acquisition manifest preserves raw values and records the external product semantics.
+- A real two-sensor technical extraction was run in a 0.01° × 0.01° rectangle whose corners fall within the SRSP candidate polygon returned by I&CAD layer 9: Sentinel-2 B02/B04/B08/SCL on 2023-02-17 and Sentinel-1 RTC VV/VH on 2023-02-20. This small rectangle is an extraction fixture only. It does not verify command boundary authority/reuse, field labels, label-to-scene dates, or select a production AOI. Details and exact limits are in `docs/DS09_AOI_AUDIT.md`.
+- No ERA5-Land collection has been accepted through this fallback. Keep weather acquisition as a separate access and license check; do not replace ERA5-Land with a different weather product without review.
+
+**Sources:** [Planetary Computer public access documentation](https://planetarycomputer.microsoft.com/docs/), [Planetary Computer Sentinel-2 STAC collection record](https://planetarycomputer.microsoft.com/api/stac/v1/collections/sentinel-2-l2a), [Planetary Computer STAC API](https://planetarycomputer.microsoft.com/docs/reference/stac/), [Copernicus data access](https://eu-space.europa.eu/earth-observation/copernicus/data-access).
+
 ## Sentinel-1 radar data
 
 - Candidate source: `COPERNICUS/S1_GRD`; record product IDs, acquisition time, relative orbit, pass direction, instrument mode, resolution and polarisation.
+- The current technical fallback is Microsoft's Planetary Computer `sentinel-1-rtc`, which is a separately processed RTC collection derived from GRD; it is not numerically interchangeable with raw GRD or the Earth Engine `COPERNICUS/S1_GRD` collection.
+- Microsoft's [AI4G Sentinel-1 instructions](https://github.com/microsoft/ai4g-flood/blob/main/README.md) identify the Planetary Computer RTC product as gamma0 radiometry in power scale and describe its calibration/terrain-correction lineage. The STAC raster assets themselves omit a unit field. Preserve raw gamma0 power and nodata/orbit metadata at acquisition; a reviewed feature stage may convert positive power to dB with `10 log10(power)`. Do not report soil moisture from radar backscatter alone.
 - Restrict comparisons to compatible acquisition geometry/polarisation where feasible; document any orbit/pass harmonisation. Keep VV/VH availability explicit.
 - Use the catalog's calibrated backscatter representation and document whether values are linear or dB before ratios/differences. Do not assume a generic despeckle step improves field-scale truth; evaluate filtering/resolution effects before adoption.
 - Aggregate temporally with a declared window and robust statistic; retain observation count, date range and quality flags.

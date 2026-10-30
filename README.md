@@ -4,7 +4,7 @@
 
 > **Phase 0: COMPLETE — approved by the three-member team; guide sign-off waived by the project owner.**
 >
-> **Phase 1 has not started.** Project-specific data prerequisites and individual architecture/scientific decisions remain open. No implementation has been performed.
+> **P1 foundation work is underway.** Contract schemas, synthetic software fixtures, selected Sentinel-1/2 preprocessing, a local API/dashboard foundation, and metadata-only Sentinel-2 catalogue discovery are implemented. The pilot AOI, source-use approvals, real data connections, and scientific outputs remain unresolved.
 
 ## Project Purpose
 
@@ -43,7 +43,7 @@ ERA5-Land (Met) ──────┘                                         �
 
 ## Recommended Architecture *(Provisional — Pending Approval)*
 
-**Owner-selected direction:** a responsive React + TypeScript browser dashboard with a FastAPI Python API; team technical confirmation remains open. The source documents propose Streamlit. GEE, scikit-learn, and SciPy remain proposed scientific stack elements. See `docs/ARCHITECTURE.md` and `docs/DECISIONS.md` for current decisions.
+**User-authorized direction:** a responsive React + TypeScript browser dashboard with a FastAPI Python API. The project owner directed that required member approvals be treated as complete for implementation; individual review records were not collected in this workspace. The source documents propose Streamlit. GEE, scikit-learn, and SciPy remain proposed scientific stack elements. See `docs/ARCHITECTURE.md` and `docs/DECISIONS.md` for current decisions.
 
 ## Project Documentation
 
@@ -59,6 +59,7 @@ ERA5-Land (Met) ──────┘                                         �
 | [`docs/TEAM_WORKFLOW.md`](docs/TEAM_WORKFLOW.md) | Git, review, and collaboration process |
 | [`docs/DECISIONS.md`](docs/DECISIONS.md) | Architecture decision log |
 | [`docs/DS09_AOI_AUDIT.md`](docs/DS09_AOI_AUDIT.md) | TGRAC command-area and ground-truth evidence audit; AOI remains unselected |
+| [`docs/GATE_REMEDIATION.md`](docs/GATE_REMEDIATION.md) | Gate-by-gate closure evidence, safe next actions, and presentation-safe scope |
 | [`docs/STATUS.md`](docs/STATUS.md) | Current progress and checkpoints |
 | [`docs/risks/SCIENTIFIC_RISKS.md`](docs/risks/SCIENTIFIC_RISKS.md) | Risk register |
 | [`docs/references/README.md`](docs/references/README.md) | Reference document inventory |
@@ -66,10 +67,47 @@ ERA5-Land (Met) ──────┘                                         �
 ## Development Prerequisites
 
 - Python 3.10+
+- Node.js with npm for the React dashboard
 - Google Earth Engine account with API access, if GEE is selected at the Phase 0 gate
 - Git
 
-> **Setup status:** Not yet configured. See `docs/STATUS.md`.
+> **Setup:** Use the pinned root dependency set in `requirements.txt`. See `docs/STATUS.md` for toolchain and data-readiness checkpoints.
+
+Create a local environment and install the application and development tools:
+
+```powershell
+py -3.10 -m venv .venv
+.\.venv\Scripts\python -m pip install -r requirements.txt
+.\.venv\Scripts\python -m pytest
+.\.venv\Scripts\python -m ruff check src tests
+.\.venv\Scripts\python -m black --check src tests
+.\.venv\Scripts\python -m isort --check-only src tests
+```
+
+On Linux/macOS, use `python3 -m venv .venv` and `.venv/bin/python` in place of the Windows commands.
+
+## Run the Local Foundation Demo
+
+The current demo shows the responsive research workspace, API/data readiness, local GeoJSON preview, and structural study-request validation. It does **not** load satellite/weather observations or generate crop, stress, growth-stage, or irrigation estimates. Bring a boundary file you are authorized to use; the repository does not bundle a synthetic or unverified AOI.
+
+From the repository root, install the frontend dependencies and build the browser app:
+
+```powershell
+cd frontend
+npm ci
+npm run build
+cd ..
+```
+
+Start the local API, which serves the built frontend when `frontend/dist` exists:
+
+```powershell
+.\.venv\Scripts\python.exe -m uvicorn src.api.main:app --host 127.0.0.1 --port 8000
+```
+
+Open [http://127.0.0.1:8000](http://127.0.0.1:8000). To demonstrate the supported flow, upload an authorized GeoJSON `Polygon` or `MultiPolygon` in longitude/latitude order, choose an inclusive start and exclusive end date, and select **Validate study request**. The response confirms request structure only; it does not select an AOI, query a provider, or acquire data. The interactive API schema is available at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs).
+
+For frontend hot reload during development, run `npm run dev` from `frontend` and start the API in a second terminal with the command above. Vite proxies `/api` requests to the local API.
 
 ## Finding Your Tasks
 

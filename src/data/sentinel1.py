@@ -39,12 +39,13 @@ def db_to_linear_power(backscatter_db: NDArray[np.floating]) -> FloatArray:
     Returns:
         Float32 linear-power array with the same shape.
     """
-    values = np.asarray(backscatter_db, dtype=np.float32)
+    values = np.asarray(backscatter_db, dtype=np.float64)
     with np.errstate(over="ignore", invalid="ignore"):
-        linear = np.power(np.float32(10.0), values / np.float32(10.0))
-    return np.where(
-        np.isfinite(values) & np.isfinite(linear), linear, np.nan
-    ).astype(np.float32, copy=False)
+        linear = np.power(10.0, values / 10.0)
+    representable = np.isfinite(linear) & (linear <= np.finfo(np.float32).max)
+    return np.where(np.isfinite(values) & representable, linear, np.nan).astype(
+        np.float32, copy=False
+    )
 
 
 def compute_dual_pol_features(
@@ -85,7 +86,11 @@ def compute_dual_pol_features(
     valid = validity_mask & np.isfinite(vv) & np.isfinite(vh)
     vv_linear = db_to_linear_power(vv)
     vh_linear = db_to_linear_power(vh)
-    ratio = db_to_linear_power(vh - vv)
+    # Subtract in float64 so finite float32 dB values cannot overflow before
+    # the conversion. Values outside float32 output range are later invalidated.
+    with np.errstate(over="ignore", invalid="ignore"):
+        ratio = db_to_linear_power(vh.astype(np.float64) - vv.astype(np.float64))
+    valid &= np.isfinite(vv_linear) & np.isfinite(vh_linear) & np.isfinite(ratio)
     for array in (vv, vh, vv_linear, vh_linear, ratio):
         array[~valid] = np.nan
 

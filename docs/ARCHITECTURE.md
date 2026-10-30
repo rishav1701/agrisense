@@ -4,7 +4,7 @@
 
 ## 1. Architecture Overview
 
-AgriSense is provisionally a Python scientific backend with a separate, responsive browser dashboard. The project owner selected a professional dashboard that adapts to phone, tablet, and desktop screens, using React + TypeScript with a FastAPI Python API as the preferred stack direction. Team technical confirmation is open; guide approval is unavailable and is not recorded. If GEE is selected, supported raster operations may run server-side; the Python backend handles model fitting, phenology analysis, water-balance calculations, and API responses. This proposed division depends on approved data and interface contracts.
+AgriSense is provisionally a Python scientific backend with a separate, responsive browser dashboard. The project owner selected React + TypeScript with a FastAPI Python API. The user authorized approval steps on behalf of all members on 2026-10-29; individual implementation reviews remain pending. If GEE is selected, supported raster operations may run server-side; the Python backend handles model fitting, phenology analysis, water-balance calculations, and API responses. This proposed division depends on approved data and interface contracts.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -274,8 +274,8 @@ Deployment and containerisation remain provisional; evaluate only after the team
 | Phenology | SciPy signal processing | IDP PDF specifies SciPy; mava F3 |
 | Water balance | NumPy / Pandas | FAO-56 vectorised computation |
 | Geospatial | GeoPandas, Rasterio | Both PDFs specify; canal aggregation |
-| Dashboard | Responsive React + TypeScript frontend | Owner-selected direction; team technical confirmation open; source documents propose Streamlit |
-| API/backend | FastAPI Python API | Owner-selected direction; team technical confirmation open |
+| Dashboard | Responsive React + TypeScript frontend | User-authorized direction; implementation review pending; source documents propose Streamlit |
+| API/backend | FastAPI Python API | User-authorized direction; implementation review pending |
 | Map visualisation | Library TBD | Source proposes Folium via Streamlit; select after framework and integration review |
 | Charts | Library TBD | Source proposes Plotly; confirm compatibility with DEC-01 |
 | Testing | pytest | Standard Python testing |
@@ -302,6 +302,7 @@ agrisense/
 │   ├── data/                   # Satellite files (Member B); auth/weather/assembly/cache (Member A)
 │   │   ├── __init__.py
 │   │   ├── gee_auth.py
+│   │   ├── copernicus_stac.py
 │   │   ├── sentinel2.py
 │   │   ├── sentinel1.py
 │   │   ├── era5land.py
@@ -355,7 +356,7 @@ agrisense/
 └── notebooks/                  # Exploration notebooks (gitignored outputs)
 ```
 
-> **Note:** This structure is provisional. Only `docs/`, `AGENTS.md`, `README.md`, `.gitignore`, and `.env.example` are created in Phase 0. Frontend and API frameworks and directories must be confirmed in DEC-01 before Phase 1 implementation.
+> **Note:** This proposed structure remains provisional. The repository currently includes `frontend/`, `src/api/`, contract schemas, and selected satellite utilities; the planned model, weather, assembly, and spatial modules are not all implemented. The user authorized React + TypeScript and FastAPI approval steps on 2026-10-29; this does not mark the application or phase complete.
 
 ## 10. Module Dependency Graph
 
@@ -386,3 +387,28 @@ Sequential dependencies:
 8. M-EVAL runs after all modules produce outputs.
 
 Approved work order: Member B completes satellite processing; Member A completes weather ingestion and final assembly; Member B completes scientific models; Member A completes water-balance/canal outputs; Member C completes dashboard/API after DEC-01 and API boundary approval. Each handoff is reviewed. Synthetic fixtures are for labeled software tests only.
+
+## 11. Browser/API Boundary — `T-P1-SH-003`
+
+The browser calls the same-origin `/api` routes in deployment. During local development, Vite proxies `/api` to the FastAPI service. The browser may preview a user-selected GeoJSON boundary locally; this preview is not saved or treated as an approved study AOI.
+
+### Implemented foundation routes
+
+| Route | Request | Response and meaning |
+|---|---|---|
+| `GET /api/health` | None | Process liveness only: `{status, service}`. It does not imply provider connectivity. |
+| `GET /api/readiness` | None | Capability flags, null product references, and current limitations. `null` means no product is available. |
+| `POST /api/study-area/validate` | `CON-01` fields: `aoi_geometry`, `start_date`, `end_date`, optional `target_crs`, optional `buffer_meters` | Structural validation result with `query_id`, `valid`, `message`, and `accepted_for_acquisition: false`. No persistence, data query, licensing check, AOI approval, or scientific processing occurs. |
+
+Malformed JSON or invalid fields return HTTP 422 with a validation detail. The browser displays the error and retains no success state. Network failures display an API connection error. A structurally valid request displays the returned `query_id` and the explicit no-acquisition message.
+
+### Product and data-quality states
+
+- Until actual source data and a valid processing task produce products, all estimate/product references remain `null`; the dashboard uses empty states and does not draw fictional crop, stage, stress, water-balance, or zonal layers.
+- Future responses map to `CON-03` through `CON-09` and must include their contract provenance, units, time support, quality state, limitations, and unavailable-value reasons. An absent product is an empty state, not a zero or a failed estimate.
+- Loading is a transient browser state while a request is pending. A failed request is an error state; low coverage or missing observations are product quality states supplied by real processing metadata. These states must not be conflated.
+- The current browser boundary supports only health, readiness, and `CON-01` structural validation. It has no product, layer, chart, or CSV endpoint yet. Such interfaces require actual producer modules and response contracts before they can be completed honestly.
+
+### Access and deployment
+
+The current CORS allowlist is limited to local development origins and the API has no authentication. Keep it bound to local development until deployment security, access control, data policy, and rate limits are selected. Do not expose the foundation API publicly as an authenticated product service.

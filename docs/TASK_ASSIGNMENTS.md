@@ -69,6 +69,7 @@ To prevent merge conflicts, strict file boundaries govern ownership. Work procee
 - **Acceptance Criteria:** `pip install -r requirements.txt` succeeds; `pytest` runs without error on Windows and Linux.
 - **Testing Requirements:** Test that ruff and black execute cleanly in CI / local terminal.
 - **Blockers:** None.
+- **Status (2026-10-29):** Dependency pins and pytest/Black/isort/Ruff configuration are implemented. Python 3.12 environment installation succeeded; 46 tests and 9 subtests pass, and Ruff, isort, and Black checks pass. Direct Member A/B review has not been recorded.
 
 **Start condition:** This foundation task may start as independent setup; completion does not declare P1 or the project phase complete.
 
@@ -94,7 +95,8 @@ To prevent merge conflicts, strict file boundaries govern ownership. Work procee
 - **Outputs:** Reviewed API boundary specification for `T-P2-AP-002` and `T-P2-AP-003`.
 - **Dependencies:** Gate 0; team technical confirmation of owner-selected DEC-01 before framework-specific implementation choices are recorded. The project owner has stated that guide sign-off is unavailable; no guide approval is recorded or assumed.
 - **Acceptance Criteria:** Request/response shapes, error/loading/empty/data-quality semantics, provenance, and mapping to approved output contracts are documented; reviewers approve; shared-contract changes have explicit unanimous approval.
-- **Blockers:** Team technical confirmation of DEC-01 remains open.
+- **Status:** The boundary specification is documented in `docs/ARCHITECTURE.md` under `T-P1-SH-003`; the user authorized approval steps on behalf of all members on 2026-10-29. Member-side review of the deliverable remains to be recorded.
+- **Blockers:** Reviewer acceptance of the specification is pending; no shared contract was changed.
 
 #### `T-P1-DE-001`: Google Earth Engine Authentication & Project Initializer
 - **Objective:** Set up GEE authentication flow, project binding, and connection verification helper.
@@ -220,6 +222,7 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Acceptance Criteria:** Features preserve common-grid metadata and native/effective resolution; SAR remains complementary to optical; valid-data fractions and provenance are recorded. No 8-day interval is assumed until approved.
 - **Testing Requirements:** Verify spatial alignment, CRS consistency, feature calculations, missing-data handling, and temporal metadata.
 - **Blockers:** Approved grid/temporal conventions and the pending AOI/orbit decisions.
+- **Status (2026-10-29):** Generic `CON-03` satellite-array assembly and software-only checks are implemented on `feat/T-P2-SC-002-scientific-foundation`. It preserves per-variable timestamps and provenance and rejects shape/time mismatches; it does not acquire or align real imagery. Full task acceptance and handoff remain blocked on upstream Sentinel-1/2 outputs and approved AOI/grid/time conventions.
 
 ---
 
@@ -266,6 +269,7 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Class scope:** The crop catalogue may be broad, but this classifier supports only classes with verified, traceable labels for its AOIs and seasons; unavailable classes are not emitted as predictions.
 - **Testing Requirements:** Unit test on synthetic arrays; verify model persistence (`joblib`) and inference reproducibility.
 - **Blockers:** Sourcing ground-truth labels (`DS-04`) for study area.
+- **Status (2026-10-29):** Added the gated model adapter and optional scientific dependency set on `feat/T-P2-SC-002-scientific-foundation`. It requires declared label provenance, verified-label attestation, exact train/validation/test partition coverage with spatial groups isolated, and stable feature order. Synthetic-only software checks cover fitting, nodata, uncertainty semantics, and persistence. No study labels were used; production fit, scientific validation, reviewer acceptance, and `CON-03` handoff remain open.
 
 #### `T-P2-SC-003`: Time-Series Phenology Tracker & Inflection Extractor
 - **Objective:** Evaluate a documented time-series smoothing and transition-detection method against available crop-specific references. Inflection dates are estimates; do not equate a greenness peak directly with flowering without validation.
@@ -321,7 +325,8 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Contract Dependencies:** `CON-08`, `CON-09`.
 - **Acceptance Criteria:** Correct zonal aggregation and unit conversion, with valid-area accounting and documented coverage. Operational releases remain out of scope unless hydraulic and delivery data are available and approved.
 - **Testing Requirements:** Spatial geometry tests using synthetic mock polygons and uniform deficit grids.
-- **Blockers:** Acquiring or digitizing canal boundary shapefiles (`DS-05`).
+- **Status:** Deferred from the first build under `DEC-13` (2026-10-29 delegated member approval). Do not acquire or digitize a command boundary for this task until the scope is reopened and `DS-05` is resolved.
+- **Blockers:** `DS-05` remains a blocker only if this task is reactivated for a later canal phase.
 
 #### Stage 5 — Member C (Ashwanth C): API and Dashboard
 
@@ -336,7 +341,8 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Contract Dependencies:** `CON-04`, `CON-05`, `CON-06`, `CON-09`.
 - **Acceptance Criteria:** Adaptive layouts work across phone, tablet, and desktop viewport sizes; map layers and date filters operate through the approved API; loading, empty, error, and data-quality states are clear; displayed estimates include provenance/limitations; no scientific output is fabricated.
 - **Testing Requirements:** Browser/component and API integration checks appropriate to the approved stack; exact tools TBD in DEC-01. Use only explicitly labeled synthetic fixtures for software testing.
-- **Blockers:** DEC-01 approval and framework/tooling selection, and an approved browser/API request-response boundary. Synthetic fixtures are permitted only for labelled software tests.
+- **Blockers:** The owner has directed that member approvals be treated as complete for this work. Product-layer, date-filter, chart, and export behavior still depends on real producer outputs and accepted handoffs. Do not populate these interfaces with fabricated estimates.
+- **Status (2026-10-29):** A foundation-level local demo now includes API-backed capability status, an AOI GeoJSON preview, and structural date/geometry request validation. This is not completion of interactive scientific map layers or a data-connected dashboard; those remain dependent on real, reviewed producer outputs.
 
 #### `T-P2-AP-003`: Temporal Analytics Charts & Tabular Export Module
 - **Objective:** Implement field analytics displaying available NDVI/EVI/SAR trajectories, estimated growth-stage transition markers, and downloadable CSV summary tables. Chart library and browser interaction patterns follow approved DEC-01 architecture.
