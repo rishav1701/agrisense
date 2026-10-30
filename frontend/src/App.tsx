@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { TemporalAnalytics } from "./dashboard/TemporalAnalytics";
+import { parseTemporalViewJson } from "./dashboard/temporalAnalyticsData.mjs";
+import type { TemporalAnalyticsView } from "./dashboard/temporalAnalyticsData.mjs";
 
 type Geometry = {
   type: "Polygon" | "MultiPolygon";
@@ -123,7 +125,16 @@ function App() {
   const [apiOnline, setApiOnline] = useState<boolean | null>(null);
   const [readiness, setReadiness] = useState<ReadinessResponse | null>(null);
   const [noticeVisible, setNoticeVisible] = useState(true);
+  const [temporalView, setTemporalView] = useState<TemporalAnalyticsView | null>(null);
+  const [temporalProductName, setTemporalProductName] = useState("");
+  const [temporalInputError, setTemporalInputError] = useState("");
+  const [mapZoom, setMapZoom] = useState(1);
   const path = useMemo(() => (geometry ? geometryPath(geometry) : ""), [geometry]);
+  const mapViewBox = useMemo(() => {
+    const width = 400 / mapZoom;
+    const height = 240 / mapZoom;
+    return `${(400 - width) / 2} ${(240 - height) / 2} ${width} ${height}`;
+  }, [mapZoom]);
 
   useEffect(() => {
     void checkApi();
@@ -186,9 +197,11 @@ function App() {
     try {
       const candidate = parseBoundaryDocument(JSON.parse(await file.text()) as unknown);
       setGeometry(candidate);
+      setMapZoom(1);
       setAreaName(file.name.replace(/\.geojson$|\.json$/i, ""));
     } catch (caught) {
       setGeometry(null);
+      setMapZoom(1);
       setError(caught instanceof Error ? caught.message : "Could not read this GeoJSON file.");
     }
   }
@@ -220,6 +233,28 @@ function App() {
     } finally {
       setBusy(false);
     }
+  }
+
+  async function handleTemporalProduct(file?: File) {
+    setTemporalInputError("");
+    if (!file) return;
+    setTemporalView(null);
+    setTemporalProductName("");
+    try {
+      const view = parseTemporalViewJson(await file.text());
+      setTemporalView(view);
+      setTemporalProductName(file.name);
+    } catch (caught) {
+      setTemporalInputError(
+        caught instanceof Error ? caught.message : "Could not read this temporal product.",
+      );
+    }
+  }
+
+  function clearTemporalProduct() {
+    setTemporalView(null);
+    setTemporalProductName("");
+    setTemporalInputError("");
   }
 
   return (
@@ -273,7 +308,30 @@ function App() {
 
           {active === "Temporal analytics" ? (
             <section className="panel temporal-analytics-page">
-              <TemporalAnalytics view={null} />
+              <div className="temporal-import">
+                <div>
+                  <b>Load a reviewed temporal product</b>
+                  <p>Choose producer-projected JSON with timestamps, units, quality, source references, and limitations. The file is read locally and is not uploaded or saved.</p>
+                </div>
+                <label className="temporal-import-button">
+                  <span>{temporalProductName ? "Replace product" : "Choose JSON"}</span>
+                  <input
+                    type="file"
+                    accept=".json,application/json"
+                    onChange={(event) => {
+                      void handleTemporalProduct(event.target.files?.[0]);
+                      event.currentTarget.value = "";
+                    }}
+                  />
+                </label>
+                {temporalProductName && (
+                  <button className="text-link temporal-clear" onClick={clearTemporalProduct}>
+                    Clear {temporalProductName}
+                  </button>
+                )}
+                {temporalInputError && <p className="form-message error temporal-import-error" role="alert">{temporalInputError}</p>}
+              </div>
+              <TemporalAnalytics view={temporalView} />
             </section>
           ) : (
             <>
@@ -291,8 +349,12 @@ function App() {
               <div className="panel-heading"><div><div className="section-kicker">STUDY AREA</div><h2>Spatial workspace</h2></div><button className="subtle-button" onClick={() => setActive("Field setup")}>Set up area <span>→</span></button></div>
               <div className={`map-canvas ${geometry ? "has-geometry" : ""}`}>
                 <div className="map-grid" />
-                <div className="map-controls"><button disabled title="Map zoom is unavailable in the boundary preview" aria-label="Zoom in">＋</button><button disabled title="Map zoom is unavailable in the boundary preview" aria-label="Zoom out">−</button><button disabled title="No map layer is loaded" aria-label="Reset view">⌖</button></div>
-                {geometry ? <svg className="aoi-preview" viewBox="0 0 400 240" role="img" aria-label="Uploaded AOI geometry preview"><path d={path} /></svg> : <div className="map-empty"><span className="map-empty-icon"><MapIcon /></span><b>Your study area will appear here</b><span>Upload a GeoJSON boundary to preview its shape</span><button className="map-upload" onClick={() => setActive("Field setup")}>Add boundary <span>→</span></button></div>}
+                <div className="map-controls">
+                  <button disabled={!geometry || mapZoom >= 4} title="Zoom into the boundary preview" aria-label="Zoom in" onClick={() => setMapZoom((zoom) => Math.min(zoom * 1.5, 4))}>＋</button>
+                  <button disabled={!geometry || mapZoom <= 1} title="Zoom out of the boundary preview" aria-label="Zoom out" onClick={() => setMapZoom((zoom) => Math.max(zoom / 1.5, 1))}>−</button>
+                  <button disabled={!geometry || mapZoom === 1} title="Fit the full boundary in view" aria-label="Reset view" onClick={() => setMapZoom(1)}>⌖</button>
+                </div>
+                {geometry ? <svg className="aoi-preview" viewBox={mapViewBox} role="img" aria-label={`Uploaded AOI geometry preview, zoom ${mapZoom.toFixed(1)} times`}><path d={path} /></svg> : <div className="map-empty"><span className="map-empty-icon"><MapIcon /></span><b>Your study area will appear here</b><span>Upload a GeoJSON boundary to preview its shape</span><button className="map-upload" onClick={() => setActive("Field setup")}>Add boundary <span>→</span></button></div>}
                 <div className="map-attribution">AOI preview only · EPSG:4326 coordinates</div>
               </div>
               <div className="map-footer"><span><i className="legend-aoi" />Study boundary</span><span className="map-footer-note">No basemap or satellite layer loaded</span></div>

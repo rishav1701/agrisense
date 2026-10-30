@@ -105,7 +105,7 @@ Start the local API, which serves the built frontend when `frontend/dist` exists
 .\.venv\Scripts\python.exe -m uvicorn src.api.main:app --host 127.0.0.1 --port 8000
 ```
 
-Open [http://127.0.0.1:8000](http://127.0.0.1:8000). To demonstrate the supported flow, upload an authorized GeoJSON `Polygon` or `MultiPolygon` in longitude/latitude order, choose an inclusive start and exclusive end date, and select **Validate study request**. The response confirms request structure only; it does not select an AOI, query a provider, or acquire data. The interactive API schema is available at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs).
+Open [http://127.0.0.1:8000](http://127.0.0.1:8000). To demonstrate the supported flow, upload an authorized GeoJSON `Polygon` or `MultiPolygon` in longitude/latitude order, choose an inclusive start and exclusive end date, and select **Validate study request**. The response confirms request structure only; it does not select an AOI, query a provider, or acquire data. Temporal analytics can locally display a producer-projected JSON view with provenance metadata; structural validation does not establish scientific validity. See the [user guide](docs/USER_GUIDE.md) for the expected fields. The interactive API schema is available at [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs).
 
 For frontend hot reload during development, run `npm run dev` from `frontend` and start the API in a second terminal with the command above. Vite proxies `/api` requests to the local API.
 

@@ -295,3 +295,11 @@ See [`docs/WORK_STATUS.md`](WORK_STATUS.md), [`docs/AOI_DECISION.md`](AOI_DECISI
 
 - The project owner reaffirmed approval for all current Member C work and authorized committing and pushing the reviewed changes on this feature branch. This is owner-reported authorization; no new shared contract or scientific decision was introduced.
 - Upstream producer handoffs, provider credentials, AOI/source-use evidence, scientific validation, and formal guide approval remain separate project requirements.
+
+## 27. Temporal product import integration — 2026-10-31
+
+- Connected the temporal analytics page to a local JSON file import for producer-projected time-series views. Files are parsed and checked for interval dates, ordered UTC timestamps, units, quality, source references, missing-value reasons, and limitations before display.
+- The file remains in browser memory; no upload, persistence, synthetic product data, or API product endpoint was added. Structural validation does not establish scientific correctness or data-use rights. CSV export remains available for a validated loaded view.
+- Added `docs/USER_GUIDE.md` with the local run flow and expected temporal product fields, and linked it from the README.
+- Enabled map zoom-in, zoom-out, and fit-to-boundary controls for a user-supplied AOI preview. This does not add a basemap or product layer.
+- Verification: all 10 frontend tests pass; TypeScript/Vite production build succeeds; `git diff --check` passes. Real producer outputs and automated server-side integration remain unavailable.

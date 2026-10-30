@@ -3,6 +3,7 @@ import test from "node:test";
 
 import {
   buildChartModel,
+  parseTemporalViewJson,
   serializeTemporalCsv,
   validateTemporalView,
 } from "../src/dashboard/temporalAnalyticsData.mjs";
@@ -46,6 +47,15 @@ const softwareFixture = {
 
 test("validates provenance-aware temporal output and preserves the requested interval", () => {
   assert.equal(validateTemporalView(softwareFixture), softwareFixture);
+});
+
+test("parses and validates a temporal product JSON document", () => {
+  assert.deepEqual(parseTemporalViewJson(JSON.stringify(softwareFixture)), softwareFixture);
+});
+
+test("rejects malformed JSON and valid JSON without a product interval", () => {
+  assert.throws(() => parseTemporalViewJson("{"), /valid JSON/);
+  assert.throws(() => parseTemporalViewJson("{}"), /interval.start/);
 });
 
 test("chart model leaves a visible break at missing samples", () => {

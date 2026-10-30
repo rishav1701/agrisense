@@ -97,6 +97,20 @@ export function validateTemporalView(view) {
   return view;
 }
 
+/** Parse and validate a producer-projected temporal product JSON document. */
+export function parseTemporalViewJson(contents) {
+  if (typeof contents !== "string") {
+    throw new TypeError("Temporal product content must be text.");
+  }
+  let parsed;
+  try {
+    parsed = JSON.parse(contents);
+  } catch {
+    throw new TypeError("Temporal product must contain valid JSON.");
+  }
+  return validateTemporalView(parsed);
+}
+
 /** Return finite chart coordinates while keeping missing samples as line breaks. */
 export function buildChartModel(series, interval, width = 760, height = 220) {
   if (!Number.isFinite(width) || width <= 0 || !Number.isFinite(height) || height <= 0) {

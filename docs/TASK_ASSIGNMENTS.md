@@ -345,6 +345,7 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Testing Requirements:** Browser/component and API integration checks appropriate to the approved stack; exact tools TBD in DEC-01. Use only explicitly labeled synthetic fixtures for software testing.
 - **Blockers:** The owner has directed that member approvals be treated as complete for this work. Product-layer, date-filter, chart, and export behavior still depends on real producer outputs and accepted handoffs. Do not populate these interfaces with fabricated estimates.
 - **Status (2026-10-29):** A foundation-level local demo now includes API-backed capability status, an AOI GeoJSON preview, and structural date/geometry request validation. This is not completion of interactive scientific map layers or a data-connected dashboard; those remain dependent on real, reviewed producer outputs.
+- **Status (2026-10-31):** Added functional zoom-in, zoom-out, and fit-to-boundary controls for the locally uploaded AOI preview. This remains a geometry preview; basemap and producer-backed scientific layers are not connected.
 
 #### `T-P2-AP-003`: Temporal Analytics Charts & Tabular Export Module
 - **Objective:** Implement field analytics displaying available NDVI/EVI/SAR trajectories, estimated growth-stage transition markers, and downloadable CSV summary tables. Chart library and browser interaction patterns follow approved DEC-01 architecture.
@@ -358,7 +359,7 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Acceptance Criteria:** Charts expose units, time support, missing-data gaps, and estimate status; table downloads include valid headers, units, and provenance metadata where applicable.
 - **Testing Requirements:** Check CSV generation and chart serialization using tools selected with the approved frontend.
 - **Blockers:** No producer endpoint or accepted data handoff is connected yet; chart/export integration with real outputs remains gated on upstream products and reviewed handoffs. The current reusable component and empty state satisfy the UI foundation only.
-- **Status (2026-10-30):** A provenance-aware chart/export component and empty state are implemented. It only renders caller-supplied contract-derived values; no producer endpoint is connected and the UI currently shows no data. Software tests use explicitly synthetic test-only fixtures.
+- **Status (2026-10-31):** A provenance-aware chart/export component, empty state, and local JSON import are implemented. Imported views are structurally validated and stay in browser memory; no producer endpoint is connected, no scientific validity is inferred, and no product is bundled. Software tests use explicitly synthetic test-only fixtures.
 
 ---
 

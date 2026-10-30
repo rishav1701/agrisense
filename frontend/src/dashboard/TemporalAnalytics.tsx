@@ -124,8 +124,8 @@ export function TemporalAnalytics({ view, loading = false, error = null }: Props
     return (
       <div className="temporal-empty" role="status">
         <span className="section-kicker">TEMPORAL ANALYTICS</span>
-        <h2>No reviewed time-series outputs available</h2>
-        <p>Charts and CSV export will appear after an accepted data handoff supplies observations or estimates with units, time support, quality, and provenance.</p>
+        <h2>No temporal product loaded</h2>
+        <p>Choose a reviewed producer-projected JSON file above. Structural validation checks its metadata and timestamps, not scientific validity.</p>
       </div>
     );
   }
@@ -144,8 +144,8 @@ export function TemporalAnalytics({ view, loading = false, error = null }: Props
     return (
       <div className="temporal-empty" role="status">
         <span className="section-kicker">TEMPORAL ANALYTICS</span>
-        <h2>No reviewed time-series outputs available</h2>
-        <p>Charts and CSV export will appear after an accepted data handoff supplies observations or estimates with units, time support, quality, and provenance.</p>
+        <h2>No temporal records in this product</h2>
+        <p>The file contains no series or stage transitions for the requested interval.</p>
       </div>
     );
   }

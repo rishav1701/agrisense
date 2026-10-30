@@ -458,7 +458,7 @@ Malformed JSON or invalid fields return HTTP 422 with a validation detail. The b
 - Until actual source data and a valid processing task produce products, all estimate/product references remain `null`; the dashboard uses empty states and does not draw fictional crop, stage, stress, water-balance, or zonal layers.
 - Future responses map to `CON-03` through `CON-09` and must include their contract provenance, units, time support, quality state, limitations, and unavailable-value reasons. An absent product is an empty state, not a zero or a failed estimate.
 - Loading is a transient browser state while a request is pending. A failed request is an error state; low coverage or missing observations are product quality states supplied by real processing metadata. These states must not be conflated.
-- The current browser boundary supports only health, readiness, and `CON-01` structural validation. It has no product, layer, chart, or CSV endpoint yet. Such interfaces require actual producer modules and response contracts before they can be completed honestly.
+- The current API boundary supports health, readiness, and `CON-01` structural validation; it has no product endpoint. The browser can locally import a producer-projected temporal JSON view after structural validation and export that supplied view to CSV. The import is not uploaded or persisted, does not validate scientific truth, and does not replace a producer/API handoff. Map products and server-backed charts require actual producer modules and accepted response contracts.
 
 ### Access and deployment
 
