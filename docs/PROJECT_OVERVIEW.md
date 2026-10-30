@@ -1,7 +1,7 @@
 # AgriSense — Project Overview
 
 > **Document Type:** Phase 0 — Architecture & Planning  
-> **Status:** Project-owner approved scope direction (multi-region India-first); pilot AOI and implementation decisions remain open.
+> **Status:** Project-owner approved scope direction (multi-region India-first); all-member approval to proceed with remaining implementation is reported on 2026-10-31. Pilot AOI, source suitability, and scientific evidence gates remain open.
 > **Created:** 2026-10-23  
 > **Project Title:** AI-Driven Automated Crop Type, Moisture Stress Detection and Irrigation Advisory Across Growth Stages Using Moderate Resolution Spectral Signatures (Optical & Microwave Satellite Data)  
 > **Domain:** Remote Sensing & Geospatial AI for Precision Agriculture and Water Resource Management
@@ -65,7 +65,7 @@ Canal irrigation systems across India's agricultural belts rely on **district-le
 |----|---------------|-------------|
 | **O1** | SAR–Optical Crop Classification | Source asks for Sentinel-1/2 + ERA5-Land ingestion and Random Forest mapping at a 10 m output grid; effective resolution depends on the source bands and processing. |
 | **O2** | Stage-Aware Stress Detection | Source asks for a SciPy phenology tracker and dynamic VCI thresholds to address senescence-related false alarms; this proposed effect requires validation. |
-| **O3** | Irrigation-Relevant Decision Support | Source asks for FAO-56-based deficits and canal-command aggregation. Canal summaries are conditional on sourced command boundaries and suitable estimates; operational control is out of scope. The project owner selected React + TypeScript and FastAPI as the dashboard/API direction, pending team technical confirmation. Depth is in mm; volume requires area and explicit assumptions. |
+| **O3** | Irrigation-Relevant Decision Support | Source asks for FAO-56-based deficits and canal-command aggregation. Canal summaries are conditional on sourced command boundaries and suitable estimates; operational control is out of scope. The project owner selected React + TypeScript and FastAPI as the dashboard/API direction, with all-member approval to proceed reported 2026-10-31. Depth is in mm; volume requires area and explicit assumptions. |
 
 > **Source:** IDP PDF, page 23 — Objectives O1, O2, O3.
 
@@ -75,7 +75,7 @@ Canal irrigation systems across India's agricultural belts rely on **district-le
 - **Growth stage map** showing vegetative, flowering/heading, and senescence phases
 - **Candidate vegetation/stress indicator map** using a documented method; stage-aware rules and their value over static baselines require independent validation
 - Canal-boundary summary of estimated depth (mm); any area-derived volume (m³) must document valid area and assumptions and is not a gate-release prescription
-- Outputs presented in an interactive, responsive React + TypeScript dashboard with a FastAPI API as owner-selected direction, pending team technical confirmation
+- Outputs presented in an interactive, responsive React + TypeScript dashboard with a FastAPI API as owner-selected direction, with all-member approval to proceed reported 2026-10-31
 
 ### 2.4 Intended Users (source-proposed; operational suitability unvalidated)
 
@@ -111,7 +111,7 @@ The project intends to address source features **F1–F8** and objectives **O1�
 - **F5:** Sentinel-1 radar features. The source's “all-weather” framing is an aspiration; SAR does not provide optical-equivalent observations or guarantee continuous stress detection.
 - **F6:** Mava-proposed FAO-56 water-balance estimate (ETc = Kc × ET₀ against rainfall; method and inputs require definition; source uses “mm/ha”)
 - **F7:** Canal Command Boundary Aggregator (pixel → canal polygon summaries)
-- **F8:** Responsive browser dashboard (source proposal: Streamlit; owner-selected direction: React + TypeScript with FastAPI, pending team technical confirmation)
+- **F8:** Responsive browser dashboard (source proposal: Streamlit; owner-selected direction: React + TypeScript with FastAPI, all-member approval to proceed reported 2026-10-31)
 
 ### 3.2 Exclusions
 
@@ -223,7 +223,7 @@ The proposed AgriSense pipeline transforms satellite and meteorological inputs i
 **Objectives & Deliverables (REQUIREMENT):**
 - **O1:** SAR–Optical crop classification on the source-requested 10 m grid using Random Forest; source resolutions and effective detail must be documented
 - **O2:** Source asks for a SciPy phenology tracker with dynamic VCI thresholds; these remain candidate rules until defined and validated.
-- **O3:** Irrigation-relevant summaries using sourced FAO-56 estimates; canal-command aggregation is conditional on valid command boundaries. The source proposes Streamlit delivery; the owner selected a responsive React + TypeScript dashboard with FastAPI, pending team technical confirmation.
+- **O3:** Irrigation-relevant summaries using sourced FAO-56 estimates; canal-command aggregation is conditional on valid command boundaries. The source proposes Streamlit delivery; the owner selected a responsive React + TypeScript dashboard with FastAPI, with all-member approval to proceed reported 2026-10-31.
 
 **Techniques Specified (REQUIREMENT):**
 1. SAR-Optical Data Fusion — the source proposes Sentinel-2 indices with Sentinel-1 VH/VV; neither continuous optical coverage nor equivalent stress observations are guaranteed
@@ -275,7 +275,7 @@ The proposed AgriSense pipeline transforms satellite and meteorological inputs i
 |-------|-------------|
 | Cloud Data & Infrastructure | Source-proposed Google Earth Engine, Sentinel-2, Sentinel-1, and ERA5-Land; nominal grid spacing and effective resolution are distinct |
 | ML & Processing | Scikit-Learn (Random Forest candidate; Mava's 100-tree setting is a proposal to evaluate), NumPy & Pandas, SciPy (signal processing) |
-| Geospatial & Frontend | Source proposal: GeoPandas/Rasterio, Streamlit, Streamlit-Folium, Plotly. Owner-selected direction: responsive React + TypeScript frontend and FastAPI API; mapping/chart libraries remain open pending team review. |
+| Geospatial & Frontend | Source proposal: GeoPandas/Rasterio, Streamlit, Streamlit-Folium, Plotly. Owner-selected direction: responsive React + TypeScript frontend and FastAPI API; all-member approval to proceed reported 2026-10-31; mapping/chart libraries remain open. |
 
 **USP Statement (source claim, not independently verified):**
 > Mava presents this combination as its unique selling proposition. This is an unverified source claim and is not repeated as a comparative finding.

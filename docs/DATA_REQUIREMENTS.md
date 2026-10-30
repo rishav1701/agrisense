@@ -46,7 +46,7 @@ meteorological fields, and several ancillary vector/tabular datasets to produce:
 - FAO-56 water-balance depth estimates in mm (F6); “mm/ha” appears in source documents but is not a depth unit
 - Canal-command-level advisory tables (F7, O3)
 
-The source proposes Streamlit delivery (F8). The project owner selected a responsive React + TypeScript browser frontend with a FastAPI API; team technical confirmation remains open under DEC-01.
+The source proposes Streamlit delivery (F8). The project owner selected a responsive React + TypeScript browser frontend with a FastAPI API; all-member approval to proceed is reported on 2026-10-31 under DEC-01.
 
 The datasets fall into two tiers:
 

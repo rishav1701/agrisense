@@ -41,9 +41,9 @@ ERA5-Land (Met) ──────┘                                         �
                                                Responsive Web Dashboard
 ```
 
-## Recommended Architecture *(Provisional — Pending Approval)*
+## Recommended Architecture *(Owner-selected; all-member approval to proceed reported 2026-10-31)*
 
-**User-authorized direction:** a responsive React + TypeScript browser dashboard with a FastAPI Python API. The project owner directed that required member approvals be treated as complete for implementation; individual review records were not collected in this workspace. The source documents propose Streamlit. GEE, scikit-learn, and SciPy remain proposed scientific stack elements. See `docs/ARCHITECTURE.md` and `docs/DECISIONS.md` for current decisions.
+**User-authorized direction:** a responsive React + TypeScript browser dashboard with a FastAPI Python API. The project owner reports that all three members approved proceeding with remaining work and reviews (2026-10-31); individual review artifacts are not stored in this workspace. The source documents propose Streamlit. GEE, scikit-learn, and SciPy remain candidate scientific stack elements, subject to available data and method evidence. See `docs/ARCHITECTURE.md` and `docs/DECISIONS.md` for current decisions and remaining gates.
 
 ## Project Documentation
 

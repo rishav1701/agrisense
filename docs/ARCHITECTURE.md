@@ -1,10 +1,10 @@
 # Architecture — AgriSense
 
-> **Status: PROVISIONAL** — All recommendations require team approval before implementation.
+> **Status:** The owner-selected application stack and all-member approval to proceed are reported complete (2026-10-31). Exact processing choices, shared-contract amendments, AOI selection, and evidence-dependent methods remain subject to their specific inputs and decision records.
 
 ## 1. Architecture Overview
 
-AgriSense is provisionally a Python scientific backend with a separate, responsive browser dashboard. The project owner selected React + TypeScript with a FastAPI Python API. The user authorized approval steps on behalf of all members on 2026-10-29; individual implementation reviews remain pending. If GEE is selected, supported raster operations may run server-side; the Python backend handles model fitting, phenology analysis, water-balance calculations, and API responses. This proposed division depends on approved data and interface contracts.
+AgriSense is a Python scientific backend with a separate, responsive browser dashboard. The project owner selected React + TypeScript with a FastAPI Python API and reports all-member approval to proceed on 2026-10-31; individual review artifacts are not stored here. If GEE is selected, supported raster operations may run server-side; the Python backend handles model fitting, phenology analysis, water-balance calculations, and API responses. This proposed division depends on available data and agreed interface contracts.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────┐
@@ -63,7 +63,7 @@ The project-owner-approved scope direction is India-first and multi-region. Punj
 
 Regional profile fields that affect `CON-01`–`CON-09` require a proposed schema change and unanimous approval from all three members before implementation.
 
-Maintain an extensible crop catalogue independently from the model's supported class list. The initial classifier includes only classes with verified, traceable labels for its selected AOIs and seasons. Canal-command aggregation is conditional on a sourced command boundary and suitable estimates; otherwise omit/defer that layer. The dashboard direction selected by the owner is React + TypeScript with a FastAPI API, subject to team technical confirmation.
+Maintain an extensible crop catalogue independently from the model's supported class list. The initial classifier includes only classes with verified, traceable labels for its selected AOIs and seasons. Canal-command aggregation is conditional on a sourced command boundary and suitable estimates; otherwise omit/defer that layer. The owner-selected React + TypeScript and FastAPI direction has all-member approval to proceed reported on 2026-10-31; pilot data and scientific gates remain separate.
 
 The regional configuration boundary is a configuration/provenance layer consumed by shared acquisition, feature, modelling, water-balance, aggregation, and presentation modules. It selects region-specific references and supported domains; it must not silently tune models, substitute missing labels, or supply unsourced agronomic defaults.
 
@@ -140,11 +140,11 @@ Any future field added to a shared contract requires a separate proposal, compat
 | **Interactivity** | Supports a custom responsive layout and tailored map, chart, and table interactions |
 | **Deployment** | Frontend and API hosting must be planned; exact deployment remains undecided |
 | **Limitations** | Higher setup and maintenance cost for a three-member academic project |
-| **Suitability** | Better fit for the owner's professional and responsive dashboard preference, subject to team technical confirmation |
+| **Suitability** | Better fit for the owner's professional and responsive dashboard preference; all-member approval to proceed reported 2026-10-31 |
 
 ### Decision
 
-> **DEC-01: Owner-selected direction — responsive React + TypeScript frontend with a FastAPI Python API.** The source documents propose Streamlit; this is a deliberate departure from that implementation proposal while preserving the dashboard objective. Team technical confirmation, mapping/chart libraries, and deployment remain open. No guide approval is recorded or assumed.
+> **DEC-01: Owner-selected direction — responsive React + TypeScript frontend with a FastAPI Python API.** The source documents propose Streamlit; this is a deliberate departure from that implementation proposal while preserving the dashboard objective. All-member approval to proceed is reported by the project owner (2026-10-31); mapping/chart libraries and deployment remain open. No guide approval is recorded or assumed.
 
 ## 3. Module Responsibilities
 
@@ -310,7 +310,7 @@ Any future field added to a shared contract requires a separate proposal, compat
 
 ## 7. Deployment *(Provisional)*
 
-For academic demonstration, local development will run the owner-selected browser frontend and Python API after team technical confirmation of DEC-01. Commands, hosting, and service topology remain undecided.
+For academic demonstration, local development runs the owner-selected browser frontend and Python API under DEC-01, with all-member approval to proceed reported by the project owner (2026-10-31). Hosting and service topology remain undecided.
 
 - GEE authenticated per-user
 
@@ -325,8 +325,8 @@ Deployment and containerisation remain provisional; evaluate only after the team
 | Phenology | SciPy signal processing | IDP PDF specifies SciPy; mava F3 |
 | Water balance | NumPy / Pandas | FAO-56 vectorised computation |
 | Geospatial | GeoPandas, Rasterio | Both PDFs specify; canal aggregation |
-| Dashboard | Responsive React + TypeScript frontend | User-authorized direction; implementation review pending; source documents propose Streamlit |
-| API/backend | FastAPI Python API | User-authorized direction; implementation review pending |
+| Dashboard | Responsive React + TypeScript frontend | User-authorized direction; all-member approval to proceed reported 2026-10-31; source documents propose Streamlit |
+| API/backend | FastAPI Python API | User-authorized direction; all-member approval to proceed reported 2026-10-31 |
 | Map visualisation | Library TBD | Source proposes Folium via Streamlit; select after framework and integration review |
 | Charts | Library TBD | Source proposes Plotly; confirm compatibility with DEC-01 |
 | Testing | pytest | Standard Python testing |
@@ -407,7 +407,7 @@ agrisense/
 └── notebooks/                  # Exploration notebooks (gitignored outputs)
 ```
 
-> **Note:** This proposed structure remains provisional. The repository currently includes `frontend/`, `src/api/`, contract schemas, and selected satellite utilities; the planned model, weather, assembly, and spatial modules are not all implemented. The user authorized React + TypeScript and FastAPI approval steps on 2026-10-29; this does not mark the application or phase complete.
+> **Note:** The repository currently includes `frontend/`, `src/api/`, contract schemas, and selected satellite utilities; the planned phenology, stress, complete weather/assembly, and spatial modules are not all implemented. The project owner reports all-member approval to proceed with remaining work/reviews (2026-10-31); this does not mark the application or phase complete.
 
 ## 10. Module Dependency Graph
 

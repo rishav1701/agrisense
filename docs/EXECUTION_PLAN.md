@@ -35,7 +35,7 @@ Architecture  & Contracts   Development   & Contracts   End-to-End    Validation
 - `AGENTS.md`: Agent behavior rules and scientific integrity constraints.
 - `README.md`: Project summary, phase status, navigation.
 - `docs/PROJECT_OVERVIEW.md`: Grounded problem statement, objectives (O1–O3), features (F1–F8), gaps (G1–G5).
-- `docs/ARCHITECTURE.md`: Proposed scientific backend and responsive browser dashboard architecture, tradeoffs, and pending DEC-01 review.
+- `docs/ARCHITECTURE.md`: Scientific backend and responsive browser dashboard architecture, tradeoffs, and DEC-01 approval record.
 - `docs/EXECUTION_PLAN.md`: Complete phased roadmap (P0–P6).
 - `docs/TASK_ASSIGNMENTS.md`: Work breakdown structure for Members A, B, and C.
 - `docs/DATA_REQUIREMENTS.md`: Dataset inventory (S1, S2, ERA5-Land, ground-truth, canal vectors).
@@ -58,13 +58,13 @@ Architecture  & Contracts   Development   & Contracts   End-to-End    Validation
 - All required Phase 0 documents are present; audit remediation updated their cross-references and recorded unresolved decisions and blockers.
 - No application or scientific code has been implemented.
 - Neither reference PDF is committed to the Git repository.
-- Decisions are labeled `PROPOSED` until approved by team consensus.
+- Decision records distinguish reported member approval to proceed from decisions and evidence-dependent parameters that remain open.
 
 ### P1 Entry Gate Conditions (Preventing Progression from P0 to P1)
 - The Phase 0 baseline is approved by all three members per the project owner’s confirmation; guide sign-off is waived by the project owner for this baseline.
 - Role-to-name mapping and the sequential allocation plan are approved as part of the Phase 0 baseline.
 - The API contract amendment has unanimous approval from all three members (2026-10-23).
-- Study area, crop classes, ground-truth strategy, canal-boundary source, required decision approvals, and GEE access if selected are not yet recorded. P0 may be complete while this P1 entry gate remains open.
+- The project owner reports all-member approval to proceed with remaining work and reviews (2026-10-31). Study area, crop classes, ground-truth strategy, boundary provenance/reuse, and GEE access if selected remain unresolved; P0 may be complete while this P1 entry gate remains open.
 
 ---
 
@@ -73,7 +73,7 @@ Architecture  & Contracts   Development   & Contracts   End-to-End    Validation
 Independent foundation tasks may start when their own inputs are satisfied; pilot AOI and data prerequisites gate AOI-specific acquisition and scientific modelling, not environment setup. Add `T-P1-SH-004` to specify regional profile/provenance handling. Any shared-contract changes still require unanimous approval.
 
 ### Objectives
-1. Configure local virtual environments, Python dependency definitions (`requirements.txt`), and developer linting/formatting hooks (`black`, `ruff`, `isort`, `pytest`); add frontend tooling after the team confirms the owner-selected DEC-01 stack. This Python setup may begin independently of pilot AOI selection.
+1. Configure local virtual environments, Python dependency definitions (`requirements.txt`), and developer linting/formatting hooks (`black`, `ruff`, `isort`, `pytest`); frontend tooling follows the owner-selected DEC-01 stack. This Python setup may begin independently of pilot AOI selection.
 2. Implement contract schemas in Python (`src/contracts/schemas.py`) using Pydantic or dataclasses to enforce inter-module interfaces.
 3. Establish directory structure and mock data fixtures for unit and interface testing.
 4. Set up GEE project credentials and verify cloud connectivity.
@@ -81,16 +81,16 @@ Independent foundation tasks may start when their own inputs are satisfied; pilo
 ### Deliverables
 - `requirements.txt` with pinned stable dependencies.
 - `pyproject.toml` or configuration files for `black`, `ruff`, and `isort`.
-- Provisional directory skeleton for approved backend/scientific modules and tests; frontend/API directories are created after team confirmation of DEC-01.
+- Provisional directory skeleton for approved backend/scientific modules and tests; frontend/API directories follow DEC-01.
 - Python implementation of data contracts in `src/contracts/schemas.py`.
-- Reviewed browser/API boundary specification (`T-P1-SH-003`) after DEC-01 selection.
+- Reviewed browser/API boundary specification (`T-P1-SH-003`) under DEC-01.
 - Mock fixture generator in `tests/fixtures/` producing synthetic data adhering strictly to `CON-01` through `CON-09`.
 - Verified GEE connection script (`scripts/verify_gee.py`).
 
 ### Ordered P1 Handoffs
 1. Ashwanth C: `T-P1-SH-001` environment/tooling.
 2. Ashwanth C: `T-P1-SH-002` schemas, with Peter and Rishav sign-off.
-3. Ashwanth C: `T-P1-SH-003` browser/API boundary after team confirmation of DEC-01.
+3. Ashwanth C: `T-P1-SH-003` browser/API boundary under owner-selected DEC-01 and reported all-member approval to proceed.
 4. Peter: `T-P1-DE-001` GEE setup.
 5. Rishav: `T-P1-SC-001` explicitly synthetic software fixtures.
 6. Proposed: `T-P1-SH-004` regional profile/provenance specification after team confirms the task and its owner.
@@ -118,9 +118,9 @@ This order is sequential for implementation ownership. A task can be complete wh
 
 ### Gate Conditions (Preventing Progression to P2)
 - Any member cannot run the agreed software checks.
-- Required P1 task handoffs, including the DEC-01/API boundary, are incomplete or unreviewed.
+- Required P1 task handoffs and evidence prerequisites remain incomplete; owner-reported member approval does not substitute for missing artifacts.
 - Shared contracts have not been unanimously approved.
-- DEC-01 and the frontend/API toolchain have not yet received team technical confirmation. Guide sign-off is unavailable per project-owner statement and is not recorded as obtained.
+- All-member approval to proceed with DEC-01 and remaining implementation is reported by the project owner (2026-10-31). This does not supply missing environment access or complete downstream handoffs. Guide sign-off is unavailable per project-owner statement and is not recorded as obtained.
 - Study area and target crop classes remain undefined.
 - Ground-truth and canal-boundary acquisition strategies remain unassessed. Coding against synthetic fixtures may proceed only for software behavior, not scientific performance.
 
@@ -132,7 +132,7 @@ This order is sequential for implementation ownership. A task can be complete wh
 1. Implement isolated modules in sequential, non-overlapping stages with formal handoff packages; do not use another member’s daily progress as a prerequisite.
 2. Member B (Rishav) completes Sentinel-1/2 and satellite feature/time-series preparation (`T-P2-DE-002`, `003`, `005`); Member A (Peter) then completes ERA5-Land and cross-source assembly (`T-P2-DE-004`, `006`).
 3. Member B (Rishav) implements the scientific models sequentially after the accepted complete `CON-03` data handoff: classifier, phenology, then stress model, respecting sourced-label and method blockers. Synthetic fixtures support software tests only; scientific claims and calibration require sourced evidence.
-4. Member A (Peter) completes water-balance and canal-geospatial outputs (`T-P2-SC-005`, `T-P2-AP-001`); Member C (Ashwanth C) begins API/dashboard work only after reviewed output handoffs and DEC-01/API boundary approval.
+4. Member A (Peter) completes water-balance and canal-geospatial outputs (`T-P2-SC-005`, `T-P2-AP-001`); Member C (Ashwanth C) connects the API/dashboard after required producer outputs and their handoffs exist. DEC-01 approval to proceed is reported complete.
 
 ### Deliverables
 - **Stage 1 — Member B (Rishav):** `T-P2-DE-002`, `T-P2-DE-003`, `T-P2-DE-005` — satellite package.
@@ -148,7 +148,7 @@ This order is sequential for implementation ownership. A task can be complete wh
 - The primary owner and independent reviewer for every task are listed in `docs/TASK_ASSIGNMENTS.md`; sequential stage handoffs are required before the next owner starts dependent work.
 
 ### Dependencies
-- Successful completion of Phase P1, approved DEC-01/API boundary, and frozen `src/contracts/schemas.py`.
+- Successful completion of Phase P1, required upstream handoffs, and frozen `src/contracts/schemas.py`; DEC-01 approval to proceed is reported complete.
 
 ### Testing and Validation Requirements
 - Every non-trivial module needs unit tests for its defined behavior; software coverage is not scientific validation.
@@ -219,7 +219,7 @@ This order is sequential for implementation ownership. A task can be complete wh
 - Multi-temporal phenological inflection rasters and growth stage classifications.
 - Candidate vegetation/stress indicator maps with quality states and documented senescence handling.
 - Canal-boundary summaries of estimated depth (mm) and, if approved and supported, area-derived volume with assumptions; no gate-release prescription.
-- Responsive browser dashboard displaying available observations, estimates, candidate indicators, and their limitations; framework selection remains gated by DEC-01.
+- Responsive browser dashboard displaying available observations, estimates, candidate indicators, and their limitations; production views remain gated by upstream products and evidence.
 
 ### Roles & Responsibilities
 - **Satellite & Met Processing:** Member A.
@@ -292,7 +292,7 @@ This order is sequential for implementation ownership. A task can be complete wh
 ## Phase P6: Deployment, Documentation, Demonstration, and Academic Presentation
 
 ### Objectives
-1. Finalize the responsive browser dashboard for academic presentation and guide review, using the framework approved in DEC-01.
+1. Finalize the responsive browser dashboard for academic presentation and guide review, using the owner-selected framework in DEC-01.
 2. Complete all technical documentation, user guides, and reproducibility instructions.
 3. Prepare presentation slide deck and demonstration script highlighting the 3-in-1 pipeline USP.
 4. Conduct final code audit, dependency cleanup, and repository archiving.

@@ -3,7 +3,7 @@
 > **P0 baseline approved by the three-member team per project-owner confirmation (2026-10-23); guide sign-off waived by the project owner for P0. P1 execution remains subject to the listed entry prerequisites and task dependencies.**
 > **Team Allocation:** Exactly three human student members. The project owner approved the proposed allocation and sequential handoff plan; this records the approved Phase 0 baseline and role plan, not approval of individual scientific decisions. Member A is Peter Livins (weather, water-balance support, geospatial); Member B is Rishav Raj (satellite data, ML, scientific modelling); Member C is Ashwanth C (application, dashboard, integration).
 > **Execution mode:** Sequential, non-overlapping stage handoffs are preferred. A member can work from an accepted handoff package without monitoring another member's day-to-day progress. This does not waive formal phase gates or shared-contract approval.
-> **Member C continuation and branch review approval (2026-10-31):** The project owner reports that all three members approved Member C's work and that Members A and B manually reviewed and approved the current feature-branch changes. This is owner-reported approval; separate review artifacts are not stored here. It does not waive dependencies or evidence gates, and any shared-contract change still requires an explicit unanimous approval record for that proposed change.
+> **All-work approval and review report (2026-10-31):** The project owner reports that all three members approved proceeding with the remaining work and reviews, and that Members A and B manually reviewed the implementation branch. Record this as owner-reported delegated approval; separate member signatures/review artifacts are not stored here. Member approval does not waive dependencies or scientific/data evidence gates. Any proposed shared-contract amendment still needs its own explicit unanimous approval record.
 > **Scope direction:** The project owner approved an India-first multi-region design direction and evidence-led pilot review on 2026-10-23 (`DEC-10`, `DEC-14`). Telangana/TGRAC is currently a lead candidate; SRSP Stage I is not a selected AOI. Existing task IDs, primary owners, reviewers, and file boundaries are retained. Region-dependent scientific work remains gated by sourced AOI/data/method inputs; independent foundation, learning, and source-inventory work may proceed without a pilot.
 > **Academic Project:** BACSE291 — Innovative Design Project, VIT Vellore (Fall 2026).
 > **Guide:** Dr. Muthuraja S, Assistant Professor Sr. Grade 1.
@@ -33,7 +33,7 @@ To prevent merge conflicts, strict file boundaries govern ownership. Work procee
 | `src/models/classifier.py`, `phenology.py`, `stress.py`; corresponding tests | Member B (Rishav) | Member A (Peter) | **No.** PR/review required. |
 | `src/models/water_balance.py`, `config/kc_coefficients.yaml`, water-balance tests | Member A (Peter) | Member B (Rishav) | **No.** Requires approved methods/inputs; Rishav reviews scientific assumptions. |
 | `src/evaluation/**` | Member B (Rishav) | Member A (Peter) | **No.** PR with owner review required. |
-| `frontend/**`, `src/api/**`, `src/dashboard/**` | Member C (Ashwanth C) | Member B (Rishav) | **No.** DEC-01 and API boundary approval required before implementation. |
+| `frontend/**`, `src/api/**`, `src/dashboard/**` | Member C (Ashwanth C) | Member B (Rishav) | **No.** DEC-01 and API boundary approval to proceed are reported complete; producer-backed features still require accepted handoffs. |
 | `src/spatial/**`, `tests/spatial/**` | Member A (Peter) | Member C (Ashwanth C) | **No.** Ashwanth reviews application integration at handoff. |
 | `src/contracts/**` | Member C (Ashwanth C; custodian) | Member A (Peter) & Member B (Rishav) | **No.** Strict unanimous consensus required (all 3 members must approve PR). |
 | `tests/contracts/**` | Member C (Ashwanth C) | Member A (Peter) & Member B (Rishav) | **No.** Contract tests must follow the approved shared schemas. |
@@ -70,7 +70,7 @@ To prevent merge conflicts, strict file boundaries govern ownership. Work procee
 - **Acceptance Criteria:** `pip install -r requirements.txt` succeeds; `pytest` runs without error on Windows and Linux.
 - **Testing Requirements:** Test that ruff and black execute cleanly in CI / local terminal.
 - **Blockers:** None.
-- **Status (updated 2026-10-31):** Dependency pins and pytest/Black/isort/Ruff configuration are implemented. Python 3.12 environment installation succeeded; 46 tests and 9 subtests passed at the recorded checkpoint. The project owner reports Member A/B manually reviewed and approved the current branch; no separate review artifacts are stored here.
+- **Status (updated 2026-10-31):** Dependency pins and pytest/Black/isort/Ruff configuration are implemented. Python 3.12 environment installation succeeded; 46 tests and 9 subtests passed at the recorded checkpoint. The project owner reports all three members approved proceeding with the work and reviews; no separate review artifacts are stored here.
 
 **Start condition:** This foundation task may start as independent setup; completion does not declare P1 or the project phase complete.
 
@@ -94,9 +94,9 @@ To prevent merge conflicts, strict file boundaries govern ownership. Work procee
 - **File Ownership:** Proposed API boundary section in `docs/ARCHITECTURE.md`; if it changes a shared contract, follow unanimous approval and edit `docs/API_CONTRACTS.md` only after approval.
 - **Inputs:** Approved DEC-01 choice and `CON-01` through `CON-09`.
 - **Outputs:** Reviewed API boundary specification for `T-P2-AP-002` and `T-P2-AP-003`.
-- **Dependencies:** Gate 0; team technical confirmation of owner-selected DEC-01 before framework-specific implementation choices are recorded. The project owner has stated that guide sign-off is unavailable; no guide approval is recorded or assumed.
+- **Dependencies:** Gate 0; owner-selected DEC-01 with all-member approval to proceed reported 2026-10-31 before framework-specific implementation choices are recorded. The project owner has stated that guide sign-off is unavailable; no guide approval is recorded or assumed.
 - **Acceptance Criteria:** Request/response shapes, error/loading/empty/data-quality semantics, provenance, and mapping to approved output contracts are documented; reviewers approve; shared-contract changes have explicit unanimous approval.
-- **Status:** The boundary specification is documented in `docs/ARCHITECTURE.md` under `T-P1-SH-003` and was checked against the implemented health/readiness/study-area routes and browser states. The project owner authorized delegated approval steps on behalf of all members; no direct member review artifacts are represented here.
+- **Status:** The boundary specification is documented in `docs/ARCHITECTURE.md` under `T-P1-SH-003` and was checked against the implemented health/readiness/study-area routes and browser states. The project owner reports all-member approval to proceed and manual A/B review of the implementation branch (2026-10-31); no separate review artifacts are represented here.
 - **Blockers:** Product routes remain dependent on real producer modules and handoffs. No shared contract was changed.
 
 #### `T-P1-DE-001`: Google Earth Engine Authentication & Project Initializer
@@ -146,7 +146,7 @@ To prevent merge conflicts, strict file boundaries govern ownership. Work procee
 - **Blockers:** None for research; supervised training remains blocked until suitable verified labels and AOIs are selected.
 
 #### `T-P1-SH-004`: Regional Profile and Provenance Specification
-- **Status:** Specification completed in `docs/ARCHITECTURE.md`; it references existing contracts without amending them. The project owner's delegated approval instruction covers implementation review, but no individual review artifacts are represented here.
+- **Status:** Specification completed in `docs/ARCHITECTURE.md`; it references existing contracts without amending them. The project owner reports all-member approval to proceed with implementation/review (2026-10-31); no individual review artifacts are represented here.
 - **Objective:** Specify how AOI, crop/season support, region-specific references, profile versioning, and provenance will be represented without embedding regional assumptions in shared modules.
 - **Primary Owner:** Member C (Ashwanth C; contract custodian).
 - **Reviewers:** Member A (Peter) and Member B (Rishav); all three members approve any shared-contract change.
@@ -271,7 +271,7 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Class scope:** The crop catalogue may be broad, but this classifier supports only classes with verified, traceable labels for its AOIs and seasons; unavailable classes are not emitted as predictions.
 - **Testing Requirements:** Unit test on synthetic arrays; verify model persistence (`joblib`) and inference reproducibility.
 - **Blockers:** Sourcing ground-truth labels (`DS-04`) for study area.
-- **Status (2026-10-29):** Added the gated model adapter and optional scientific dependency set on `feat/T-P2-SC-002-scientific-foundation`. It requires declared label provenance, verified-label attestation, exact train/validation/test partition coverage with spatial groups isolated, and stable feature order. Synthetic-only software checks cover fitting, nodata, uncertainty semantics, and persistence. No study labels were used; production fit, scientific validation, reviewer acceptance, and `CON-03` handoff remain open.
+- **Status (2026-10-29; review updated 2026-10-31):** Added the gated model adapter and optional scientific dependency set on `feat/T-P2-SC-002-scientific-foundation`. It requires declared label provenance, verified-label attestation, exact train/validation/test partition coverage with spatial groups isolated, and stable feature order. Synthetic-only software checks cover fitting, nodata, uncertainty semantics, and persistence. The project owner reports member approval to proceed with the software work and reviews. No study labels were used; production fit, scientific validation, and `CON-03` handoff remain open.
 
 #### `T-P2-SC-003`: Time-Series Phenology Tracker & Inflection Extractor
 - **Objective:** Evaluate a documented time-series smoothing and transition-detection method against available crop-specific references. Inflection dates are estimates; do not equate a greenness peak directly with flowering without validation.

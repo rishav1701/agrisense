@@ -9,9 +9,9 @@
 
 ## 1. Executive Summary
 
-The project owner approved an India-first multi-region scope direction (`DEC-10`). The initial Punjab/Tamil Nadu evidence-review scope in `DEC-11` has been broadened by `DEC-14`: Telangana/TGRAC is the current lead candidate for evidence review, with the final location still determined by verifiable data suitability. A read-only audit retrieved TGRAC ground-truth points and I&CAD command polygons; SRSP Stage I has the largest observed overlap (147 points), but its boundary provenance/reuse terms and label suitability are unresolved. The 12 points tagged Wanaparthy intersect none of the seven queried commands. No AOI is selected and `DS-09` remains a blocker. See [`docs/DS09_AOI_AUDIT.md`](DS09_AOI_AUDIT.md). The owner selected React + TypeScript and FastAPI (`DEC-01`); the user directed that required member approvals be treated as complete for implementation. This is owner-reported delegated authorization; individual review records were not collected in this workspace. An extensible all-crops catalogue is the product direction, while initial model classes remain limited to verified labels (`DEC-12`). Canal-command summaries are conditional on proper boundaries and inputs (`DEC-13`). P0 is complete and P1/P2 software foundation work is underway; AOI-dependent acquisition, scientific modelling, calibration, and validation remain gated.
+The project owner approved an India-first multi-region scope direction (`DEC-10`). The initial Punjab/Tamil Nadu evidence-review scope in `DEC-11` has been broadened by `DEC-14`: Telangana/TGRAC is the current lead candidate for evidence review, with the final location still determined by verifiable data suitability. A read-only audit retrieved TGRAC ground-truth points and I&CAD command polygons; SRSP Stage I has the largest observed overlap (147 points), but its boundary provenance/reuse terms and label suitability are unresolved. The 12 points tagged Wanaparthy intersect none of the seven queried commands. No AOI is selected and `DS-09` remains a blocker. See [`docs/DS09_AOI_AUDIT.md`](DS09_AOI_AUDIT.md). The owner selected React + TypeScript and FastAPI (`DEC-01`); on 2026-10-31 the owner reported that all three members approved proceeding with remaining work and reviews. This is owner-reported delegated approval; individual review records were not collected in this workspace. An extensible all-crops catalogue is the product direction, while initial model classes remain limited to verified labels (`DEC-12`). Canal-command summaries are conditional on proper boundaries and inputs (`DEC-13`). P0 is complete and P1/P2 software foundation work is underway; AOI-dependent acquisition, scientific modelling, calibration, and validation remain gated.
 
-The Phase 0 documentation baseline is complete and approved by all three team members, as confirmed by the project owner on 2026-10-23. The project owner waived guide sign-off for Phase 0. Audit remediation corrected source overclaims, units, resolution, ownership, unsupported scientific examples, and advisory semantics. This approval closes Phase 0 documentation; it does not approve individual proposed scientific/architecture decisions or satisfy the separate P1 entry prerequisites.
+The Phase 0 documentation baseline is complete and approved by all three team members, as confirmed by the project owner on 2026-10-23. The project owner waived guide sign-off for Phase 0. Audit remediation corrected source overclaims, units, resolution, ownership, unsupported scientific examples, and advisory semantics. The owner separately reports all-member approval to proceed with remaining work/reviews on 2026-10-31; neither approval creates missing data, access, provenance, or scientific validation evidence.
 
 The project has exactly three members. The project owner approved Phase 0 on 2026-10-23 and previously approved this role mapping and sequential handoff plan: Member A — Peter Livins (weather, water-balance support, geospatial); Member B — Rishav Raj (satellite data, ML, scientific modelling); Member C — Ashwanth C (application, dashboard, integration). The project owner reports that all three members approved the Phase 0 baseline; guide sign-off was waived by the owner for this phase. Individual decisions retain their listed approval requirements. The shared API contract amendment has unanimous member approval.
 
@@ -19,7 +19,7 @@ The project has exactly three members. The project owner approved Phase 0 on 202
 - **Three-member team:** Approved, per the project owner’s confirmation on 2026-10-23.
 - **Project guide:** No approval will be provided; the project owner waived guide sign-off for the Phase 0 documentation baseline.
 - **Phase 0 disposition:** **COMPLETE**.
-- **P1 entry gate:** **OPEN / NOT SATISFIED** pending the project-specific inputs, decision approvals, and access checks listed below. Foundation and software-prototype implementation is underway; production/scientific work remains gated.
+- **P1 entry gate:** **OPEN / NOT SATISFIED** pending project-specific inputs, evidence-dependent decisions, and access checks listed below. The owner reports all-member approval to proceed with remaining work/reviews (2026-10-31); production/scientific work remains gated on required evidence and handoffs.
 
 ---
 
@@ -48,24 +48,26 @@ The project has exactly three members. The project owner approved Phase 0 on 202
 
 | Decision ID | Summary | Proposed Recommendation | Status |
 |:---|:---|:---|:---|
-| **`DEC-01`** | Web Application Architecture | Responsive React + TypeScript frontend and FastAPI candidate stack | **User-authorized; A/B implementation review reported complete 2026-10-31** |
-| **`DEC-02`** | Satellite Geoprocessing Engine | Google Earth Engine Python API (Server-Side) | **Owner-preferred; Peter/Rishav review open** |
-| **`DEC-03`** | Crop Classification Algorithm | Random Forest baseline; classes/features remain data-dependent | **Owner-approved baseline; team review open** |
-| **`DEC-04`** | Phenology Curve Tracking | Evaluate documented SciPy time-series methods; parameters unselected | **Owner-preferred candidate** |
-| **`DEC-05`** | Moisture-Stress Detection | Evaluate stage-aware indicators; thresholds unapproved | **Owner-preferred direction; method open** |
-| **`DEC-06`** | Agro-Meteorological Forcing | ERA5-Land with native-grid/temporal limits preserved | **Owner-preferred; Peter/Rishav review open** |
-| **`DEC-07`** | Canal Aggregation Method | Conditional local vector descriptive summary | **Owner-preferred conditional method** |
-| **`DEC-08`** | Intermediate Data Caching | Local ignored cache for initial build | **Owner-preferred** |
+| **`DEC-01`** | Web Application Architecture | Responsive React + TypeScript frontend and FastAPI candidate stack | **All-member approval to proceed reported 2026-10-31; no separate review artifacts stored** |
+| **`DEC-02`** | Satellite Geoprocessing Engine | Google Earth Engine Python API (Server-Side) | **All-member approval to proceed reported; provider access and verification open** |
+| **`DEC-03`** | Crop Classification Algorithm | Random Forest baseline; classes/features remain data-dependent | **All-member approval to proceed reported; supported classes/configuration remain data-dependent** |
+| **`DEC-04`** | Phenology Curve Tracking | Evaluate documented SciPy time-series methods; parameters unselected | **All-member approval to proceed with evaluation reported; evidence/parameters open** |
+| **`DEC-05`** | Moisture-Stress Detection | Evaluate stage-aware indicators; thresholds unapproved | **All-member approval to proceed with research reported; method/thresholds open** |
+| **`DEC-06`** | Agro-Meteorological Forcing | ERA5-Land with native-grid/temporal limits preserved | **All-member approval to proceed reported; access, extraction, and conventions open** |
+| **`DEC-07`** | Canal Aggregation Method | Conditional local vector descriptive summary | **All-member approval to proceed reported; boundary evidence required** |
+| **`DEC-08`** | Intermediate Data Caching | Local ignored cache for initial build | **All-member approval to proceed reported; accepted products required** |
 | **`DEC-09`** | Software Testing Fixtures | Clearly labelled synthetic software fixtures only | **Owner-approved integrity rule** |
-| **`DEC-10`** | India-first multi-region scope and regional configuration | Shared pipeline with region-specific profiles; no transferability claims without evaluation | **Approved by project owner; implementation/schema review remains open** |
-| **`DEC-11`** | Initial multi-region AOIs | Initial Punjab/Tamil Nadu evidence comparison, broadened by `DEC-14`; exact AOI unset | **Initial candidate review; AOI evidence review open** |
-| **`DEC-12`** | Crop catalogue and model class scope | Broad catalogue; initial model limited to verified labels | **Owner direction; evidence review open** |
+| **`DEC-10`** | India-first multi-region scope and regional configuration | Shared pipeline with region-specific profiles; no transferability claims without evaluation | **All-member implementation approval to proceed reported; AOI and regional values remain open** |
+| **`DEC-11`** | Initial multi-region AOIs | Initial Punjab/Tamil Nadu evidence comparison, broadened by `DEC-14`; exact AOI unset | **All-member approval to proceed with evidence review reported; AOI selection open** |
+| **`DEC-12`** | Crop catalogue and model class scope | Broad catalogue; initial model limited to verified labels | **All-member approval to proceed reported; classes remain subject to verified labels** |
 | **`DEC-13`** | Canal aggregation scope | Conditional descriptive aggregation only with sourced command boundaries | **Deferred from first build under delegated approval (2026-10-29)** |
 | **`DEC-14`** | Evidence-led first pilot | TGRAC/Telangana is a leading candidate; SRSP Stage I has the strongest queried overlap, not a verified AOI | **Owner-approved audit direction; final AOI open** |
 
-*The 2026-10-29 user message authorizes approval steps on behalf of all members; direct member-side implementation reviews are not recorded. `DEC-11` records the initial candidate-state scope; `DEC-14` expands the evidence review. No specific AOI is selected.*
+*The project owner reports all three members approved proceeding with remaining work and reviews on 2026-10-31. This is owner-reported delegated approval; individual signatures/review artifacts are not in the workspace. `DEC-11` records the initial candidate-state scope; `DEC-14` expands the evidence review. No specific AOI is selected.*
 
-The source documents propose Streamlit; this repository contains the owner-selected React + TypeScript and FastAPI direction. On 2026-10-29, the user instructed that the other members' approvals be treated as complete. Record this as owner-reported delegated authorization; individual member-side review signatures are not independently available in this workspace.
+The source documents propose Streamlit; this repository contains the owner-selected React + TypeScript and FastAPI direction. On 2026-10-29, the user instructed that the other members' approvals be treated as complete. On 2026-10-31, the owner reported that all three members approved proceeding with remaining work and reviews. These are owner-reported approvals; individual signatures and review artifacts are not independently available in this workspace. The later report supersedes earlier checkpoint statements about approval status, but it does not resolve evidence gates.
+
+The project owner reaffirmed on 2026-10-31 that all three members approved proceeding with remaining work and reviews. This closes member-approval-only waits where applicable. It does not satisfy source, data access, AOI, method-input, handoff, or scientific validation requirements.
 
 ---
 
@@ -96,7 +98,7 @@ Phase 0 is complete. P1 foundation tasks may begin when their own dependencies a
 2. [ ] Before AOI-specific acquisition: select one pilot command and study period through `DEC-14`, verify its sourced boundary (`DS-09`), and confirm provider access and reuse terms.
 3. [ ] Before supervised training/evaluation: confirm supported crop classes and a feasible ground-truth source/strategy; acquire/verify independent labels (`DS-04`).
 4. [x] Canal aggregation is explicitly deferred from the first build under `DEC-13` (2026-10-29 delegated approval); `DS-05` remains open for future canal work.
-5. [x] User authorization for the React + TypeScript/FastAPI direction (`DEC-01`) and required member approvals was provided on 2026-10-29. Source and scientific method choices must still be supported by their inputs and documented evidence.
+5. [x] User authorization for the React + TypeScript/FastAPI direction (`DEC-01`) and all-member approval to proceed with remaining work/reviews are reported complete (2026-10-31). Source and scientific method choices must still be supported by their inputs and documented evidence.
 6. [ ] Verify required GEE account access if the team selects GEE; do not share credentials.
 7. [x] Initial references identified for later review: ICAR Telangana Kharif agro-advisories for DS-06 and FAO-56 Table 12 for generic DS-07 Kc values. These do not resolve a pilot-specific Rabi calendar, target-class coverage, local calibration, or method approval; those remain gates before the corresponding scientific implementation. Soil parameters (`DS-08`) are required only for a method that models soil storage; otherwise document the supported balance scope and limitations.
 
@@ -304,10 +306,10 @@ See [`docs/WORK_STATUS.md`](WORK_STATUS.md), [`docs/AOI_DECISION.md`](AOI_DECISI
 - Enabled map zoom-in, zoom-out, and fit-to-boundary controls for a user-supplied AOI preview. This does not add a basemap or product layer.
 - Verification: all 10 frontend tests pass; TypeScript/Vite production build succeeds; `git diff --check` passes. Real producer outputs and automated server-side integration remain unavailable.
 
-## 28. Member A/B branch review approvals — 2026-10-31
+## 28. Member approval and implementation review report — 2026-10-31
 
-- The project owner reports that Members A and B manually reviewed and approved the current feature-branch changes. Pending A/B software-review approvals for this branch are marked approved on that basis; the repository does not contain separate review artifacts.
-- This review approval closes only the reported software/team-review sign-offs for the branch. Gate 1 and production tasks remain open for AOI selection and boundary provenance/reuse, provider access, verified labels, source-aligned conventions, and scientific method/evaluation evidence.
-- The feature branch is a fast-forward descendant of `main`; promotion follows the passing software checks recorded below.
+- The project owner reports that all three members approved proceeding with remaining work/reviews and that Members A and B manually reviewed the implementation branch. Member approval to proceed and the reported branch review are recorded as complete; the repository does not contain separate signatures or review artifacts.
+- This approval closes member-approval-only waits for current work. It does not complete task handoffs or evidence gates. Gate 1 and production tasks remain open for AOI selection and boundary provenance/reuse, provider access, verified labels, source-aligned conventions, and scientific method/evaluation evidence.
+- The implementation branch was fast-forwarded to `main` after software checks passed; the latest implementation is pushed to `origin/main`.
 - Software checks pass for the current implementation: Python (73 tests, 12 subtests), frontend (12 tests and production build), Ruff, isort, and `git diff --check`. The frontend date filter now applies a half-open interval to chart records, stage transitions, and CSV export.
-- Manual review approval clears the current branch's A/B code-review sign-offs. Gate 1 remains open because its independent AOI/source-use, provider access, verified-label, and scientific-method prerequisites remain unresolved; P3 integration cannot run without the upstream product handoffs.
+- Manual review approval clears the reported A/B code-review sign-offs for the implementation branch. Gate 1 remains open because its independent AOI/source-use, provider access, verified-label, and scientific-method prerequisites remain unresolved; P3 integration cannot run without the upstream product handoffs.

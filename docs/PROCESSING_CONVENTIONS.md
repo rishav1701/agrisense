@@ -1,6 +1,6 @@
 # Proposed Satellite and Weather Processing Conventions
 
-> **Proposal only — pending technical review by the three-member team.** No processing outputs or scientific results are implied. Follow existing contracts and decisions; this document does not amend `docs/API_CONTRACTS.md`.
+> **The project owner reports all-member approval to proceed with the work and reviews (2026-10-31).** The entries below remain candidate processing conventions; AOI-specific parameters and scientific choices require source inputs and evidence. No processing outputs or scientific results are implied. This document does not amend `docs/API_CONTRACTS.md`.
 
 ## Rishav satellite learning notes — source facts, not approved processing choices
 

@@ -8,20 +8,20 @@
 
 | Decision ID | Topic | Status | Proposed Date | Approver Role |
 |:---|:---|:---|:---|:---|
-| **`DEC-01`** | Application Architecture: Streamlit vs. Responsive Web Frontend + Python API | **Owner-selected direction; A/B implementation review reported complete 2026-10-31** | 2026-10-23 | Project Owner; team review |
-| **`DEC-02`** | Satellite Data Processing Platform: Google Earth Engine vs. Local Downloads | **Owner-preferred: GEE; team review open** | 2026-10-23 | Peter + Rishav; no guide prerequisite recorded |
-| **`DEC-03`** | Crop Classification Algorithm: Random Forest vs. Deep Learning (CNN/LSTM) | **Owner-approved baseline: Random Forest; team review open** | 2026-10-23 | All 3 Members; no guide prerequisite recorded |
-| **`DEC-04`** | Phenology Estimation: SciPy Curve Inflection vs. Fixed Calendar Rules | **Owner-preferred candidate: evaluate SciPy time-series methods** | 2026-10-23 | Rishav; no guide prerequisite recorded |
-| **`DEC-05`** | Stress Detection: Dynamic Stage-Aware Thresholds vs. Static VCI/NDVI | **Owner-preferred research direction; thresholds/method unapproved** | 2026-10-23 | Rishav + Peter review; no guide prerequisite recorded |
-| **`DEC-06`** | Agro-Meteorological Data Source: ERA5-Land Reanalysis vs. Station Data | **Owner-preferred: ERA5-Land with native-resolution limits** | 2026-10-23 | Peter + Rishav; no guide prerequisite recorded |
-| **`DEC-07`** | Canal Aggregation Strategy: Vector GeoPandas vs. Server-Side GEE Zonal Stats | **Owner-preferred: local vector summary, conditional on valid boundaries** | 2026-10-23 | Peter + Ashwanth C; no guide prerequisite recorded |
-| **`DEC-08`** | Intermediate Data Caching: Local GeoTIFF Cache vs. Cloud Object Storage | **Owner-preferred: local ignored cache for initial build** | 2026-10-23 | Peter + Ashwanth C; no guide prerequisite recorded |
-| **`DEC-09`** | Software Testing Data Integrity: Pure Synthetic Fixtures vs. Sample Data | **Owner-approved integrity rule: labelled synthetic fixtures for software tests only** | 2026-10-23 | All 3 Members |
-| **`DEC-10`** | India-first Multi-Region Scope and Regional Configuration | **Project-owner approved; team implementation review open** | 2026-10-23 | Project Owner; team review for implementation |
-| **`DEC-11`** | Initial Multi-Region Candidate AOIs: Punjab and Tamil Nadu | **Initial candidate review; broadened by DEC-14; AOIs open** | 2026-10-23 | Project Owner + all 3 Members |
-| **`DEC-12`** | Initial Crop Catalogue and Model Class Scope | **Owner direction; model classes depend on verified labels** | 2026-10-23 | Project Owner; team review |
-| **`DEC-13`** | Canal Aggregation Scope | **Deferred from first build; may be reconsidered with licensed boundaries and approved inputs** | 2026-10-29 | Project Owner under delegated member approval |
-| **`DEC-14`** | Evidence-Led First Pilot: TGRAC Agriculture2 and I&CAD Command Boundaries | **Owner-approved evidence audit; SRSP Stage I is a lead candidate only; final AOI open** | 2026-10-23 | Project Owner; team review before final AOI/data use |
+| **`DEC-01`** | Application Architecture: Streamlit vs. Responsive Web Frontend + Python API | **Owner-selected direction; all-member approval to proceed reported 2026-10-31** | 2026-10-23 | Project Owner; team review |
+| **`DEC-02`** | Satellite Data Processing Platform: Google Earth Engine vs. Local Downloads | **Owner-preferred: GEE; all-member approval to proceed reported 2026-10-31; access and provider verification open** | 2026-10-23 | Peter + Rishav; no guide prerequisite recorded |
+| **`DEC-03`** | Crop Classification Algorithm: Random Forest vs. Deep Learning (CNN/LSTM) | **Owner-approved baseline: Random Forest; all-member approval to proceed reported 2026-10-31; classes/configuration remain data-dependent** | 2026-10-23 | All 3 Members; no guide prerequisite recorded |
+| **`DEC-04`** | Phenology Estimation: SciPy Curve Inflection vs. Fixed Calendar Rules | **All-member approval to proceed with evaluation reported 2026-10-31; method/parameters require evidence** | 2026-10-23 | Rishav; no guide prerequisite recorded |
+| **`DEC-05`** | Stress Detection: Dynamic Stage-Aware Thresholds vs. Static VCI/NDVI | **All-member approval to proceed with research reported 2026-10-31; thresholds/method remain unapproved** | 2026-10-23 | Rishav + Peter review; no guide prerequisite recorded |
+| **`DEC-06`** | Agro-Meteorological Data Source: ERA5-Land Reanalysis vs. Station Data | **Owner-preferred: ERA5-Land; all-member approval to proceed reported 2026-10-31; access and extraction open** | 2026-10-23 | Peter + Rishav; no guide prerequisite recorded |
+| **`DEC-07`** | Canal Aggregation Strategy: Vector GeoPandas vs. Server-Side GEE Zonal Stats | **Owner-preferred conditional method; all-member approval to proceed reported 2026-10-31; valid boundaries remain required** | 2026-10-23 | Peter + Ashwanth C; no guide prerequisite recorded |
+| **`DEC-08`** | Intermediate Data Caching: Local GeoTIFF Cache vs. Cloud Object Storage | **Owner-preferred local cache; all-member approval to proceed reported 2026-10-31; accepted source products remain required** | 2026-10-23 | Peter + Ashwanth C; no guide prerequisite recorded |
+| **`DEC-09`** | Software Testing Data Integrity: Pure Synthetic Fixtures vs. Sample Data | **Owner-approved rule; all-member approval to proceed reaffirmed 2026-10-31: labelled synthetic fixtures for software tests only** | 2026-10-23 | All 3 Members |
+| **`DEC-10`** | India-first Multi-Region Scope and Regional Configuration | **Project-owner approved; all-member implementation approval reported 2026-10-31; AOI and regional values remain open** | 2026-10-23 | Project Owner; team review for implementation |
+| **`DEC-11`** | Initial Multi-Region Candidate AOIs: Punjab and Tamil Nadu | **All-member approval to proceed with evidence review reported 2026-10-31; broadened by DEC-14; AOI selection open** | 2026-10-23 | Project Owner + all 3 Members |
+| **`DEC-12`** | Initial Crop Catalogue and Model Class Scope | **Owner direction and all-member approval to proceed reported 2026-10-31; model classes depend on verified labels** | 2026-10-23 | Project Owner; team review |
+| **`DEC-13`** | Canal Aggregation Scope | **Deferred from first build under delegated member approval; scope remains unchanged** | 2026-10-29 | Project Owner under delegated member approval |
+| **`DEC-14`** | Evidence-Led First Pilot: TGRAC Agriculture2 and I&CAD Command Boundaries | **Evidence-audit direction approved; all-member approval to proceed reported 2026-10-31; SRSP Stage I remains a lead candidate only; final AOI open** | 2026-10-23 | Project Owner; team review before final AOI/data use |
 
 ## Approval Record — 2026-10-29
 
@@ -35,6 +35,8 @@ On 2026-10-31, the project owner reaffirmed approval for all current Member C wo
 
 On 2026-10-31, the project owner reported that Members A and B manually reviewed and approved the current feature-branch changes. Their pending software-review approvals for this branch are therefore recorded as approved per the owner's report. No separate review artifacts were supplied. This does not approve an AOI, a data-use right, an unreviewed scientific method, model results, or validation claims.
 
+On 2026-10-31, the project owner additionally reported that all three members approved proceeding with the remaining project work and reviews. This records delegated approval to execute and review work; it is not represented as individual signatures or review artifacts. It closes member-approval-only waits for current implementation work. It does not select an AOI, establish provider access, define scientific parameters, grant third-party data rights, or establish scientific validity. Evidence-dependent choices and acceptance gates remain open until the required inputs and artifacts exist.
+
 ---
 
 ## Detailed Decision Records
@@ -42,7 +44,7 @@ On 2026-10-31, the project owner reported that Members A and B manually reviewed
 ### `DEC-10`: India-First Multi-Region Scope and Regional Configuration
 
 - **Topic:** Project geographic scope and separation of shared pipeline behavior from region-specific inputs.
-- **Status:** **APPROVED BY PROJECT OWNER — 2026-10-23; team implementation review and any shared-contract approval remain open.**
+- **Status:** **APPROVED BY PROJECT OWNER — 2026-10-23; all-member approval to proceed with implementation is reported 2026-10-31. Any shared-contract amendment still requires a scoped unanimous approval record.**
 - **Decision:** Design AgriSense for an India-first multi-region direction. Punjab and Tamil Nadu were the initial candidate states recorded in `DEC-11`; the candidate review was broadened by `DEC-14`, and no state or AOI is preselected as final. Use region/season-specific configuration and provenance; do not embed state-specific assumptions in shared modules or claim transferability without independent evaluation.
 - **Constraints:** This approval does not select an AOI, crop classes, season, dataset, algorithm parameters, or technology stack. Any amendment to shared contracts still requires all three team members' approval.
 - **Required next decisions:** Regional profile fields/representation; pilot AOI; crop/season scope; evaluation extent.
@@ -80,22 +82,22 @@ On 2026-10-31, the project owner reported that Members A and B manually reviewed
 - **Sentinel evidence limit:** Copernicus Data Space STAC products intersecting SRSP point footprints were found in the February–April 2023 window. Temporal proximity was checked against `CreationDate` as an explicitly unverified proxy, not as confirmed observation-date matching. Catalog presence does not prove cloud-free usable pixels or a valid scientific feature stack.
 - **Required before final selection / closing `DS-09`:** Confirm source lineage/version and reuse terms for labels and boundaries; establish the authoritative I&CAD layer/vintage and verify topology/area; confirm survey date semantics, point meaning/positional quality, crop-label validity, and a non-leaking spatial holdout; inspect usable pixel coverage; identify independent field evidence for moisture-stress and irrigation-advisory validation; and document the selected study period. If the Wanaparthy focus is retained, identify a matching real command and adequate labels because its 12 tagged points are outside these seven polygons.
 - **Scope controls:** Keep one real command-area pilot as the first target and maintain multi-region capability. This decision changes no task ID, primary owner, file-ownership boundary, architecture, or shared API contract. It does not mark `DS-04`, `DS-05`, or `DS-09` complete and does not authorize model fitting, accuracy claims, or operational irrigation advice.
-- **Required approvers:** The project owner approved this evidence-based planning direction. Final AOI selection and use of a data source remain subject to the project’s existing member-review rules; no guide approval is asserted.
+- **Required approvers:** The project owner reports all-member approval to proceed with this evidence-based planning direction (2026-10-31). Final AOI selection and use of a data source still require a specific evidence-backed decision; no guide approval is asserted.
 
 ### `DEC-01`: Application Architecture & Technology Stack
 
 - **Topic:** High-level web application and backend architecture.
-- **Status:** **React + TypeScript / FastAPI implementation direction approved. The project owner reports Members A and B manually reviewed and approved the current implementation branch on 2026-10-31; no separate review artifacts are stored in the workspace.**
+- **Status:** **React + TypeScript / FastAPI implementation direction approved. The project owner reports all three members approved proceeding with the work and that A/B manually reviewed the implementation branch on 2026-10-31; no separate review artifacts are stored in the workspace.**
 - **Context:** The source documents request an interactive GIS-enabled dashboard with nominal 10 m crop outputs, growth stage estimates, stress indicators, and canal-boundary summaries. Two architectural options were evaluated:
   1. *Streamlit Monolith (Python-only):* Single-process Python application utilizing `streamlit-folium` for interactive maps and `plotly` for temporal graphs; this is the source documents' implementation proposal.
   2. *Responsive Web Frontend + Python API:* React + TypeScript and FastAPI are candidate technologies. No PostGIS/GeoServer requirement has been established.
 - **Alternatives Considered:**
   - *Option 1 (Streamlit Monolith):* Native Python, fast iteration, minimal boilerplate, and directly proposed in reference documents.
   - *Option 2 (Responsive Web Frontend + Python API):* Supports a custom responsive interface and separates UI from scientific services, but introduces frontend tooling, API integration, and deployment coordination.
-- **Recommendation:** Use **Option 2: React + TypeScript responsive browser frontend with a FastAPI Python API**. The user has explicitly authorized approval steps on behalf of all members for this work. Reviewers still need to verify the implementation and deployment fit; no guide response is recorded.
+- **Recommendation:** Use **Option 2: React + TypeScript responsive browser frontend with a FastAPI Python API**. The project owner reports all-member approval to proceed and manual A/B review of the implementation branch (2026-10-31). No separate review artifacts are stored; deployment fit remains a technical follow-up, and no guide response is recorded.
 - **Rationale:**
   - The reference documents propose Streamlit (IDP PDF Sub-Objective O3, page 23; `mava.pdf` Feature F8 and Tech Stack, page 9); they do not prevent the team from selecting another implementation for the same dashboard objective.
-  - The owner prioritizes a polished, adaptive dashboard experience. The selected stack direction remains subject to team technical confirmation; deployment and libraries remain open.
+  - The owner prioritizes a polished, adaptive dashboard experience. Team approval to proceed is reported; deployment and mapping/chart library choices remain open.
 - **Consequences & Trade-offs:**
   - *Potential benefits:* Custom responsive layouts and clear separation between browser presentation and Python scientific processing.
   - *Costs and open questions:* Frontend/API integration, separate tooling, deployment topology, and mapping/chart library choices must be decided before implementation.
@@ -107,7 +109,7 @@ On 2026-10-31, the project owner reported that Members A and B manually reviewed
 ### `DEC-02`: Satellite Data Processing Platform
 
 - **Topic:** Cloud geoprocessing platform vs. local raw satellite raster downloads.
-- **Status:** **PROPOSED**
+- **Status:** **Owner-preferred GEE direction; all-member approval to proceed reported 2026-10-31. Cloud project registration, user access, and live verification remain open.**
 - **Context:** Multi-temporal satellite processing can impose substantial storage and compute costs. The actual data volume and local capacity have not been measured for a study area.
 - **Alternatives Considered:**
   - *Option 1 (Google Earth Engine API):* Server-side filtering, cloud masking, band math, and compositing, exporting only clipped 10 m analytical tiles to local disk.
@@ -127,7 +129,7 @@ On 2026-10-31, the project owner reported that Members A and B manually reviewed
 ### `DEC-03`: Crop Classification Algorithm
 
 - **Topic:** Selection of supervised classification model for 10 m pixel crop mapping.
-- **Status:** **OWNER-APPROVED BASELINE — team confirmation open; model configuration unapproved**
+- **Status:** **OWNER-APPROVED RANDOM FOREST BASELINE — all-member approval to proceed reported 2026-10-31; model configuration and supported classes remain data-dependent**
 - **Context:** The source asks for crop-type classification but does not define the study area or final class list. “Wheat vs. Mustard” appears as an example in Mava.
 - **Alternatives Considered:**
   - *Option 1 (Random Forest):* Candidate ensemble classifier trained via Scikit-Learn on multi-temporal features; Mava names a 100-tree model, which remains a proposal to evaluate.
@@ -190,7 +192,7 @@ On 2026-10-31, the project owner reported that Members A and B manually reviewed
 ### `DEC-06`: Agro-Meteorological Data Source
 
 - **Topic:** Source for reference evapotranspiration ($ET_0$) and precipitation forcing.
-- **Status:** **OWNER-PREFERRED SOURCE — Peter/Rishav access and method review open**
+- **Status:** **OWNER-PREFERRED ERA5-LAND SOURCE — all-member approval to proceed reported 2026-10-31; provider access, data extraction, and source-aligned conventions remain open**
 - **Context:** Calculating FAO-56 crop water balance ($ET_c = K_c \times ET_0$) requires daily temperature, solar radiation, wind speed, vapor pressure, and rainfall. Ground weather stations are sparse across rural command areas.
 - **Alternatives Considered:**
   - *Option 1 (ECMWF ERA5-Land Reanalysis via GEE):* Gridded global land-surface reanalysis on an approximately 0.1° grid (Earth Engine reports a nominal 11,132 m pixel size); the selected collection's actual temporal support must be recorded.
@@ -211,7 +213,7 @@ On 2026-10-31, the project owner reported that Members A and B manually reviewed
 ### `DEC-07`: Canal Command Aggregation Framework
 
 - **Topic:** Method for aggregating pixel-level deficits into administrative canal polygons.
-- **Status:** **OWNER-PREFERRED CONDITIONAL METHOD — member review and boundary availability open**
+- **Status:** **OWNER-PREFERRED CONDITIONAL METHOD — all-member approval to proceed reported 2026-10-31; boundary availability and evidence remain open**
 - **Context:** Pixel or field depth estimates may be summarized across canal boundaries if inputs and geometry are available. A gross operational release volume requires additional area, delivery, and hydraulic assumptions.
 - **Alternatives Considered:**
   - *Option 1 (Local Vector Processing via GeoPandas & Rasterio):* Export clipped raster arrays and perform zonal overlay and volume integration locally.
@@ -231,7 +233,7 @@ On 2026-10-31, the project owner reported that Members A and B manually reviewed
 ### `DEC-08`: Intermediate Data Caching Strategy
 
 - **Topic:** Mechanism for caching preprocessed satellite composites and intermediate model outputs.
-- **Status:** **OWNER-PREFERRED INITIAL APPROACH — member review open**
+- **Status:** **OWNER-PREFERRED INITIAL APPROACH — all-member approval to proceed reported 2026-10-31; cache implementation depends on accepted source products and handoffs**
 - **Context:** To support responsive dashboard queries and permit offline model development, intermediate raster stacks must be persisted locally without exceeding Git or disk constraints.
 - **Alternatives Considered:**
   - *Option 1 (Local Filesystem Cache in `data/cache/`):* Standard GeoTIFF / NumPy `.npy` files ignored by Git via `.gitignore`.
