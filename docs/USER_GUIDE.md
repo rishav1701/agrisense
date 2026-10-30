@@ -33,7 +33,8 @@ The API validates request structure only. It does not select or approve the AOI,
 
 1. Open **Temporal analytics**.
 2. Choose a JSON product view produced from a reviewed data handoff.
-3. Review units, time support, quality, source references, missing-value reasons, and limitations before interpreting the chart or exporting CSV.
+3. Optionally set a start date and exclusive end date within the product interval to filter the displayed records and stage transitions.
+4. Review units, time support, quality, source references, missing-value reasons, and limitations before interpreting the chart or exporting CSV. The CSV contains the selected interval only.
 
 The browser reads the file locally. It is not uploaded or persisted. The importer checks structural metadata and timestamp ordering; it does not verify source authenticity, scientific validity, AOI approval, or method approval. Use only traceable producer outputs for research interpretation.
 
@@ -47,7 +48,7 @@ The JSON object has these fields:
 | `stageTransitions` | Array of optional transition records, each with a UTC `timestamp`, `stageCode`, `method`, `methodVersion`, `qualityState`, and `sourceReference`. |
 | `limitations` | Array of non-empty strings describing product-level limitations. |
 
-Each series must include provenance and quality metadata. The importer preserves separate series scales and visible gaps; it does not interpolate missing values. CSV export includes the interval, timestamps, values, units, missing reasons, quality, method, provenance references, and limitations.
+Each series must include provenance and quality metadata. The importer preserves separate series scales and visible gaps; it does not interpolate missing values. Date filtering uses a half-open interval (start inclusive, end exclusive) and leaves the loaded product unchanged. CSV export includes the selected interval, timestamps, values, units, missing reasons, quality, method, provenance references, and limitations.
 
 ## Current limits
 
