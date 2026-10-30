@@ -1,29 +1,22 @@
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-<<<<<<< HEAD
 pythonpath = ["."]
-=======
 python_files = ["test_*.py"]
 addopts = "-ra"
->>>>>>> ef2d459bf64c13fb1f8e3f926f0049e2a8766a14
 
 [tool.black]
 line-length = 88
 target-version = ["py310"]
-<<<<<<< HEAD
-include = '\.pyi?$'
+include = "\\.pyi?$"
 exclude = '''
 /(\.git|\.venv|venv|build|dist)/
 '''
-=======
-include = "\\.pyi?$"
->>>>>>> ef2d459bf64c13fb1f8e3f926f0049e2a8766a14
 
 [tool.isort]
 profile = "black"
 line_length = 88
-<<<<<<< HEAD
 py_version = 310
+known_first_party = ["src", "tests"]
 
 [tool.ruff]
 target-version = "py310"
@@ -32,20 +25,7 @@ src = ["src", "tests"]
 exclude = [".git", ".venv", "venv", "build", "dist"]
 
 [tool.ruff.lint]
-# Keep line wrapping with Black; Ruff checks the remaining standard error rules.
 select = ["E4", "E7", "E9", "F", "I"]
-=======
-known_first_party = ["src", "tests"]
-
-[tool.ruff]
-line-length = 88
-target-version = "py310"
-src = ["src", "tests"]
-
-[tool.ruff.lint]
-select = ["E", "F", "I"]
-ignore = ["E501"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["src", "tests"]
->>>>>>> ef2d459bf64c13fb1f8e3f926f0049e2a8766a14

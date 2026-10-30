@@ -1,20 +1,15 @@
 # AgriSense Project Status & Progress Checkpoint
 
-<<<<<<< HEAD
-> **Last Updated:** 2026-10-27
-> **Current Phase:** **Phase P0 complete; P1 readiness research underway — production entry gate remains open**
-=======
-> **Last Updated:** 2026-10-29
-> **Current Phase:** **Phase P0 complete; P1 foundation and demo-dashboard work underway — P1/Gate 1 and production entry gates remain open**
->>>>>>> ef2d459bf64c13fb1f8e3f926f0049e2a8766a14
+> **Last Updated:** 2026-10-30
+> **Current Phase:** **P1 foundation and P2 software/prototype work underway — P1/Gate 1 and scientific production gates remain open**
 > **Phase P0 Status:** **APPROVED BY THE THREE-MEMBER TEAM (per project-owner confirmation, 2026-10-23); GUIDE SIGN-OFF WAIVED BY PROJECT OWNER FOR P0**
-> **Implementation Status:** **Contract schemas, synthetic software fixtures, Sentinel-1/2 numerical preprocessing, a local readiness/study-area API, and a responsive dashboard foundation are present. Copernicus STAC metadata discovery is implemented. No source assets were acquired, no pilot AOI was selected, and no scientific models or estimates are available.**
+> **Implementation Status:** **Contract schemas, software fixtures, Sentinel processing prototypes, Copernicus STAC discovery/extraction, a local API, and a responsive dashboard foundation are present. Technical satellite sample assets are in ignored local cache for an unselected candidate area. No pilot AOI is approved, and no validated scientific estimates are available.**
 
 ---
 
 ## 1. Executive Summary
 
-The project owner approved an India-first multi-region scope direction (`DEC-10`). The initial Punjab/Tamil Nadu evidence-review scope in `DEC-11` has been broadened by `DEC-14`: Telangana/TGRAC is the current lead candidate for evidence review, with the final location still determined by verifiable data suitability. A read-only audit retrieved TGRAC ground-truth points and I&CAD command polygons; SRSP Stage I has the largest observed overlap (147 points), but its boundary provenance/reuse terms and label suitability are unresolved. The 12 points tagged Wanaparthy intersect none of the seven queried commands. No AOI is selected and `DS-09` remains a blocker. See [`docs/DS09_AOI_AUDIT.md`](DS09_AOI_AUDIT.md). The owner selected React + TypeScript and FastAPI (`DEC-01`); the user directed that required member approvals be treated as complete for implementation. This is owner-reported delegated authorization; individual review records were not collected in this workspace. An extensible all-crops catalogue is the product direction, while initial model classes remain limited to verified labels (`DEC-12`). Canal-command summaries are conditional on proper boundaries and inputs (`DEC-13`). P0 is complete and P1 foundation plus demo-dashboard work is underway; evidence-dependent acquisition, modelling, calibration, and validation remain gated.
+The project owner approved an India-first multi-region scope direction (`DEC-10`). The initial Punjab/Tamil Nadu evidence-review scope in `DEC-11` has been broadened by `DEC-14`: Telangana/TGRAC is the current lead candidate for evidence review, with the final location still determined by verifiable data suitability. A read-only audit retrieved TGRAC ground-truth points and I&CAD command polygons; SRSP Stage I has the largest observed overlap (147 points), but its boundary provenance/reuse terms and label suitability are unresolved. The 12 points tagged Wanaparthy intersect none of the seven queried commands. No AOI is selected and `DS-09` remains a blocker. See [`docs/DS09_AOI_AUDIT.md`](DS09_AOI_AUDIT.md). The owner selected React + TypeScript and FastAPI (`DEC-01`); the user directed that required member approvals be treated as complete for implementation. This is owner-reported delegated authorization; individual review records were not collected in this workspace. An extensible all-crops catalogue is the product direction, while initial model classes remain limited to verified labels (`DEC-12`). Canal-command summaries are conditional on proper boundaries and inputs (`DEC-13`). P0 is complete and P1/P2 software foundation work is underway; AOI-dependent acquisition, scientific modelling, calibration, and validation remain gated.
 
 The Phase 0 documentation baseline is complete and approved by all three team members, as confirmed by the project owner on 2026-10-23. The project owner waived guide sign-off for Phase 0. Audit remediation corrected source overclaims, units, resolution, ownership, unsupported scientific examples, and advisory semantics. This approval closes Phase 0 documentation; it does not approve individual proposed scientific/architecture decisions or satisfy the separate P1 entry prerequisites.
 
@@ -24,7 +19,7 @@ The project has exactly three members. The project owner approved Phase 0 on 202
 - **Three-member team:** Approved, per the project owner’s confirmation on 2026-10-23.
 - **Project guide:** No approval will be provided; the project owner waived guide sign-off for the Phase 0 documentation baseline.
 - **Phase 0 disposition:** **COMPLETE**.
-- **P1 entry gate:** **OPEN / NOT SATISFIED** pending the project-specific inputs, decision approvals, and access checks listed below. Implementation remains not started.
+- **P1 entry gate:** **OPEN / NOT SATISFIED** pending the project-specific inputs, decision approvals, and access checks listed below. Foundation and software-prototype implementation is underway; production/scientific work remains gated.
 
 ---
 
@@ -184,14 +179,6 @@ Continue the P1/P2 foundation handoffs and resolve the remaining AOI, source-qua
 
 See [`docs/WORK_STATUS.md`](WORK_STATUS.md), [`docs/AOI_DECISION.md`](AOI_DECISION.md), and [`docs/DATA_SOURCES_AND_LICENCES.md`](DATA_SOURCES_AND_LICENCES.md) for details. The AOI evidence and reuse blockers remain open.
 
-<<<<<<< HEAD
-## 10. Member C tooling and fixture review checkpoint — 2026-10-27
-
-- Added the `T-P1-SH-001` dependency manifest (`requirements.txt`) with pinned NumPy and development-tool versions, plus `pyproject.toml` configuration for pytest, Black, isort, and Ruff. The setup does not alter scientific methods, shared contracts, or regional assumptions.
-- Installed the pinned requirements in the ignored `.venv` on Windows Python 3.11. Full test discovery passes (30 tests), the Member C-owned contract files pass Ruff and Black checks, and `git diff --check` passes. Python 3.10/Linux installation has not been exercised. Repository-wide Ruff still reports five findings in the TGRAC audit script, Member B's Sentinel-2 tests, the TGRAC audit tests, and the synthetic-fixture tests; repository-wide Black requests formatting in files outside Member C's ownership. `T-P1-SH-001` remains open pending owner reviews and cross-platform verification.
-- Member C reviewed the `T-P1-SC-001` synthetic fixture implementation and its schema-validation tests. The fixtures are visibly marked synthetic, keep modality timestamps separate, omit real AOI/CRS/source metadata, and validate the `CON-03` manifest. All nine fixture tests pass as part of the 30-test suite; this is software review only, not scientific validation.
-- `T-P1-SH-002` schemas remain implemented as recorded above; Member A and Member B reviewer handoff/acceptance remains pending. `T-P1-SH-003` and proposed `T-P1-SH-004` remain gated on team technical confirmation of `DEC-01` and the required profile/contract review. P1 gates remain open.
-=======
 ## 11. Member A review checkpoint — 2026-10-28
 
 - Refreshed the `T-P1-DE-002` candidate-region source inventory with official-source details on ERA5-Land daily-band semantics and known accumulated-variable issues, IMD data-supply conditions, SoI boundary product scale, Soil Health Card scope, TGRAC/NWIC command-source limitations, TNGIS terms, and Earth Engine project requirements.
@@ -257,4 +244,11 @@ See [`docs/WORK_STATUS.md`](WORK_STATUS.md), [`docs/AOI_DECISION.md`](AOI_DECISI
 - Earth Search's Sentinel-2 STAC metadata calls the license `proprietary` but links to the Copernicus Sentinel legal notice, which permits lawful reuse and adaptation with attribution. This metadata inconsistency is documented in `docs/DS09_AOI_AUDIT.md`; generated manifests preserve the terms link and attribution.
 - Planetary Computer Sentinel-1 RTC asset metadata omits a unit field, while Microsoft's AI4G guidance identifies gamma0 power. The raw values and gamma0-power interpretation are recorded; no dB features are generated. Amazon Earth Search Sentinel-1 GRD was not selected for raster processing because the live COG metadata lacked a georeferenced CRS. A reviewed provider/orbit/time-series method decision remains open for production.
 - Verification completed: 66 Python tests pass; Ruff passes; isort and Black checks pass for the changed Python files; `git diff --check` is recorded after the final changes. Live public Sentinel-1/2 COG reads and manifests succeeded. These are software/acquisition checks, not scientific validation or member-side review. Team review is not independently recorded in this workspace.
->>>>>>> ef2d459bf64c13fb1f8e3f926f0049e2a8766a14
+
+## 19. Member C temporal analytics foundation — 2026-10-30
+
+- Added a reusable temporal analytics view that accepts caller-supplied series and growth-stage transition metadata, plots each series on its own labeled scale, preserves missing observations as visual gaps, and exposes quality, time support, source references, and limitations.
+- Added long-form CSV export with units, half-open interval, data status, quality state, missing-value reasons, stage method/version, provenance references, and limitations. Text fields are escaped and protected against spreadsheet formula interpretation while numeric values remain numeric.
+- Added an explicit empty state because no reviewed temporal product endpoint or producer handoff is connected. The UI creates no sample observations or model estimates. Software tests use artificial values only and are labeled as software-test fixtures.
+- Frontend software tests pass (8 tests). The existing Python software suite passes (66 tests) under the available system Python 3.11, and repository Ruff checks pass. A production TypeScript/Vite build was attempted but could not run because `npm ci` could not resolve `registry.npmjs.org` in this environment; no tracked frontend dependencies were changed by the failed install. The local `.venv` does not include the API dependencies, so its Python test run cannot collect `tests/test_api.py` until the combined requirements are installed.
+- The component is a presentation foundation for `T-P2-AP-003`, not a completed data-connected chart/export handoff. Actual producer outputs, source QA, AOI, and scientific validation remain gated.

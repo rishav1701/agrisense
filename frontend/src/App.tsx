@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { TemporalAnalytics } from "./dashboard/TemporalAnalytics";
 
 type Geometry = {
   type: "Polygon" | "MultiPolygon";
@@ -237,6 +238,13 @@ function App() {
               {item}
             </button>
           ))}
+          <button
+            className={`nav-item ${active === "Temporal analytics" ? "selected" : ""}`}
+            onClick={() => setActive("Temporal analytics")}
+          >
+            <span className="nav-icon"><ChartIcon /></span>
+            Temporal analytics
+          </button>
           {["Observations", "Crop insights", "Water balance"].map((item, index) => (
             <button className="nav-item unavailable" key={item} disabled title="Available after source data and reviewed analysis outputs are connected">
               <span className="nav-icon">{[<SatelliteIcon />, <SproutIcon />, <DropIcon />][index]}</span>
@@ -263,6 +271,12 @@ function App() {
             <button className="primary-button" onClick={() => setActive("Field setup")}><span>＋</span> Configure study area</button>
           </section>
 
+          {active === "Temporal analytics" ? (
+            <section className="panel temporal-analytics-page">
+              <TemporalAnalytics view={null} />
+            </section>
+          ) : (
+            <>
           {noticeVisible && <section className="notice" role="status"><span className="notice-icon">i</span><div><b>Research workspace is being configured</b><p>No pilot area or live data sources are connected yet. Add a GeoJSON boundary to preview and validate a study request.</p></div><button className="notice-close" aria-label="Dismiss notice" onClick={() => setNoticeVisible(false)}>×</button></section>}
 
           <section className="metrics-grid" aria-label="Project readiness">
@@ -304,6 +318,8 @@ function App() {
             <article className="panel outputs-panel"><div className="panel-heading"><div><div className="section-kicker">ANALYSIS</div><h2>Latest insights</h2></div><span className="empty-badge">No outputs</span></div><div className="outputs-empty"><span className="insight-icon"><ChartIcon /></span><b>Insights will show up here</b><p>Connect source data and complete a study setup before analysis products are available.</p></div></article>
           </section>
 
+            </>
+          )}
           <footer className="page-footer"><span>AgriSense <span>·</span> Research preview</span><span>Estimates require traceable data and documented methods</span></footer>
         </div>
       </main>

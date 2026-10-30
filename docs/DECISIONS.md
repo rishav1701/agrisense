@@ -27,6 +27,8 @@
 
 The user instructed that their message be treated as universal approval from every member for approval steps needed to continue this work. This grants delegated authorization for implementation and technical choices within the request. It is recorded as user-reported authorization; it is not an individual member's post-implementation verification and does not establish third-party data rights, provider credentials, source provenance, or scientific validity. Those evidence requirements remain open.
 
+On 2026-10-30, the user reaffirmed this authorization and asked to continue with the next build task. This permits in-scope implementation choices and delegated team-review steps; it does not select an AOI, grant provider/data access, or satisfy scientific evidence, licensing, or validation gates.
+
 ---
 
 ## Detailed Decision Records

@@ -1,13 +1,3 @@
-<<<<<<< HEAD
-# Runtime dependency used by synthetic software fixtures and numerical helpers.
-numpy==2.2.6
-
-# Development and verification tools.
-pytest==9.1.1
-black==25.1.0
-isort==5.13.2
-ruff==0.8.4
-=======
 -r requirements-app.txt
 
 # Test, lint, import sorting, and formatting tools
@@ -16,4 +6,3 @@ ruff==0.17.3
 black==26.10.1
 isort==9.0.2
 httpx2==2.13.1
->>>>>>> ef2d459bf64c13fb1f8e3f926f0049e2a8766a14
