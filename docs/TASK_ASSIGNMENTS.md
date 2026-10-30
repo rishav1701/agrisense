@@ -240,7 +240,7 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Contract Dependencies:** `CON-01`, `CON-02`.
 - **Acceptance Criteria:** ET0 calculations follow the selected documented method and are checked against appropriate reference examples; native ERA5-Land grid identity is preserved and the collection's grid/temporal support is reported.
 - **Testing Requirements:** Compare computed $ET_0$ against standard FAO-56 test example data.
-- **Blockers:** None.
+- **Blockers:** ERA5-Land query/extraction and a daily gridded output require an approved study AOI/time interval, source-band mapping, and local-day/grid conventions. The pure ET0 calculation kernel is implemented and reference-tested; ingestion and product handoff remain open.
 
 
 #### `T-P2-DE-006`: ERA5-to-Satellite Assembly and Cache
@@ -355,7 +355,7 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Contract Dependencies:** `CON-03`, `CON-05`, `CON-08`, `CON-09`.
 - **Acceptance Criteria:** Charts expose units, time support, missing-data gaps, and estimate status; table downloads include valid headers, units, and provenance metadata where applicable.
 - **Testing Requirements:** Check CSV generation and chart serialization using tools selected with the approved frontend.
-- **Blockers:** None.
+- **Blockers:** No producer endpoint or accepted data handoff is connected yet; chart/export integration with real outputs remains gated on upstream products and reviewed handoffs. The current reusable component and empty state satisfy the UI foundation only.
 - **Status (2026-10-30):** A provenance-aware chart/export component and empty state are implemented. It only renders caller-supplied contract-derived values; no producer endpoint is connected and the UI currently shows no data. Software tests use explicitly synthetic test-only fixtures.
 
 ---
