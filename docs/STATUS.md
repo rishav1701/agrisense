@@ -48,7 +48,7 @@ The project has exactly three members. The project owner approved Phase 0 on 202
 
 | Decision ID | Summary | Proposed Recommendation | Status |
 |:---|:---|:---|:---|
-| **`DEC-01`** | Web Application Architecture | Responsive React + TypeScript frontend and FastAPI candidate stack | **User-authorized on behalf of all members; implementation review pending** |
+| **`DEC-01`** | Web Application Architecture | Responsive React + TypeScript frontend and FastAPI candidate stack | **User-authorized; A/B implementation review reported complete 2026-10-31** |
 | **`DEC-02`** | Satellite Geoprocessing Engine | Google Earth Engine Python API (Server-Side) | **Owner-preferred; Peter/Rishav review open** |
 | **`DEC-03`** | Crop Classification Algorithm | Random Forest baseline; classes/features remain data-dependent | **Owner-approved baseline; team review open** |
 | **`DEC-04`** | Phenology Curve Tracking | Evaluate documented SciPy time-series methods; parameters unselected | **Owner-preferred candidate** |
@@ -102,12 +102,12 @@ Phase 0 is complete. P1 foundation tasks may begin when their own dependencies a
 
 ### AOI-independent P1 work and current handoffs
 
-- `T-P1-SH-001` — Environment/tooling configuration is implemented and passes local software checks; required member approval is considered complete per the project owner's instruction. No individual review records were collected.
-- `T-P1-SH-002` — `CON-01`–`CON-09` schemas are implemented; required member approval is considered complete per the project owner's instruction. No individual review records were collected. No regional fields were added.
-- `T-P1-SH-003` — browser/API boundary specification is documented; required member approvals are treated as complete per the project owner's instruction. No individual review records were collected.
-- `T-P1-SC-001` — synthetic fixture implementation and schema integration pass software validation; required member approval is treated as complete per the project owner's instruction. No individual review records were collected.
-- `T-P1-SC-002` — source-feasibility inventory is complete; required member approvals are treated as complete per the project owner's instruction. No individual review records were collected.
-- `T-P1-DE-002` — Member A's regional-source inventory is complete as desk research; required member review is considered complete per the project owner's instruction. No individual review records were collected.
+- `T-P1-SH-001` — Environment/tooling configuration is implemented and passes local software checks; Member A/B manual review approval for the current branch is reported by the project owner on 2026-10-31.
+- `T-P1-SH-002` — `CON-01`–`CON-09` schemas are implemented; Member A/B manual review approval for the current branch is reported by the project owner on 2026-10-31. No regional fields were added.
+- `T-P1-SH-003` — Browser/API boundary specification is documented and checked against the current implementation; Member A/B manual review approval for the current branch is reported by the project owner on 2026-10-31.
+- `T-P1-SC-001` — Synthetic fixture implementation and schema integration pass software validation; Member A/B manual review approval for the current branch is reported by the project owner on 2026-10-31. Fixtures remain software-test-only.
+- `T-P1-SC-002` — Source-feasibility inventory is complete; Member A/B manual review approval for the current branch is reported by the project owner on 2026-10-31. Dataset suitability remains unapproved until evidence gates close.
+- `T-P1-DE-002` — Member A's regional-source inventory is complete as desk research; Member A/B manual review approval for the current branch is reported by the project owner on 2026-10-31.
 - `T-P1-DE-001` — GEE setup remains assigned to Peter and requires the selected provider plus account/project access; no authentication was attempted.
 - AOI-free satellite catalog discovery is implemented as a tested metadata utility; this does not complete Sentinel asset ingestion or AOI-specific work.
 
@@ -303,3 +303,11 @@ See [`docs/WORK_STATUS.md`](WORK_STATUS.md), [`docs/AOI_DECISION.md`](AOI_DECISI
 - Added `docs/USER_GUIDE.md` with the local run flow and expected temporal product fields, and linked it from the README.
 - Enabled map zoom-in, zoom-out, and fit-to-boundary controls for a user-supplied AOI preview. This does not add a basemap or product layer.
 - Verification: all 10 frontend tests pass; TypeScript/Vite production build succeeds; `git diff --check` passes. Real producer outputs and automated server-side integration remain unavailable.
+
+## 28. Member A/B branch review approvals — 2026-10-31
+
+- The project owner reports that Members A and B manually reviewed and approved the current feature-branch changes. Pending A/B software-review approvals for this branch are marked approved on that basis; the repository does not contain separate review artifacts.
+- This review approval closes only the reported software/team-review sign-offs for the branch. Gate 1 and production tasks remain open for AOI selection and boundary provenance/reuse, provider access, verified labels, source-aligned conventions, and scientific method/evaluation evidence.
+- The feature branch is a fast-forward descendant of `main`; promotion follows the passing software checks recorded below.
+- Software checks now pass on the feature branch: Python (73 tests, 12 subtests), frontend (10 tests and production build), Ruff, isort, and `git diff --check`.
+- Manual review approval clears the current branch's A/B code-review sign-offs. Gate 1 remains open because its independent AOI/source-use, provider access, verified-label, and scientific-method prerequisites remain unresolved; P3 integration cannot run without the upstream product handoffs.

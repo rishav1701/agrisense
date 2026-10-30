@@ -8,7 +8,7 @@
 
 | Decision ID | Topic | Status | Proposed Date | Approver Role |
 |:---|:---|:---|:---|:---|
-| **`DEC-01`** | Application Architecture: Streamlit vs. Responsive Web Frontend + Python API | **Owner-selected direction; team technical confirmation open** | 2026-10-23 | Project Owner; team review |
+| **`DEC-01`** | Application Architecture: Streamlit vs. Responsive Web Frontend + Python API | **Owner-selected direction; A/B implementation review reported complete 2026-10-31** | 2026-10-23 | Project Owner; team review |
 | **`DEC-02`** | Satellite Data Processing Platform: Google Earth Engine vs. Local Downloads | **Owner-preferred: GEE; team review open** | 2026-10-23 | Peter + Rishav; no guide prerequisite recorded |
 | **`DEC-03`** | Crop Classification Algorithm: Random Forest vs. Deep Learning (CNN/LSTM) | **Owner-approved baseline: Random Forest; team review open** | 2026-10-23 | All 3 Members; no guide prerequisite recorded |
 | **`DEC-04`** | Phenology Estimation: SciPy Curve Inflection vs. Fixed Calendar Rules | **Owner-preferred candidate: evaluate SciPy time-series methods** | 2026-10-23 | Rishav; no guide prerequisite recorded |
@@ -32,6 +32,8 @@ On 2026-10-30, the user reaffirmed this authorization and asked to continue with
 On 2026-10-30, the project owner reported that all three members had approved and given a green light to continue and complete Member C's assigned work. This is recorded as owner-reported team approval for that work scope, including implementation and delegated review steps. No individual member signatures or separate approval artifacts were supplied in the repository. The approval does not select an AOI or scientific method, authorize third-party data reuse, establish source provenance, or validate results. Any shared-contract amendment still requires an explicit unanimous approval record for the proposed change.
 
 On 2026-10-31, the project owner reaffirmed approval for all current Member C work and authorized committing and pushing the reviewed changes in this branch. This approval is recorded as owner-reported authorization; it does not clear upstream handoff, access, AOI, source-rights, scientific-evidence, validation, or formal guide-approval requirements.
+
+On 2026-10-31, the project owner reported that Members A and B manually reviewed and approved the current feature-branch changes. Their pending software-review approvals for this branch are therefore recorded as approved per the owner's report. No separate review artifacts were supplied. This does not approve an AOI, a data-use right, an unreviewed scientific method, model results, or validation claims.
 
 ---
 
@@ -83,7 +85,7 @@ On 2026-10-31, the project owner reaffirmed approval for all current Member C wo
 ### `DEC-01`: Application Architecture & Technology Stack
 
 - **Topic:** High-level web application and backend architecture.
-- **Status:** **React + TypeScript / FastAPI implementation direction approved per the project owner's 2026-10-29 instruction to treat member approvals as complete; no individual review records were collected in this workspace.**
+- **Status:** **React + TypeScript / FastAPI implementation direction approved. The project owner reports Members A and B manually reviewed and approved the current implementation branch on 2026-10-31; no separate review artifacts are stored in the workspace.**
 - **Context:** The source documents request an interactive GIS-enabled dashboard with nominal 10 m crop outputs, growth stage estimates, stress indicators, and canal-boundary summaries. Two architectural options were evaluated:
   1. *Streamlit Monolith (Python-only):* Single-process Python application utilizing `streamlit-folium` for interactive maps and `plotly` for temporal graphs; this is the source documents' implementation proposal.
   2. *Responsive Web Frontend + Python API:* React + TypeScript and FastAPI are candidate technologies. No PostGIS/GeoServer requirement has been established.
