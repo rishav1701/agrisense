@@ -3,6 +3,7 @@ import test from "node:test";
 
 import {
   buildChartModel,
+  filterTemporalView,
   parseTemporalViewJson,
   serializeTemporalCsv,
   validateTemporalView,
@@ -51,6 +52,39 @@ test("validates provenance-aware temporal output and preserves the requested int
 
 test("parses and validates a temporal product JSON document", () => {
   assert.deepEqual(parseTemporalViewJson(JSON.stringify(softwareFixture)), softwareFixture);
+});
+
+test("filters records and stage transitions to a half-open date interval", () => {
+  const filtered = filterTemporalView(softwareFixture, {
+    start: "2023-01-02",
+    end: "2023-01-04",
+  });
+  assert.deepEqual(filtered.interval, { start: "2023-01-02", end: "2023-01-04" });
+  assert.deepEqual(filtered.series[0].samples.map((sample) => sample.timestamp), [
+    "2023-01-02T00:00:00Z",
+    "2023-01-03T00:00:00Z",
+  ]);
+  assert.equal(filtered.stageTransitions.length, 1);
+  assert.deepEqual(softwareFixture.interval, { start: "2023-01-01", end: "2023-01-05" });
+  assert.equal(softwareFixture.series[0].samples.length, 3);
+  const csv = serializeTemporalCsv(filtered);
+  assert.match(csv, /"2023-01-02","2023-01-04"/);
+  assert.doesNotMatch(csv, /2023-01-01T00:00:00Z/);
+});
+
+test("date filter rejects empty, invalid, or out-of-product intervals", () => {
+  assert.throws(
+    () => filterTemporalView(softwareFixture, { start: "2023-01-03", end: "2023-01-03" }),
+    /filter end must follow/,
+  );
+  assert.throws(
+    () => filterTemporalView(softwareFixture, { start: "2022-12-31", end: "2023-01-03" }),
+    /within the product interval/,
+  );
+  assert.throws(
+    () => filterTemporalView(softwareFixture, { start: "2023-01-02", end: "2023-02-30" }),
+    /valid calendar date/,
+  );
 });
 
 test("rejects malformed JSON and valid JSON without a product interval", () => {

@@ -1,5 +1,7 @@
+import { useEffect, useState } from "react";
 import {
   buildChartModel,
+  filterTemporalView,
   serializeTemporalCsv,
   validateTemporalView,
 } from "./temporalAnalyticsData.mjs";
@@ -118,6 +120,14 @@ function downloadCsv(view: TemporalAnalyticsView) {
 
 /** Display provenance-aware time series and export their available records. */
 export function TemporalAnalytics({ view, loading = false, error = null }: Props) {
+  const [rangeStart, setRangeStart] = useState(view?.interval.start ?? "");
+  const [rangeEnd, setRangeEnd] = useState(view?.interval.end ?? "");
+
+  useEffect(() => {
+    setRangeStart(view?.interval.start ?? "");
+    setRangeEnd(view?.interval.end ?? "");
+  }, [view?.interval.start, view?.interval.end]);
+
   if (loading) return <p className="temporal-state" role="status">Loading temporal outputs…</p>;
   if (error) return <p className="temporal-state error" role="alert">{error}</p>;
   if (!view) {
@@ -140,43 +150,72 @@ export function TemporalAnalytics({ view, loading = false, error = null }: Props
     );
   }
 
-  if (view.series.length === 0 && view.stageTransitions.length === 0) {
+  let filteredView: TemporalAnalyticsView;
+  try {
+    filteredView = filterTemporalView(view, { start: rangeStart, end: rangeEnd });
+  } catch (caught) {
     return (
-      <div className="temporal-empty" role="status">
-        <span className="section-kicker">TEMPORAL ANALYTICS</span>
-        <h2>No temporal records in this product</h2>
-        <p>The file contains no series or stage transitions for the requested interval.</p>
-      </div>
+      <>
+        <div className="temporal-filter" aria-label="Temporal date filter">
+          <label>Start date <input type="date" min={view.interval.start} max={view.interval.end} value={rangeStart} onChange={(event) => setRangeStart(event.target.value)} /></label>
+          <label>End date, exclusive <input type="date" min={view.interval.start} max={view.interval.end} value={rangeEnd} onChange={(event) => setRangeEnd(event.target.value)} /></label>
+        </div>
+        <p className="temporal-state error" role="alert">
+          {caught instanceof Error ? caught.message : "Choose a valid date interval."}
+        </p>
+      </>
     );
   }
 
-  const hasRecords = view.series.some((series) => series.samples.length > 0) || view.stageTransitions.length > 0;
+  if (filteredView.series.length === 0 && filteredView.stageTransitions.length === 0) {
+    return (
+      <>
+        <div className="temporal-filter" aria-label="Temporal date filter">
+          <label>Start date <input type="date" min={view.interval.start} max={view.interval.end} value={rangeStart} onChange={(event) => setRangeStart(event.target.value)} /></label>
+          <label>End date, exclusive <input type="date" min={view.interval.start} max={view.interval.end} value={rangeEnd} onChange={(event) => setRangeEnd(event.target.value)} /></label>
+        </div>
+        <div className="temporal-empty" role="status">
+          <span className="section-kicker">TEMPORAL ANALYTICS</span>
+          <h2>No temporal records in this date range</h2>
+          <p>Choose a wider interval within the loaded product's coverage.</p>
+        </div>
+      </>
+    );
+  }
+
+  const hasRecords = filteredView.series.some((series) => series.samples.length > 0) || filteredView.stageTransitions.length > 0;
   return (
     <section className="temporal-analytics" aria-labelledby="temporal-title">
       <header className="panel-heading temporal-page-heading">
         <div>
           <div className="section-kicker">TEMPORAL ANALYTICS</div>
           <h2 id="temporal-title">Observations and stage transitions</h2>
-          <p>{view.interval.start} through {view.interval.end} (end exclusive)</p>
+          <p>{filteredView.interval.start} through {filteredView.interval.end} (end exclusive)</p>
         </div>
-        <button className="subtle-button" onClick={() => downloadCsv(view)} disabled={!hasRecords}>
-          Download CSV ↓
-        </button>
+        <div className="temporal-actions">
+          <div className="temporal-filter" aria-label="Temporal date filter">
+            <label>Start date <input type="date" min={view.interval.start} max={view.interval.end} value={rangeStart} onChange={(event) => setRangeStart(event.target.value)} /></label>
+            <label>End date, exclusive <input type="date" min={view.interval.start} max={view.interval.end} value={rangeEnd} onChange={(event) => setRangeEnd(event.target.value)} /></label>
+          </div>
+          <button className="subtle-button" onClick={() => downloadCsv(filteredView)} disabled={!hasRecords}>
+            Download CSV ↓
+          </button>
+        </div>
       </header>
-      {view.series.map((series) => <SeriesChart key={series.id} series={series} view={view} />)}
-      {view.stageTransitions.length > 0 && (
+      {filteredView.series.map((series) => <SeriesChart key={series.id} series={series} view={filteredView} />)}
+      {filteredView.stageTransitions.length > 0 && (
         <section className="stage-transition-list" aria-label="Growth-stage transitions">
           <h3>Growth-stage transitions</h3>
-          {view.stageTransitions.map((transition) => (
+          {filteredView.stageTransitions.map((transition) => (
             <p key={`${transition.timestamp}-${transition.stageCode}`}>
               <b>{transition.timestamp}</b> · {transition.stageCode} · {transition.method} {transition.methodVersion} · {transition.qualityState} · {transition.sourceReference}
             </p>
           ))}
         </section>
       )}
-      {view.limitations.length > 0 && (
+      {filteredView.limitations.length > 0 && (
         <ul className="temporal-limitations" aria-label="Product limitations">
-          {view.limitations.map((limitation) => <li key={limitation}>{limitation}</li>)}
+          {filteredView.limitations.map((limitation) => <li key={limitation}>{limitation}</li>)}
         </ul>
       )}
       <p className="temporal-footnote">Separate scales are used per series. Missing samples break lines and are not interpolated.</p>

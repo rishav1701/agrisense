@@ -97,6 +97,38 @@ export function validateTemporalView(view) {
   return view;
 }
 
+/** Return a validated half-open date-window view without altering source data. */
+export function filterTemporalView(view, interval) {
+  validateTemporalView(view);
+  const start = parseDate(interval?.start, "filter.start");
+  const end = parseDate(interval?.end, "filter.end");
+  const sourceStart = parseDate(view.interval.start, "interval.start");
+  const sourceEnd = parseDate(view.interval.end, "interval.end");
+  if (start >= end) throw new TypeError("The filter end must follow the filter start.");
+  if (start < sourceStart || end > sourceEnd) {
+    throw new TypeError("The filter interval must remain within the product interval.");
+  }
+  const series = view.series
+    .map((item) => ({
+      ...item,
+      samples: item.samples.filter((sample) => {
+        const timestamp = parseTimestamp(sample.timestamp, "sample.timestamp");
+        return timestamp >= start && timestamp < end;
+      }),
+    }))
+    .filter((item) => item.samples.length > 0);
+  const stageTransitions = view.stageTransitions.filter((transition) => {
+    const timestamp = parseTimestamp(transition.timestamp, "transition.timestamp");
+    return timestamp >= start && timestamp < end;
+  });
+  return {
+    ...view,
+    interval: { start: interval.start, end: interval.end },
+    series,
+    stageTransitions,
+  };
+}
+
 /** Parse and validate a producer-projected temporal product JSON document. */
 export function parseTemporalViewJson(contents) {
   if (typeof contents !== "string") {

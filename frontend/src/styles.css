@@ -21,6 +21,11 @@
 .temporal-page-heading h2{margin:5px 0;font:700 17px Manrope,sans-serif;color:var(--ink)}
 .temporal-page-heading p{margin:0;color:var(--muted);font-size:11px}
 .temporal-page-heading button:disabled{opacity:.5;cursor:not-allowed}
+.temporal-actions{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}
+.temporal-filter{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.temporal-filter label{display:grid;gap:4px;color:var(--muted);font-size:9px;font-weight:700}
+.temporal-filter input{min-height:32px;padding:0 8px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink);font:500 10px 'DM Sans',sans-serif}
+.temporal-filter input:focus-visible{outline:2px solid #b9ddcb;outline-offset:2px}
 .temporal-import{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:16px 18px;margin-bottom:18px;border:1px solid var(--line);border-radius:14px;background:#fbfcfa}
 .temporal-import>div{flex:1 1 300px}
 .temporal-import b{color:var(--ink);font-size:13px}
@@ -50,4 +55,4 @@
 .stage-transition-list p{margin:9px 0;color:#6e7c72;font-size:10px;line-height:1.5;overflow-wrap:anywhere}
 .temporal-limitations{margin:16px 0 0;padding:12px 12px 12px 28px;border-radius:7px;background:#f8f7f1;color:#7d704e;font-size:10px;line-height:1.6}
 .temporal-footnote{margin:12px 0 0;color:#909a92;font-size:9px}
-@media(max-width:680px){.temporal-analytics-page{min-height:300px;padding:16px}.temporal-series-card{padding:12px}.temporal-page-heading{gap:10px}.temporal-page-heading h2{font-size:15px}.temporal-chart{min-height:150px}}
+@media(max-width:680px){.temporal-analytics-page{min-height:300px;padding:16px}.temporal-series-card{padding:12px}.temporal-page-heading{display:block}.temporal-page-heading h2{font-size:15px}.temporal-actions{align-items:flex-start;flex-direction:column;gap:6px;margin-top:12px}.temporal-filter{gap:7px}.temporal-filter label{flex:1 1 130px}.temporal-filter input{width:100%}.temporal-chart{min-height:150px}}

@@ -47,6 +47,10 @@ export interface ChartModel {
 }
 
 export function validateTemporalView(view: TemporalAnalyticsView): TemporalAnalyticsView;
+export function filterTemporalView(
+  view: TemporalAnalyticsView,
+  interval: TemporalAnalyticsView["interval"],
+): TemporalAnalyticsView;
 export function parseTemporalViewJson(contents: string): TemporalAnalyticsView;
 export function buildChartModel(
   series: TemporalSeries,

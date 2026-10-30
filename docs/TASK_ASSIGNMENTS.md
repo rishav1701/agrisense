@@ -359,7 +359,7 @@ After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage wit
 - **Acceptance Criteria:** Charts expose units, time support, missing-data gaps, and estimate status; table downloads include valid headers, units, and provenance metadata where applicable.
 - **Testing Requirements:** Check CSV generation and chart serialization using tools selected with the approved frontend.
 - **Blockers:** No producer endpoint or accepted data handoff is connected yet; chart/export integration with real outputs remains gated on upstream products and reviewed handoffs. The current reusable component and empty state satisfy the UI foundation only.
-- **Status (2026-10-31):** A provenance-aware chart/export component, empty state, and local JSON import are implemented. Imported views are structurally validated and stay in browser memory; no producer endpoint is connected, no scientific validity is inferred, and no product is bundled. Software tests use explicitly synthetic test-only fixtures.
+- **Status (2026-10-31):** A provenance-aware chart/export component, empty state, local JSON import, and half-open date-range filtering are implemented. The selected interval filters series, stage transitions, and CSV export. Imported views stay in browser memory; no producer endpoint is connected, no scientific validity is inferred, and no product is bundled. Software tests use explicitly synthetic test-only fixtures.
 
 ---
 

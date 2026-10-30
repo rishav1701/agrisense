@@ -1,9 +1,9 @@
 # AgriSense Project Status & Progress Checkpoint
 
-> **Last Updated:** 2026-10-30
+> **Last Updated:** 2026-10-31
 > **Current Phase:** **P1 foundation and P2 software/prototype work underway — P1/Gate 1 and scientific production gates remain open**
 > **Phase P0 Status:** **APPROVED BY THE THREE-MEMBER TEAM (per project-owner confirmation, 2026-10-23); GUIDE SIGN-OFF WAIVED BY PROJECT OWNER FOR P0**
-> **Implementation Status:** **Contract schemas, software fixtures, Sentinel processing prototypes, Copernicus STAC discovery/extraction, a local API, and a responsive dashboard foundation are present. Technical satellite sample assets are in ignored local cache for an unselected candidate area. No pilot AOI is approved, and no validated scientific estimates are available.**
+> **Implementation Status:** **Contract schemas, software fixtures, Sentinel processing prototypes, Copernicus STAC discovery/extraction, a local API, and a responsive dashboard foundation are present. The current checkout contains no AOI-specific cache or configured pilot geometry. No pilot AOI is approved, and no validated scientific estimates are available.**
 
 ---
 
@@ -309,5 +309,5 @@ See [`docs/WORK_STATUS.md`](WORK_STATUS.md), [`docs/AOI_DECISION.md`](AOI_DECISI
 - The project owner reports that Members A and B manually reviewed and approved the current feature-branch changes. Pending A/B software-review approvals for this branch are marked approved on that basis; the repository does not contain separate review artifacts.
 - This review approval closes only the reported software/team-review sign-offs for the branch. Gate 1 and production tasks remain open for AOI selection and boundary provenance/reuse, provider access, verified labels, source-aligned conventions, and scientific method/evaluation evidence.
 - The feature branch is a fast-forward descendant of `main`; promotion follows the passing software checks recorded below.
-- Software checks now pass on the feature branch: Python (73 tests, 12 subtests), frontend (10 tests and production build), Ruff, isort, and `git diff --check`.
+- Software checks pass for the current implementation: Python (73 tests, 12 subtests), frontend (12 tests and production build), Ruff, isort, and `git diff --check`. The frontend date filter now applies a half-open interval to chart records, stage transitions, and CSV export.
 - Manual review approval clears the current branch's A/B code-review sign-offs. Gate 1 remains open because its independent AOI/source-use, provider access, verified-label, and scientific-method prerequisites remain unresolved; P3 integration cannot run without the upstream product handoffs.
