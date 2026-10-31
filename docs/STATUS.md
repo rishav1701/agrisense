@@ -313,3 +313,11 @@ See [`docs/WORK_STATUS.md`](WORK_STATUS.md), [`docs/AOI_DECISION.md`](AOI_DECISI
 - The implementation branch was fast-forwarded to `main` after software checks passed; the latest implementation is pushed to `origin/main`.
 - Software checks pass for the current implementation: Python (73 tests, 12 subtests), frontend (12 tests and production build), Ruff, isort, and `git diff --check`. The frontend date filter now applies a half-open interval to chart records, stage transitions, and CSV export.
 - Manual review approval clears the reported A/B code-review sign-offs for the implementation branch. Gate 1 remains open because its independent AOI/source-use, provider access, verified-label, and scientific-method prerequisites remain unresolved; P3 integration cannot run without the upstream product handoffs.
+
+## 29. Member A GEE setup implementation — 2026-10-31
+
+- Implemented `src/data/gee_auth.py` with explicit or `EE_PROJECT_ID` project selection and local SDK authentication; no credential paths or tokens are read from or written to source files.
+- Added `scripts/verify_gee.py` to probe metadata access for Sentinel-1 GRD, Sentinel-2 SR Harmonized, and ERA5-Land Daily Aggregated, and mocked software tests for configuration/initialization behavior. This does not authenticate or establish live project access.
+- Updated `docs/GEE_SETUP.md` to point at the implemented helper and script. `T-P1-DE-001` remains open for live setup/probe and Member C's assigned review. `T-P1-DE-002` source inventory remains complete as a desk-research handoff; reviewer approvals already recorded in the project checkpoint are not re-entered as new individual signatures.
+- Member A's scientific decision approvals are not blanket-set by this implementation. In particular, no new ET0 source-band/daily-grid convention or soil-storage method is approved without the required Member B concurrence and source evidence. No AOI, scientific data product, or validation result was created.
+- Verification attempt: `py -3.12 -m pytest tests/data/test_gee_auth.py -q` and Ruff could not start because the Windows Python launcher targets a Python 3.13 WindowsApps executable that returns Access Denied; `python`/`python3` are not on PATH. `git diff --check` completed without reported whitespace errors. The new tests remain unexecuted in this environment.
