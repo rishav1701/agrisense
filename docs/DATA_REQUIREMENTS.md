@@ -317,15 +317,15 @@ The datasets fall into two tiers:
 | Attribute | Detail |
 |-----------|--------|
 | **Purpose** | Training and validation of the Random Forest crop-type classifier (F2, O1) |
-| **Provider / Source** | **Candidate identified:** [TGRAC Agriculture2 CropAnalysis service](https://tgrac.telangana.gov.in/arcgis/rest/services/Agri2/Agriculture2_CropAnalysis_Layers/MapServer), child layers 10 (February), 11 (March), and 12 (April) under Ground Truth - Rabi Season 2023. The live query returned 2,446 point features in EPSG:4326. Source-survey lineage/version and reuse terms are not stated in the inspected layer metadata. |
+| **Provider / Source** | **Candidates:** [TGRAC Agriculture2 CropAnalysis service](https://tgrac.telangana.gov.in/arcgis/rest/services/Agri2/Agriculture2_CropAnalysis_Layers/MapServer), child layers 10–12 under Ground Truth - Rabi Season 2023 (2,446 queried EPSG:4326 points; provenance/reuse terms unstated); [WRMS field survey via ADeX](https://fair-forward.github.io/datasets/projects/ui_29-predicting_crop_health_using_opensource_geospatial/) (>12,000 records, six Telangana mandals, 2022–2024, cataloged CC BY 4.0; linked ADeX resource returned 404 on 2026-10-31); and the [Zindi Telangana Crop Health Challenge](https://zindi.world/competitions/telangana-crop-health-challenge/data) (challenge terms specify CC-BY-SA 4.0; official Train.csv endpoint returned HTTP 401 without authorization). The challenge page lists field polygons, cultivation dates, crop labels and health categories, but the official file has not been retrieved here. A public participant mirror's geography conflicts with FAIR Forward's six-mandal description and is used only for directional screening in [`DS09_AOI_AUDIT.md`](DS09_AOI_AUDIT.md). These sources are not interchangeable; verify exact geometry, target semantics, time and rights for the specific data copy before use. |
 | **Requirements** | Georeferenced point or polygon samples with confirmed crop type, cropping season (Kharif/Rabi/Zaid), and collection date |
 | **Sample Size** | Not specified by the source PDFs. Determine from label availability, spatial design, class distribution, and validation needs; do not treat a generic count as a guarantee of adequacy. |
 | **Spatial Format** | GeoJSON, Shapefile, or GeoPackage with CRS metadata |
 | **Temporal Alignment** | Must correspond to the same season as the satellite imagery used for classification |
 | **Preprocessing** | Verify label source, date, positional and class uncertainty; keep spatially independent evaluation labels outside model fitting. Split proportions are to be selected and documented based on the independent validation design. |
 | **Missing-Data Handling** | Preserve uncertain, conflicting, or incomplete labels with quality metadata; exclude or separately handle them under the approved training/evaluation protocol rather than silently assigning a class. |
-| **License** | **Unconfirmed.** The layer metadata has empty `copyrightText` and descriptions; do not infer permission to reuse or redistribute from public query access. |
-| **Access Confirmed** | **Read-only query confirmed; reuse/redistribution permission and provider access conditions are unconfirmed.** |
+| **License** | **TGRAC layer terms unconfirmed.** FAIR Forward documents the WRMS/ADeX dataset as CC BY 4.0, but direct linked access failed on 2026-10-31. Zindi challenge data are CC-BY-SA 4.0 under challenge rules; access to the official Train.csv endpoint requires an authorized session. |
+| **Access Confirmed** | **TGRAC read-only query confirmed; WRMS/ADeX link not currently retrievable; official Zindi data endpoint returned 401 without authorization. A third-party mirror was inspected but its checksum and geography are unverified. No accepted field-label copy is available in the repository.** |
 | **Status** | 🔴 **BLOCKER** for model fitting and independent classification validation until label semantics, positional/date quality, class-domain discrepancies, license, and spatial holdout are reviewed. |
 
 > [!CAUTION]
@@ -422,14 +422,14 @@ The datasets fall into two tiers:
 | Attribute | Detail |
 |-----------|--------|
 | **Purpose** | Define the geographic extent for all data queries, processing, and output products |
-| **Provider / Source** | **Candidate under review:** one real irrigation-command polygon from the TGRAC I&CAD `Command_Boundary` layers, linked to suitable crop labels and satellite coverage. [SRSP STAGE I](DS09_AOI_AUDIT.md) is the leading candidate by observed ground-truth overlap, but no AOI is selected and the boundary authority, vintage, and reuse terms are unresolved. |
+| **Provider / Source** | **Candidates under review:** TGRAC I&CAD `Command_Boundary` layers 9/10 (coordinate-identical features, boundary authority/vintage/reuse terms unresolved); and the CWC “Water Resource Project” GeoJSON listed by [NWIC](https://nwdp.nwic.gov.in/en/dataset/water-resource-project), updated 2025-11-17, whose resource metadata says “Other (Open)” but does not specify a standard license. A read-only download contains a Telangana feature named “Sriramsagar Stage-I (Pochampad)”; exact geometric equivalence with TGRAC's `SRSP STAGE I` is unverified. |
 | **Requirements** | One sourced polygon (or multipolygon) per selected AOI, in a standard geospatial format; multiple AOIs may be configured independently |
 | **Spatial Format** | GeoJSON or Shapefile |
 | **CRS** | EPSG:4326 (WGS84) or the project's chosen UTM zone |
 | **Preprocessing** | Select one source-verified command polygon after geometry, lineage, vintage, license, and overlap checks; validate geometry before storing a sourced AOI. The candidate audit has not produced an approved AOI file. |
 | **Missing-Data Handling** | N/A — cannot proceed without a defined study area |
-| **License** | Unconfirmed for candidate TGRAC boundaries and ground-truth records; must be established for each source before use. |
-| **Access Confirmed** | **Candidate geometries and feature records were queryable read-only; final AOI source suitability and reuse permissions are not confirmed.** |
+| **License** | TGRAC terms unconfirmed; NWIC/CWC resource marked “Other (Open)” with exact reuse terms unresolved. Confirm source terms before storing/redistributing geometry. |
+| **Access Confirmed** | TGRAC candidate geometry query confirmed read-only. NWIC's listed national GeoJSON download succeeded and contains the named Sriramsagar Stage-I feature; exact match to TGRAC geometry and reuse suitability remain unverified. |
 | **Status** | 🔴 **BLOCKER** — the owner approved one command-area pilot and an evidence-based review, but no boundary has passed provenance, reuse, suitability, study-period, and validation checks. Do not mark DS-09 complete. |
 
 > [!CAUTION]
@@ -513,15 +513,15 @@ For pilot selection, maintain a candidate-by-candidate evidence record covering 
 
 | ID | Dataset | Status | Action Required to Confirm |
 |----|---------|--------|--------------------------|
-| DS-01 | Sentinel-2 MSI | ❌ UNCONFIRMED | Define study area → identify required tiles → verify GEE account access → test query for date range |
-| DS-02 | Sentinel-1 SAR | ❌ UNCONFIRMED | Define study area → identify orbit coverage (ascending/descending) → verify GEE access → test query |
-| DS-03 | ERA5-Land | ❌ UNCONFIRMED | Define study area → verify GEE access OR provision CDS API key → test data download for date range |
-| DS-04 | Ground Truth Labels | 🟡 CANDIDATE RETRIEVED; NOT VERIFIED | Confirm TGRAC survey provenance/date semantics, label meaning/quality, code-domain mismatches, reuse terms, and spatially independent evaluation feasibility |
-| DS-05 | Canal Command Boundaries | 🟡 CANDIDATE GEOMETRIES RETRIEVED; NOT VERIFIED | Confirm responsible authority, which layer/vintage is authoritative, reuse terms, topology, and attributes; verify overlap with selected command and labels |
-| DS-06 | Crop Calendar | ❌ UNCONFIRMED | Identify target crops → obtain regional phenology guides from FAO, state agriculture dept, or ICAR |
+| DS-01 | Sentinel-2 MSI | 🟡 PUBLIC ACCESS DEMONSTRATED FOR TECHNICAL WINDOWS | Public Copernicus/Earth Search STAC/COG access succeeded in the existing technical trial; after AOI selection, check actual clear-pixel coverage and date alignment. GEE is a separate access path and is not configured here. |
+| DS-02 | Sentinel-1 SAR | 🟡 PUBLIC RTC ACCESS DEMONSTRATED FOR TECHNICAL WINDOW | Public Planetary Computer Sentinel-1 RTC extraction succeeded in the prior trial; decide production product/radiometry/orbit strategy and inspect time-series suitability after AOI/date selection. GEE access is not configured here. |
+| DS-03 | ERA5-Land | 🟡 SOURCE/TERMS CONFIRMED; ACCOUNT ACCESS NOT PROVISIONED | CDS offers ERA5-Land under CC BY but requires registration and license acceptance; Earth Engine access requires an account/project, absent in this checkout. Select one access route, then define supported daily aggregation and verify query for the chosen AOI/period. |
+| DS-04 | Ground Truth Labels | 🔴 CANDIDATES, NOT ACCEPTED | TGRAC records remain unverified. WRMS/ADeX is cataloged as >12k field-survey records over six mandals and CC BY 4.0, but its linked resource returns 404. The Zindi official file endpoint returned 401 without an authorized session; an unauthenticated participant mirror conflicts with the FAIR Forward geography description and is not accepted. Retrieve the authorized source copy; verify coordinates, dates, label semantics, quality and independent holdout feasibility. |
+| DS-05 | Canal Command Boundaries | 🟡 MULTIPLE CANDIDATE SOURCES, NOT VERIFIED | TGRAC I&CAD layers 9/10 are duplicate geometries with unknown authority/terms. NWIC's CWC GeoJSON (updated 2025-11-17; “Other (Open)”) was downloaded and contains a named Sriramsagar Stage-I feature; compare its geometry to TGRAC, confirm exact terms, vintage, topology and attribute meanings. |
+| DS-06 | Crop Calendar | 🟡 GENERAL SEASON WINDOWS AVAILABLE; CROP/STAGE REFERENCE OPEN | Telangana government pages publish broad Kharif/Yasangi timing, not crop-specific stage dates. Obtain source-backed regional crop calendars/advisories for supported crops and the selected season; do not treat broad windows as validated phenology. |
 | DS-07 | Crop Coefficients (Kc) | 🟡 PARTIAL | Generic FAO-56 values available → confirm target crop list → check for locally calibrated values |
-| DS-08 | Soil Parameters | ❌ UNCONFIRMED | Evaluate SoilGrids coverage over study area → download and validate AWC estimates → compare with local soil surveys if available |
-| DS-09 | Study Area Boundary | 🟡 LEAD CANDIDATE; NOT VERIFIED | Review SRSP Stage I candidate against other evidence; resolve Wanaparthy mismatch, command source/vintage/license, label suitability, actual observation dates, satellite pixel usability, advisory validation evidence, and pilot study period before selecting one command polygon |
+| DS-08 | Soil Parameters | 🟡 LICENSED MODELED SOURCE IDENTIFIED; NOT EXTRACTED | SoilGrids is CC BY 4.0 at 250 m and provides public WCS/WMS access; its beta REST API is currently paused. If the chosen method needs soil storage, verify available properties/depths/uncertainty and compare with local evidence; do not call modeled values field measurements. |
+| DS-09 | Study Area Boundary | 🟡 LEAD CANDIDATE ONLY; NOT VERIFIED | Keep SRSP Stage I as the crop-mapping lead (147 candidate points; 8 observed labels; 433,249 ha attributed) while confirming CWC/NWIC geometry/terms, label source access and validity, actual observation dates, pixel usability, and study period. No final AOI or irrigation-advisory validation source is established. |
 
 > [!IMPORTANT]
 > **Key scientific/operational dependencies** include DS-04 (labels), DS-05 (canal boundaries, if canal summaries remain in scope), and DS-09 (study area). DS-09 is foundational for regional data-access checks. Synthetic software work may proceed after contract approval, but it is not scientific validation.

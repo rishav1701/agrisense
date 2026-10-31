@@ -1,7 +1,7 @@
 # DS-09 Evidence Audit — TGRAC Agriculture2 and Irrigation Commands
 
 > **Audit date:** 2026-10-23  
-> **Decision status:** SRSP Stage I is the leading candidate for further verification; no pilot AOI is selected. `DS-09` remains open.  
+> **Decision status:** SRSP Stage I remains the strongest *candidate* among the seven previously queried TGRAC command polygons; no pilot AOI is selected. `DS-09` remains open.
 > **Scope:** Read-only inspection of TGRAC ground-truth and irrigation-command services and the Copernicus Data Space STAC catalog. No application code, model fitting, scientific performance measurement, or raw-data files were added.
 
 ## Recommendation
@@ -156,6 +156,64 @@ The same technical window was queried against Microsoft's [Planetary Computer ST
 For these selected items, the S1 and S2 10 m windows have identical EPSG:32644 transforms and dimensions (113 × 108). This is an observed match for this pair only; the acquisition code does not force or assume alignment for other scenes. The S1 and S2 acquisitions are about 67 hours apart, but the TGRAC source does not provide confirmed field observation times, so this is not a label match.
 
 The provider's STAC assets declare Float32 and nodata `-32768` but omit a unit/radiometry field. Microsoft's [AI4G Sentinel-1 instructions](https://github.com/microsoft/ai4g-flood/blob/main/README.md) identify Planetary Computer RTC processing as gamma0 with power scale and note the RTC calibration/terrain-correction lineage. The extractor therefore records gamma0 power as the documented product interpretation and preserves raw pixels; it does not make dB features. A future feature step may convert positive power to dB with `10 log10(power)` after the team reviews the intended radiometry and temporal/orbit strategy. Earth Search's Sentinel-1 GRD COG also returned `uint16` measurement pixels without a georeferenced CRS in the live check; it was not treated as analysis-ready. The PC RTC source was chosen for technical AOI extraction, not as approval to switch `DEC-02` or as a final GRD processing-method decision.
+
+## AOI and data-access reassessment — 2026-10-31
+
+### Best-supported candidate and limits
+
+**Recommendation for the next evidence step: continue with SRSP Stage I, Rabi 2023, as the lead candidate only. Do not create or approve `config/study_area.geojson` yet.** It remains the strongest of the seven previously tested TGRAC command polygons for a crop-mapping feasibility study by raw sample count and label variety: 147 intersecting candidate points, 8 observed crop labels, 42 villages and 20 mandals. The disadvantages are material: the service's attributed area is 433,249 ha (not independently measured), the points span seven districts, labels are imbalanced (Paddy 78, Maize 46, all other classes 7 or fewer), and record-creation dates are not confirmed field-observation dates. This is a lead for source confirmation, not a “perfect” or verified AOI.
+
+The smaller candidates do not currently dominate it: Nizam Sagar has 40 intersections over an attributed 93,660 ha but 36 are Paddy; NSLC has 44 over 265,373 ha, with only 21 Paddy records and several sparse classes. These counts are from the same unverified TGRAC layers and do not establish ground-truth suitability. No candidate in this audit has confirmed moisture-stress measurements or irrigation recommendation outcomes. If those are required in the initial pilot definition, none of the seven qualifies today.
+
+### Newly checked source/access evidence
+
+| Need | Current evidence and access result | Consequence |
+|---|---|---|
+| Command polygon | NWIC's National Water Data Portal lists a CWC-produced national “Water Resource Project” command-area dataset, updated 2025-11-17, with KML, GeoJSON and SHP downloads. The GeoJSON resource metadata says **“Other (Open)”**, not a specific reuse license. The portal listing/download link is public, but the geometry contents and SRSP feature match were not independently verified in this review. [Dataset page](https://nwdp.nwic.gov.in/en/dataset/water-resource-project) · [GeoJSON resource metadata](https://nwdp.nwic.gov.in/en/dataset/water-resource-project/resource/7b1e0abf-ca24-46d2-b0dc-7234021e414d) | Promising independent boundary source. Ask CWC/NWIC to confirm precise terms, vintage, project identity, and whether the data are suitable for redistribution/use; compare the actual polygon to TGRAC layers 9/10 before selecting. |
+| Ground truth | TGRAC's public read-only ArcGIS query returned the earlier 2,446 Rabi 2023 points, but the exact layer has empty copyright/description fields. Separately, FAIR Forward describes a WRMS field-survey dataset (>12,000 observations, six Telangana mandals, 2022–2024 cycles) as CC BY 4.0; its cited ADeX dataset URL returned 404 on this check. Zindi's completed challenge page lists train/test files and says challenge data are CC-BY-SA 4.0, with access gated by accepting challenge terms. [FAIR Forward source](https://fair-forward.github.io/datasets/projects/ui_29-predicting_crop_health_using_opensource_geospatial/) · [Zindi data page](https://zindi.world/competitions/telangana-crop-health-challenge/data) | The WRMS dataset is a better potential label source because it has documented field visits and a stated license, but current direct retrieval is not confirmed and the six mandals are not identified in the catalog record. Zindi challenge targets/fields must be inspected under its terms and are not automatically independent field-moisture truth. Do not substitute either source for TGRAC or claim label validation until the records, locations, dates and terms are checked. |
+| Sentinel-2 | Copernicus Sentinel data are free/open with attribution; public STAC/COG access has already succeeded in the technical trial. [Sentinel legal notice](https://sentinels.copernicus.eu/documents/247904/690755/Sentinel_Data_Legal_Notice) | Data access is available without GEE for the tested public sources. AOI/date selection, pixel quality and label matching remain unverified. |
+| Sentinel-1 | Public Planetary Computer Sentinel-1 RTC access succeeded for the technical trial; the collection declares CC-BY-4.0. This is not approval of an analytical method or orbit convention. | Technical access available. Production time-series/orbit choices and matching still require review. |
+| Weather / ET₀ | ERA5-Land is available via CDS under CC BY, but accepting terms requires CDS login/registration. GEE-hosted daily aggregates require Earth Engine access; this checkout has no configured GEE project/authentication. [CDS ERA5-Land](https://cds.climate.copernicus.eu/datasets/reanalysis-era5-land) · [Earth Engine collection](https://developers.google.com/earth-engine/datasets/catalog/ECMWF_ERA5_LAND_DAILY_AGGR) | A lawful data route exists, but account-level access is not provisioned here. The daily aggregation convention must be selected; native weather support is about 0.1°/11.1 km and must not be portrayed as 10 m weather. |
+| Soil, if storage balance is selected | SoilGrids maps are CC BY 4.0 at 250 m with uncertainty; public WCS/WMS routes exist. ISRIC states its beta REST API is currently paused, while recommending alternative access paths. [ISRIC SoilGrids](https://isric.org/explore/soilgrids) · [access FAQ](https://docs.isric.org/globaldata/soilgrids/SoilGrids_faqs_02.html) | Candidate modeled soil inputs are accessible, but are not field soil measurements or crop-specific root-zone parameters. Use only if the approved balance method supports the available layers/depths and uncertainty. Otherwise restrict the balance scope. |
+| Crop calendar / independent advisory truth | Telangana's I&CAD page publishes broad Kharif/Yasangi calendar windows; the state crop-statistics page defines Kharif and Rabi periods. Neither supplies a command-specific observed crop calendar, soil moisture or irrigation outcome. [I&CAD calendar](https://irrigation.telangana.gov.in/) · [Telangana agricultural statistics](https://ecostat.telangana.gov.in/agricultural_statistics.html) | General timing context is public, but crop-specific phenology validation and advisory validation remain unavailable from these sources alone. |
+
+### Selection gate disposition
+
+The evidence supports **a lead-candidate recommendation, not AOI approval**. The most defensible near-term scope is a crop-mapping feasibility pilot in SRSP Stage I only after (1) the actual CWC/TGRAC boundary identity and reuse terms are verified, (2) a usable version of the WRMS/ADeX or another label source is retrieved with its terms, coordinates, crop meaning and field dates, and (3) label-to-image timing and pixel quality are checked. If those conditions fail, reopen the candidate comparison rather than substituting an administrative boundary or assuming the TGRAC point records are valid.
+
+For the broader moisture-stress and irrigation-advisory objective, treat that as a separate future evidence gate: the currently identified crop-health/condition labels do not provide measured root-zone water status, verified irrigation timing/quantity, or observed recommendation outcomes. No stress threshold, soil-storage balance, or operational advice is validated by this access review.
+
+The previous reassessment added no AOI geometry or production cache and changed no API contract or scientific method. Public catalog presence is not proof of lawful reuse unless the source terms are clear, and access to an account-gated service is not confirmed without credentials and a successful query.
+
+## Cross-source command and challenge-data screen — 2026-10-31
+
+### CWC command-area download
+
+The public NWIC GeoJSON download was retrieved to temporary storage for a read-only source check (about 204 MB; the national dataset was not copied into the repository). It contains a Telangana feature named **“Sriramsagar Stage-I (Pochampad)”**, with `org_yr_ap=1964`, `status=Completed`, and `area_ha=880121.9431`; a separate `cca` property is `581` and is not defined in the available resource metadata. Its geometry is EPSG:7755 (WGS 84 / India NSF LCC) and was transformed to WGS84 for candidate screening. This independently confirms that CWC publishes a project-area feature for the same named system, but does not prove it is the same extent as TGRAC's `SRSP STAGE I` polygon. The two sources expose area fields with different names and undefined semantics; do not compare them as equivalent acreage values without CWC/TGRAC clarification. The NWIC resource is still marked only “Other (Open)”; no precise reuse license was found.
+
+### Zindi challenge access and provisional spatial screen
+
+The official [Zindi challenge data page](https://zindi.world/competitions/telangana-crop-health-challenge/data) lists `Train.csv` (3.3 MB), `Test.csv`, and the challenge variable definitions. The challenge rules state that permitted challenge data are shared under CC-BY-SA 4.0. However, a direct unauthenticated request to the official Train.csv endpoint returned HTTP 401. The official file therefore remains inaccessible from this environment without an authorized challenge session.
+
+For a **non-authoritative sensitivity check only**, a publicly available participant mirror of `Train.csv` was inspected in temporary storage. It has 7,888 rows with `Crop`, `category`, `Season`, `SDate`, `HDate`, `Sub-District`, and farm-polygon geometry. Its reported footprint spans 14 districts and 116 sub-districts, which conflicts with FAIR Forward's catalog description of the WRMS/ADeX survey as covering six mandals. The mirror's checksum could not be compared to the official file because that endpoint requires authorization. Treat all results below as exploratory screening counts, not accepted ground truth, until the source copy is retrieved and reconciled.
+
+Using each mirrored farm polygon's coordinate-vertex mean as a representative point (not a full polygon overlay), the row counts inside TGRAC layer-9 command geometries were:
+
+| Candidate command | Mirrored farm rows, all seasons | Mirrored Rabi rows with `SDate` 2023-10-01–2024-04-30 | Rabi crop labels in that interval | Rabi `category=Stressed` rows |
+|---|---:|---:|---|---:|
+| Srisailam Left Bank Canal Project (AMRP) | 462 | 311 | Paddy 259, Cotton 49, Groundnut 3 | 8 |
+| **SRSP STAGE I** | **537** | 152 | Chillies 102, Maize 37, Cotton 12, Groundnut 1 | 8 |
+| NAGARJUNA SAGAR LEFT MAIN CANAL (NSLC) | 328 | 285 | Paddy 89, Groundnut 188, Cotton 8 | 12 |
+
+The CWC Sriramsagar Stage-I project feature contains 572 mirrored farm centroids overall and 159 with `Season=Rabi` and sowing date in that interval (Chillies 107, Maize 39, Cotton 12, Groundnut 1; 8 rows labeled “Stressed”). This count is for the CWC feature itself, not a validation that its full extent matches TGRAC's Stage-I command polygon.
+
+These data suggest that **SRSP Stage I remains the broadest crop-diversity candidate**, while NSLC and AMRP have more rows in the mirror's Rabi 2023–24 window. This does not identify a perfect AOI: the challenge copy is not authenticated, the mirror/catalog footprints conflict, the health category “Stressed” is not demonstrated to mean measured water stress, and its 8–12 candidate stress rows per command cannot validate stress detection or irrigation advice. Dataset terms and label semantics need source confirmation before any training or performance use.
+
+### Updated choice and phase-gate disposition
+
+Prioritize **SRSP Stage I / Sriramsagar Stage-I (Pochampad)** for the next authorized source-resolution step because (a) TGRAC's candidate audit found the greatest overlap with its point labels, (b) NWIC/CWC publishes a same-named project feature, and (c) the provisional challenge mirror shows broad crop coverage there. Keep **AMRP and NSLC** as comparison candidates until the official field file and exact boundary relation are established. A study interval of **Rabi 2023–24** is a research candidate, not an approved period.
+
+`DS-09` and `DS-04` remain open. The exact CWC/TGRAC boundary identity, legal reuse terms, official challenge-data access, and label consistency are unresolved; no production AOI file or field-label copy was added. `DS-06`/`DS-08` methods and independent crop-water/advisory validation also remain open. These are source/access/evidence gates, not member-approval waits, and cannot be closed by an agent or owner assertion alone.
 
 Runnable trial commands (replace the GeoJSON path/dates with the project's verified inputs):
 
