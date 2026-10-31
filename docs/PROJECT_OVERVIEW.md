@@ -299,7 +299,7 @@ The proposed AgriSense pipeline transforms satellite and meteorological inputs i
 
 ### RECOMMENDATION 3: Select Evidence-Supported AOIs Before Processing
 
-**Rationale:** Neither PDF specifies an AOI. The owner approved an evidence-based search for one real command area, with Telangana/TGRAC as a leading candidate and final selection based on the strongest verifiable public data. SRSP Stage I currently has the most point overlap but an attributed ayacut of 433,249 ha; verify whether this scale is workable and whether an official sub-command is available before selection. The Wanaparthy-tagged sample points do not intersect the seven inspected command polygons. Do not start AOI-specific processing until label and boundary provenance, reuse terms, actual survey dates, suitable Sentinel observations, and the first-pilot validation evidence are checked. The complete source audit is in [`docs/DS09_AOI_AUDIT.md`](DS09_AOI_AUDIT.md).
+**Rationale:** Neither PDF specifies an AOI. On 2026-10-31 the owner selected the TGRAC-published Priyadarshini Jurala command polygon and Kharif 2021 for a bounded crop-mapping feasibility pilot. The current layer-9 snapshot and historical TGRAC area attribute cross-check are recorded in [`docs/AOI_DECISION.md`](AOI_DECISION.md) and [`docs/DS09_AOI_AUDIT.md`](DS09_AOI_AUDIT.md). This is not legal cadastral certification. Labels are Paddy-dominated and accepted for limited feasibility use only; irrigation advice is deferred because independent local moisture/irrigation outcome data are unavailable. Satellite bounding-box catalog screening is complete, while pixel-level quality and exact usable coverage still require inspection.
 
 ### RECOMMENDATION 4: Prioritize Ground-Truth Acquisition Early
 
@@ -317,7 +317,7 @@ The proposed AgriSense pipeline transforms satellite and meteorological inputs i
 
 | # | Assumption | Status | Impact if Unresolved |
 |---|-----------|--------|---------------------|
-| A1 | **Pilot command not selected** — The owner requires one real irrigation command area; Telangana/TGRAC is a lead evidence candidate, not a selected AOI | ❓ Unresolved | AOI-specific acquisition and scientific processing remain gated until the command geometry, source, period, and suitability are verified |
+| A1 | **Pilot command selected for bounded feasibility** — Priyadarshini Jurala, Kharif 2021; source snapshot and limitations recorded | ✅ Resolved for limited scope | Legal cadastral status and broader reuse are not claimed; crop performance and irrigation advice remain unvalidated/deferred |
 | A2 | **Specific crop types TBD** — Mava's diagram illustrates Wheat, Mustard, and Fallow as proposal examples, not an approved class map | ❓ Unresolved | Affects classifier training, Kc values, crop calendar definitions |
 | A3 | **Ground-truth suitability unresolved** — TGRAC point records have been retrieved, but survey method, observation dates, positional/class quality, terms, and independent evaluation suitability need confirmation | ❓ Unresolved | Random Forest (F2) cannot be fit or evaluated defensibly without accepted labels |
 | A4 | **Canal boundary shapefile source undefined** — F7/O3 require canal command polygons but no source is identified | ❓ Unresolved | Cannot implement canal aggregation (F7) |

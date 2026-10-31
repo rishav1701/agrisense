@@ -8,7 +8,7 @@
 > [!IMPORTANT]
 > Two risks are flagged as **BLOCKER** (RISK-01, RISK-16). These must be resolved before meaningful Phase 1 work can begin. The team should treat these as the highest-priority action items in the Phase 0 → Phase 1 gate review.
 
-> **Scope update:** Project owner approved the India-first multi-region design and evidence-led pilot review on 2026-10-23. TGRAC/Telangana is a lead candidate; SRSP Stage I has the highest retrieved point overlap, but no AOI is selected. TGRAC label and command-boundary reuse terms, data lineage, date semantics, and scientific suitability remain unverified. RISK-09 (transferability), RISK-12 (licensing), RISK-16 (pilot AOI), and RISK-01 (labels) remain open. These blockers gate region-dependent scientific work, not independent documentation, source review, or setup tasks whose inputs are available.
+> **Scope update (2026-10-31):** The owner selected the TGRAC-published Priyadarshini Jurala command polygon for Kharif 2021 crop-mapping feasibility. This closes the undefined-AOI risk for that limited scope, not legal boundary certification or broad reuse. TGRAC labels are accepted only for limited feasibility and are insufficient for dependable multiclass metrics. Irrigation advice is deferred without independent outcomes. Risks for transferability, pixel-level observation quality, provenance limits, and future irrigation validation remain applicable; see `docs/AOI_DECISION.md` and `docs/STATUS.md`.
 
 ---
 
@@ -31,7 +31,7 @@
 | RISK-13 | Three-Member Scope and Delivery Risk | Operational | High | High | All | Open |
 | RISK-14 | Integration and Ownership Conflicts | Operational | Medium | High | All (Member C coordinates) | Open |
 | RISK-15 | SAR Data Interpretation Complexity | Scientific | Medium | Medium | Member B | Open |
-| RISK-16 | Study Area Not Defined | Scientific | High | Critical | All | Open |
+| RISK-16 | Study Area Not Defined | Scientific | High | Critical | All | Closed for bounded Jurala feasibility scope |
 | RISK-17 | Canal Boundary Data Availability | Engineering | High | High | Member A | Open |
 
 ---

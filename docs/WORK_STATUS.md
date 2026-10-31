@@ -1,7 +1,9 @@
 # AgriSense Work Status — Data Readiness
 
-> Updated: 2026-10-24 (Asia/Kolkata)  
+> Updated: 2026-10-31 (Asia/Kolkata)
 > Scope: prerequisite/data audit requested by the project owner. This is not project phase or task completion approval.
+
+> **Current disposition (2026-10-31):** The owner directed a bounded Priyadarshini Jurala/Kharif 2021 crop-mapping feasibility pilot. DS-09 is closed for that scope and DS-04 is accepted for limited feasibility use. Irrigation advice is deferred for lack of independent local outcome data. The remainder of this file records the earlier 2026-10-24 evidence checkpoint and is superseded where it conflicts with this disposition; see [`AOI_DECISION.md`](AOI_DECISION.md) and [`DS09_AOI_AUDIT.md`](DS09_AOI_AUDIT.md).
 
 ## Completed with evidence
 

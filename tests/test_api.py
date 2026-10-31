@@ -29,6 +29,9 @@ class StudyAreaApiTests(unittest.TestCase):
         self.assertEqual(response["status"], "foundation")
         self.assertIsNone(response["products"]["crop_map"])
         self.assertFalse(response["capabilities"]["crop_classification"])
+        self.assertTrue(
+            any("config/study_area.geojson" in item for item in response["limitations"])
+        )
 
     def test_valid_geometry_returns_structural_validation_only(self) -> None:
         payload = StudyAreaRequest(

@@ -6,7 +6,7 @@
 
 The live TGRAC retrieval completed for all three crop-label layers, I&CAD candidate boundaries, and a point-filtered subset of Agriculture2 layer 18. It retrieved **2,446 georeferenced ground-truth point records** (February 1,397; March 662; April 387), plus **seven polygons each** from I&CAD layers 9 and 10. All downloaded features had usable geometries and no duplicate source object IDs within their final snapshots. The fresh point-in-polygon computation reproduces the historical leading candidate: **SRSP Stage I has 147 point intersections** (84/46/17 by month), the largest among the seven queried I&CAD candidates.
 
-The 147-point result does not make SRSP a verified AOI. The TGRAC services do not state clear reuse terms or establish survey date semantics, source lineage and positional accuracy; I&CAD metadata does not establish boundary authority, vintage, reuse or why layers 9 and 10 are coordinate-identical. The crop-point condition and irrigation-source fields are not measured soil moisture or recommendation outcomes. The project remains blocked for AOI-specific scientific work and advisory validation.
+The historical 147-point result did not make SRSP a verified AOI and is superseded for the current pilot by the owner-directed Jurala/Kharif 2021 decision in `docs/AOI_DECISION.md`. For this earlier audit, TGRAC services did not establish survey date semantics, source lineage, positional accuracy, or boundary authority/vintage. The crop-point condition and irrigation-source fields are not measured soil moisture or recommendation outcomes.
 
 ## Source retrieval and geometry
 

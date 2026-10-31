@@ -83,7 +83,7 @@ def readiness() -> dict[str, Any]:
             "water_balance": None,
         },
         "limitations": [
-            "No pilot AOI or study interval is configured.",
+            "The Jurala/Kharif 2021 pilot is documented in config/study_area.geojson, but the API does not load it as an active provider query.",
             "No real satellite, weather, or verified label data is connected.",
             "No scientific estimates or validation metrics are available.",
         ],

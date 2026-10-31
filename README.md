@@ -4,7 +4,7 @@
 
 > **Phase 0: COMPLETE — approved by the three-member team; guide sign-off waived by the project owner.**
 >
-> **P1 foundation work is underway.** Contract schemas, synthetic software fixtures, selected Sentinel-1/2 preprocessing, a local API/dashboard foundation, and metadata-only Sentinel-2 catalogue discovery are implemented. The pilot AOI, source-use approvals, real data connections, and scientific outputs remain unresolved.
+> **P1 foundation work is underway.** Contract schemas, synthetic software fixtures, selected Sentinel-1/2 preprocessing, a local API/dashboard foundation, and metadata-only Sentinel-2 catalogue discovery are implemented. The owner-directed feasibility pilot uses the TGRAC-published Priyadarshini Jurala command polygon for Kharif 2021. This does not approve broader reuse, establish legal boundary status, or validate scientific outputs.
 
 ## Project Purpose
 
@@ -14,7 +14,7 @@ AgriSense is an academic project (BACSE291 — Innovative Design Project, VIT Ve
 2. **Candidate growth-stage-aware vegetation-stress indicators** using thresholds selected and validated for the chosen study area
 3. **Irrigation-deficit estimates** based on FAO-56 water-balance methods; any area-based volume is derived only when its assumptions and inputs are documented.
 
-The project-owner-approved direction is an India-first, multi-region design with a shared pipeline and region-specific configuration. The pilot AOI is not selected. Regional coverage and model transfer performance are not claims until independently evaluated.
+The project-owner-approved direction is an India-first, multi-region design with a shared pipeline and region-specific configuration. The bounded pilot AOI is Priyadarshini Jurala, Kharif 2021, for crop-mapping feasibility only. Irrigation advice is deferred; regional coverage and model transfer performance are not claims until independently evaluated.
 
 ## High-Level Scientific Workflow
 
@@ -88,7 +88,7 @@ On Linux/macOS, use `python3 -m venv .venv` and `.venv/bin/python` in place of t
 
 ## Run the Local Foundation Demo
 
-The current demo shows the responsive research workspace, API/data readiness, local GeoJSON preview, and structural study-request validation. It does **not** load satellite/weather observations or generate crop, stress, growth-stage, or irrigation estimates. Bring a boundary file you are authorized to use; the repository does not bundle a synthetic or unverified AOI.
+The current demo shows the responsive research workspace, API/data readiness, local GeoJSON preview, and structural study-request validation. The owner-directed Jurala/Kharif 2021 pilot boundary is included at `config/study_area.geojson` for reference. The API does **not** yet load it as an active provider query, acquire satellite/weather observations, or generate crop, stress, growth-stage, or irrigation estimates. Study-request validation checks request structure only.
 
 From the repository root, install the frontend dependencies and build the browser app:
 
