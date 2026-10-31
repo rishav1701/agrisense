@@ -110,7 +110,8 @@ To prevent merge conflicts, strict file boundaries govern ownership. Work procee
 - **Contract Dependencies:** None.
 - **Acceptance Criteria:** `verify_gee.py` connects and retrieves a test Earth Engine metadata object.
 - **Testing Requirements:** Mocked auth unit test when offline; live smoke test when online.
-- **Blockers:** Team members must have registered GEE developer accounts.
+- **Status (2026-10-31):** `src/data/gee_auth.py` and `scripts/verify_gee.py` are implemented; mocked initializer tests cover explicit/environment project selection and missing configuration. Live acceptance remains open until Member A configures an authorized registered Cloud project and the script retrieves collection metadata. Member C review is pending.
+- **Blockers:** Team members must have registered GEE developer accounts and configured local authentication; no credentials may be committed or shared.
 
 #### `T-P1-DE-002`: Candidate-Region Weather, Boundary, and Irrigation Data Inventory
 - **Objective:** Identify and compare publicly documented sources for administrative/AOI boundaries, weather, soil, crop calendars, and irrigation/command context in evidence-supported candidate regions. Include the TGRAC candidate review in `DEC-14`; do not assume its boundary vintage, authority, or reuse terms.
