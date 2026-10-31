@@ -4,6 +4,7 @@
 > **Team Allocation:** Exactly three human student members. The project owner approved the proposed allocation and sequential handoff plan; this records the approved Phase 0 baseline and role plan, not approval of individual scientific decisions. Member A is Peter Livins (weather, water-balance support, geospatial); Member B is Rishav Raj (satellite data, ML, scientific modelling); Member C is Ashwanth C (application, dashboard, integration).
 > **Execution mode:** Sequential, non-overlapping stage handoffs are preferred. A member can work from an accepted handoff package without monitoring another member's day-to-day progress. This does not waive formal phase gates or shared-contract approval.
 > **All-work approval and review report (2026-10-31):** The project owner reports that all three members approved proceeding with the remaining work and reviews, and that Members A and B manually reviewed the implementation branch. Record this as owner-reported delegated approval; separate member signatures/review artifacts are not stored here. Member approval does not waive dependencies or scientific/data evidence gates. Any proposed shared-contract amendment still needs its own explicit unanimous approval record.
+> **Owner authorization to proceed (2026-10-31):** The project owner explicitly approves the team continuing all assigned in-scope work and clearing approval-only holds. Members may advance independent work and software-only P2 implementation in parallel when task inputs are ready, using clearly labelled synthetic test fixtures where appropriate. This does not substitute for a required handoff/review, shared-contract unanimity, provider access/data-use rights, or scientific evidence and validation.
 > **Scope direction:** The project owner approved an India-first multi-region design direction and evidence-led pilot review on 2026-10-23 (`DEC-10`, `DEC-14`), then directed the bounded Priyadarshini Jurala/Kharif 2021 crop-feasibility pilot on 2026-10-31. Irrigation advice is deferred. Existing task IDs, primary owners, reviewers, and file boundaries are retained. Independent model evaluation and production scientific claims remain gated by adequate evidence.
 > **Academic Project:** BACSE291 — Innovative Design Project, VIT Vellore (Fall 2026).
 > **Guide:** Dr. Muthuraja S, Assistant Professor Sr. Grade 1.
@@ -110,7 +111,7 @@ To prevent merge conflicts, strict file boundaries govern ownership. Work procee
 - **Contract Dependencies:** None.
 - **Acceptance Criteria:** `verify_gee.py` connects and retrieves a test Earth Engine metadata object.
 - **Testing Requirements:** Mocked auth unit test when offline; live smoke test when online.
-- **Status (2026-10-31):** `src/data/gee_auth.py` and `scripts/verify_gee.py` are implemented; mocked initializer tests cover explicit/environment project selection and missing configuration. Live acceptance remains open until Member A configures an authorized registered Cloud project and the script retrieves collection metadata. Member C review is pending.
+- **Status (2026-10-31):** `src/data/gee_auth.py` and `scripts/verify_gee.py` are implemented; mocked initializer tests cover explicit/environment project selection and missing configuration. Workspace check confirms the Earth Engine Python package and project ID are absent, so live acceptance awaits Member A's authorized project and local authentication. Member C review is pending; owner authorization clears approval-only waiting but does not substitute for the assigned review or live probe.
 - **Blockers:** Team members must have registered GEE developer accounts and configured local authentication; no credentials may be committed or shared.
 
 #### `T-P1-DE-002`: Candidate-Region Weather, Boundary, and Irrigation Data Inventory
@@ -154,16 +155,16 @@ To prevent merge conflicts, strict file boundaries govern ownership. Work procee
 - **File Ownership:** Proposed profile section in `docs/ARCHITECTURE.md`; proposed schema amendments in `docs/API_CONTRACTS.md` only after unanimous approval.
 - **Dependencies:** `T-P1-SH-002`; `DEC-10` scope direction.
 - **Acceptance Criteria:** Profile fields, versioning, missing-input behavior, data provenance, region/season identifiers, and separation of generic versus regional parameters are documented; compatibility with `CON-01`–`CON-09` is reviewed; any contract amendment records unanimous approval.
-- **Blockers:** No pilot AOI or region-specific values are selected. Do not create regional values or a boundary file by assumption; any future shared-contract amendment still requires unanimous approval.
+- **Blockers:** Jurala/Kharif 2021 is selected for the bounded pilot; other AOI profiles remain unselected. Do not invent regional values. The profile specification may proceed without a contract change; any future shared-contract amendment still requires unanimous approval.
 
 ---
 
 ### Rishav's First Satellite Learning and Prototype Sequence
-After formal Gate 0 and Gate 1 approval, Rishav can take the satellite stage without waiting on daily progress from Peter or Ashwanth C. Before those gates, independent reading and method notes are non-implementation work only. The first owned steps are:
-1. `T-P2-DE-002`: inspect Sentinel-2 L2A band/quality-band semantics and document chosen cloud/shadow mask behavior and index equations; begin implementation only after AOI and method decisions are approved.
-2. `T-P2-DE-003`: inspect Sentinel-1 GRD VV/VH units, orbit metadata, and filtering assumptions; record unresolved orbit/filter choices before committing to a method.
-3. `T-P2-DE-005`: build satellite-only feature/time-series assembly and a handoff manifest that reports grid, temporal support, missingness, and source provenance. Software examples are explicitly synthetic; they are not scientific evidence.
-4. After Peter accepts the complete `CON-03` assembly handoff, start `T-P2-SC-002` classifier software, then phenology and stress tasks in dependency order. Fit/evaluation claims remain blocked on sourced labels and approved methods.
+Under the project owner's 2026-10-31 authorization, Rishav may proceed with software-only satellite-stage work in parallel with remaining P1 setup, using mocked provider responses and clearly labelled synthetic fixtures. Live data queries, unresolved scientific parameter choices, and scientific claims remain gated on actual access, source checks, and reviewed methods. The first owned steps are:
+1. `T-P2-DE-002`: inspect Sentinel-2 L2A band/quality-band semantics; implement and test software behavior with mocks. Do not claim AOI coverage until provider access and quality checks are complete.
+2. `T-P2-DE-003`: inspect Sentinel-1 GRD VV/VH units and orbit metadata; implement/test general helpers while leaving unresolved orbit/filter choices configurable.
+3. `T-P2-DE-005`: continue feature/time-series assembly and handoff-manifest software using synthetic fixtures. A real producer handoff still requires aligned observations, grid, temporal support, missingness, and provenance.
+4. Classifier, phenology, and stress software may be developed/tested using synthetic software fixtures. Real fitting, evaluation metrics, and scientific claims remain gated on accepted field labels, independent evaluation design, and reviewed methods.
 
 ### Rishav's Build Session Readiness
 

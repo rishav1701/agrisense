@@ -1,7 +1,7 @@
 # AgriSense Project Status & Progress Checkpoint
 
 > **Last Updated:** 2026-10-31
-> **Current Phase:** **P1 foundation and P2 software/prototype work underway — P1/Gate 1 and scientific production gates remain open**
+> **Current Phase:** **P1 foundation and owner-authorized software-only P2 work may proceed in parallel; live-data and scientific production gates remain open**
 > **Phase P0 Status:** **APPROVED BY THE THREE-MEMBER TEAM (per project-owner confirmation, 2026-10-23); GUIDE SIGN-OFF WAIVED BY PROJECT OWNER FOR P0**
 > **Implementation Status:** **Contract schemas, software fixtures, Sentinel processing prototypes, Copernicus STAC discovery/extraction, a local API, and a responsive dashboard foundation are present. The owner-directed Jurala/Kharif 2021 feasibility AOI is configured; no validated scientific estimates are available.**
 
@@ -11,9 +11,9 @@
 
 The project owner has directed a bounded pilot: crop-mapping feasibility in the TGRAC-published Priyadarshini Jurala command polygon, Kharif 2021. The AOI and study period are recorded in `config/study_area.geojson`; the current TGRAC service geometry's 42,405 ha attribute matches its historical report. TGRAC SurveyCTO records contribute 159 clear, nonblank crop labels inside the command across four mandals and 13 villages. Crop labels are heavily Paddy-dominated and positional accuracy is undocumented, so this dataset supports a restricted feasibility fit, not reliable multicrop performance claims. Sentinel catalog screening found 24 Sentinel-2 and 5 Sentinel-1 dates intersecting the AOI bounding box during the survey window; pixel masks and feature suitability remain to be checked. Irrigation advice and moisture-stress validation are deferred from this pilot because no local independent root-zone/irrigation outcome data are available. `DS-09` is closed for this defined academic pilot; `DS-04` is accepted for limited feasibility use; independent model evaluation, irrigation advice, and production data handoffs remain gated. See [`docs/DS09_AOI_AUDIT.md`](DS09_AOI_AUDIT.md). P0 is complete and P1/P2 software/prototype work continues; no validated scientific output is claimed.
 
-**Build verification (2026-10-31):** Python suite passes (73 tests); Ruff and isort pass; pip reports no broken requirements. Frontend suite passes (12 tests) and the production Vite build succeeds. Loopback smoke test returned HTTP 200 for API health/readiness and the built dashboard. Readiness now reports the configured pilot while accurately stating that it is not yet connected to a provider query. Black formatting check did not complete within 30 seconds in this environment and remains unverified. These checks establish software behavior only; they do not clear data-access or scientific-validation prerequisites.
+**Build verification (2026-10-31):** Python suite passes (76 tests, including mocked GEE setup); Ruff and isort pass; pip reports no broken requirements. Frontend suite passes (12 tests) and the production Vite build succeeds. Loopback smoke test returned HTTP 200 for API health/readiness and the built dashboard. Readiness reports the configured pilot but accurately states it is not connected to a provider query. Black formatting check did not complete within 30 seconds and remains unverified. These checks establish software behavior only; they do not clear data-access or scientific-validation prerequisites.
 
-The Phase 0 documentation baseline is complete and approved by all three team members, as confirmed by the project owner on 2026-10-23. The project owner waived guide sign-off for Phase 0. Audit remediation corrected source overclaims, units, resolution, ownership, unsupported scientific examples, and advisory semantics. The owner separately reports all-member approval to proceed with remaining work/reviews on 2026-10-31; neither approval creates missing data, access, provenance, or scientific validation evidence.
+The Phase 0 documentation baseline is complete and approved by all three team members, as confirmed by the project owner on 2026-10-23. The project owner waived guide sign-off for Phase 0. Audit remediation corrected source overclaims, units, resolution, ownership, unsupported scientific examples, and advisory semantics. On 2026-10-31, the owner reported all-member approval to proceed and explicitly authorized continuation of all assigned in-scope work, including parallel software-only P2 work where dependencies are met. These approvals do not create missing data, access, provenance, handoffs, or scientific validation evidence.
 
 The project has exactly three members. The project owner approved Phase 0 on 2026-10-23 and previously approved this role mapping and sequential handoff plan: Member A — Peter Livins (weather, water-balance support, geospatial); Member B — Rishav Raj (satellite data, ML, scientific modelling); Member C — Ashwanth C (application, dashboard, integration). The project owner reports that all three members approved the Phase 0 baseline; guide sign-off was waived by the owner for this phase. Individual decisions retain their listed approval requirements. The shared API contract amendment has unanimous member approval.
 
@@ -21,7 +21,13 @@ The project has exactly three members. The project owner approved Phase 0 on 202
 - **Three-member team:** Approved, per the project owner’s confirmation on 2026-10-23.
 - **Project guide:** No approval will be provided; the project owner waived guide sign-off for the Phase 0 documentation baseline.
 - **Phase 0 disposition:** **COMPLETE**.
-- **P1 entry gate:** **OPEN / NOT SATISFIED** pending project-specific inputs, evidence-dependent decisions, and access checks listed below. The owner reports all-member approval to proceed with remaining work/reviews (2026-10-31); production/scientific work remains gated on required evidence and handoffs.
+- **P1/Gate 1 disposition:** **Owner has approved continued assigned work, including software-only P2 tasks where their inputs are ready.** Formal phase completion and live-data/scientific work still require the missing access, handoffs, and evidence listed below.
+
+### Current Owner Approval (2026-10-31)
+- The project owner approves continuing all assigned in-scope work and clearing approval-only holds. Independent tasks and software-only P2 implementation may proceed in parallel when their task inputs are satisfied.
+- This authorizes work to start; it does not claim that every task has been reviewed or accepted, close formal institutional gates, amend shared contracts, or supply provider credentials/data rights.
+- Current environment check: `earthengine-api` is not installed and neither `EE_PROJECT_ID` nor `EE_PROJECT` is configured. Member A can complete the GEE setup task once an authorized project and local authentication are available.
+- Keep real-data acquisition and scientific claims gated on access, source terms, handoffs, and suitable independent evaluation. Guide/VTOP reviews remain separate institutional requirements.
 
 ---
 
@@ -103,7 +109,7 @@ Phase 0 is complete. P1 foundation tasks may begin when their own dependencies a
 3. [x] A source-backed label layer is accepted for a limited feasibility fit (`DS-04`): TGRAC SurveyCTO records, filtered to clear nonblank labels within Jurala. [ ] Before any accuracy/performance claim: establish a sufficiently supported grouped evaluation design and class balance; current data do not support dependable multiclass metrics.
 4. [x] Canal aggregation is explicitly deferred from the first build under `DEC-13` (2026-10-29 delegated approval); `DS-05` remains open for future canal work.
 5. [x] User authorization for the React + TypeScript/FastAPI direction (`DEC-01`) and all-member approval to proceed with remaining work/reviews are reported complete (2026-10-31). Source and scientific method choices must still be supported by their inputs and documented evidence.
-6. [ ] Verify required GEE account access if the team selects GEE; do not share credentials.
+6. [ ] Member A: install Earth Engine API in the approved environment, configure an authorized Cloud project/authentication locally, and run `scripts/verify_gee.py`. The current workspace has no package or project ID; do not share credentials.
 7. [x] ICAR Telangana Kharif advisories and FAO-56 Table 12 are identified as background sources. Crop-stage calibration, local Kc values and soil-storage method inputs remain future gates; irrigation advice is deferred from this pilot.
 
 ### AOI-independent P1 work and current handoffs
@@ -114,14 +120,14 @@ Phase 0 is complete. P1 foundation tasks may begin when their own dependencies a
 - `T-P1-SC-001` — Synthetic fixture implementation and schema integration pass software validation; Member A/B manual review approval for the current branch is reported by the project owner on 2026-10-31. Fixtures remain software-test-only.
 - `T-P1-SC-002` — Source-feasibility inventory is complete; Member A/B manual review approval for the current branch is reported by the project owner on 2026-10-31. Dataset suitability remains unapproved until evidence gates close.
 - `T-P1-DE-002` — Member A's regional-source inventory is complete as desk research; Member A/B manual review approval for the current branch is reported by the project owner on 2026-10-31.
-- `T-P1-DE-001` — GEE setup remains assigned to Peter and requires the selected provider plus account/project access; no authentication was attempted.
+- `T-P1-DE-001` — GEE helper is implemented and mocked tests pass. Live verification is unblocked as a task but awaits Member A's authorized project, local package/authentication, and metadata probe.
 - AOI-free satellite catalog discovery is implemented as a tested metadata utility; this does not complete Sentinel asset ingestion or AOI-specific work.
 
 ---
 
 ## 6. Next Recommended Action
 
-Continue the P1/P2 foundation handoffs and resolve the remaining AOI, source-quality, study-period, and provider-access blockers before asset acquisition or scientific work. Canal aggregation is deferred from the first build under `DEC-13`. User approval can authorize technical choices; it cannot establish third-party data reuse rights, source lineage, credentials, or scientific validity.
+Continue assigned P1/P2 software work in parallel under the owner authorization. Member A can complete the GEE setup/probe when the authorized project is configured. Real asset acquisition still needs provider access and reuse checks; scientific fitting/claims need accepted inputs and independent evaluation. Canal aggregation and irrigation advice remain deferred for this pilot.
 
 ---
 

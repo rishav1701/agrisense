@@ -11,7 +11,7 @@
 
 ## 1. Roadmap Overview
 
-**Progress policy:** Task completion, workstream readiness, and phase completion are distinct. A member may complete assigned P1 tasks independently, but P2 cannot start until all P1 deliverables and Gate 1 are complete. In P2, one member owns each sequential stage and can finish it without monitoring another member’s daily progress; the next owner starts only after a documented, reviewed handoff. A phase is complete only when all phase deliverables and its formal exit gate are satisfied and recorded.
+**Progress policy:** Task completion, workstream readiness, and phase completion are distinct. Per the project owner's 2026-10-31 authorization, assigned software-only P2 implementation and independent work may proceed in parallel where task inputs are satisfied, including with clearly labelled synthetic fixtures. Real-data acquisition, scientific fitting, external releases, and claims still require their evidence/access prerequisites and documented handoffs. A phase is complete only when all phase deliverables and its formal exit gate are satisfied and recorded.
 
 ```
 ┌───────┐     ┌───────┐     ┌───────┐     ┌───────┐     ┌───────┐     ┌───────┐     ┌───────┐
@@ -64,7 +64,7 @@ Architecture  & Contracts   Development   & Contracts   End-to-End    Validation
 - The Phase 0 baseline is approved by all three members per the project owner’s confirmation; guide sign-off is waived by the project owner for this baseline.
 - Role-to-name mapping and the sequential allocation plan are approved as part of the Phase 0 baseline.
 - The API contract amendment has unanimous approval from all three members (2026-10-23).
-- The project owner reports all-member approval to proceed with remaining work and reviews (2026-10-31). Study area, crop classes, ground-truth strategy, boundary provenance/reuse, and GEE access if selected remain unresolved; P0 may be complete while this P1 entry gate remains open.
+- The project owner reports all-member approval to proceed with remaining work and reviews (2026-10-31), and explicitly authorized continuation of assigned work. The bounded Jurala/Kharif 2021 pilot is selected; class scope is limited by available labels. GEE access, source reuse limits, and independent validation remain evidence prerequisites for live acquisition/scientific claims, not approval prerequisites for software-only implementation.
 
 ---
 
@@ -96,7 +96,7 @@ Independent foundation tasks may start when their own inputs are satisfied; pilo
 6. Proposed: `T-P1-SH-004` regional profile/provenance specification after team confirms the task and its owner.
 7. Peter and Rishav may independently complete `T-P1-DE-002` and `T-P1-SC-002` source inventories in their separate files; these inform but do not finalize AOIs or prove label suitability.
 
-This order is sequential for implementation ownership. A task can be complete while P1 remains open; P2 starts only after the complete P1 deliverables and Gate 1.
+The handoff order remains sequential within each dependent data workstream. Owner authorization allows independent software-only P2 implementation to proceed before formal P1 closure where inputs are satisfied. No live provider query or scientific result is authorized by synthetic tests.
 
 ### Roles & Responsibilities
 - **Lead Owner:** Member C (Application, Environment & Contracts Coordinator).
@@ -121,8 +121,8 @@ This order is sequential for implementation ownership. A task can be complete wh
 - Required P1 task handoffs and evidence prerequisites remain incomplete; owner-reported member approval does not substitute for missing artifacts.
 - Shared contracts have not been unanimously approved.
 - All-member approval to proceed with DEC-01 and remaining implementation is reported by the project owner (2026-10-31). This does not supply missing environment access or complete downstream handoffs. Guide sign-off is unavailable per project-owner statement and is not recorded as obtained.
-- Study area and target crop classes remain undefined.
-- Ground-truth and canal-boundary acquisition strategies remain unassessed. Coding against synthetic fixtures may proceed only for software behavior, not scientific performance.
+- The bounded Jurala pilot is selected; broader AOIs and multiclass targets remain unsupported.
+- Ground-label suitability is restricted to feasibility. Irrigation advice and canal aggregation are deferred; software work may continue, but synthetic fixtures cannot support scientific performance claims.
 
 ---
 

@@ -37,6 +37,8 @@ On 2026-10-31, the project owner reported that Members A and B manually reviewed
 
 On 2026-10-31, the project owner additionally reported that all three members approved proceeding with the remaining project work and reviews. This records delegated approval to execute and review work; it is not represented as individual signatures or review artifacts. It closes member-approval-only waits for current implementation work. The AOI was selected separately under `DEC-14`; this general approval does not establish provider access, define scientific parameters, grant third-party data rights, or establish scientific validity. Evidence-dependent gates remain open until the required inputs and artifacts exist.
 
+On 2026-10-31, the project owner explicitly approved proceeding with all remaining in-scope project work and asked that approval-only gates be cleared so the team can continue. This is owner approval to start or continue assigned implementation, source research, software testing, and delegated review tasks in parallel where dependencies are satisfied. Software-only P2 work may use clearly labelled synthetic fixtures. Do not record this as a new individual approval from another member, an amendment to a shared contract, a provider credential/data-use grant, acceptance of another member's deliverable, or scientific validation. Real-data acquisition remains conditional on authorized provider access and documented reuse terms; scientific outputs remain conditional on suitable data, reviewed methods, and independent evaluation. Guide/VTOP review remains a separate institutional gate.
+
 ---
 
 ## Detailed Decision Records
