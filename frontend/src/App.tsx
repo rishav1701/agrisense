@@ -302,7 +302,7 @@ function App() {
 
         <div className="page-wrap">
           <section className="welcome-row">
-            <div><div className="eyebrow"><span className="eyebrow-line" /> CROP MONITORING PLATFORM</div><h1>{active === "Overview" ? "Field intelligence,\nwith evidence." : active}</h1><p>Explore satellite observations and crop conditions for your study area.</p></div>
+            <div><div className="eyebrow"><span className="eyebrow-line" /> CROP MONITORING PLATFORM</div><h1>{active === "Overview" ? "Field intelligence,\nwith evidence." : active}</h1><p>Review study readiness and explore producer-reviewed products for your area.</p></div>
             <button className="primary-button" onClick={() => setActive("Field setup")}><span>＋</span> Configure study area</button>
           </section>
 
@@ -335,7 +335,7 @@ function App() {
             </section>
           ) : (
             <>
-          {noticeVisible && <section className="notice" role="status"><span className="notice-icon">i</span><div><b>Research workspace is being configured</b><p>No pilot area or live data sources are connected yet. Add a GeoJSON boundary to preview and validate a study request.</p></div><button className="notice-close" aria-label="Dismiss notice" onClick={() => setNoticeVisible(false)}>×</button></section>}
+          {noticeVisible && <section className="notice" role="status"><span className="notice-icon">i</span><div><b>Research workspace is being configured</b><p>The Jurala/Kharif 2021 pilot is documented, but no area is active in this browser and no live data sources are connected. Add an authorized GeoJSON boundary to preview and validate a study request.</p></div><button className="notice-close" aria-label="Dismiss notice" onClick={() => setNoticeVisible(false)}>×</button></section>}
 
           <section className="metrics-grid" aria-label="Project readiness">
             <article className="metric-card"><div className="metric-top"><span>STUDY AREAS</span><span className="metric-glyph pale-green"><PinIcon /></span></div><div className="metric-value">—</div><div className="metric-caption"><span className="tiny-dot gray" />No verified area selected</div></article>

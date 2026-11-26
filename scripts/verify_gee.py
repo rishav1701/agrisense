@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from src.data.gee_auth import initialize_earth_engine
 
-
 COLLECTIONS = {
     "Sentinel-1 GRD": "COPERNICUS/S1_GRD",
     "Sentinel-2 SR Harmonized": "COPERNICUS/S2_SR_HARMONIZED",

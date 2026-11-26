@@ -111,7 +111,7 @@ To prevent merge conflicts, strict file boundaries govern ownership. Work procee
 - **Contract Dependencies:** None.
 - **Acceptance Criteria:** `verify_gee.py` connects and retrieves a test Earth Engine metadata object.
 - **Testing Requirements:** Mocked auth unit test when offline; live smoke test when online.
-- **Status (2026-10-31):** `src/data/gee_auth.py` and `scripts/verify_gee.py` are implemented; mocked initializer tests cover explicit/environment project selection and missing configuration. Workspace check confirms the Earth Engine Python package and project ID are absent, so live acceptance awaits Member A's authorized project and local authentication. Member C review is pending; owner authorization clears approval-only waiting but does not substitute for the assigned review or live probe.
+- **Status (2026-11-26):** `src/data/gee_auth.py` and `scripts/verify_gee.py` are implemented; mocked initializer tests cover explicit/environment project selection and missing configuration. Member C reviewed the helper, probe, and tests: credentials are not embedded or persisted, and the probe checks metadata access for the configured collections. Live acceptance awaits Member A's authorized project and local authentication; software review does not establish provider access.
 - **Blockers:** Team members must have registered GEE developer accounts and configured local authentication; no credentials may be committed or shared.
 
 #### `T-P1-DE-002`: Candidate-Region Weather, Boundary, and Irrigation Data Inventory
@@ -348,6 +348,7 @@ Under the project owner's 2026-10-31 authorization, Rishav may proceed with soft
 - **Blockers:** The owner has directed that member approvals be treated as complete for this work. Product-layer, date-filter, chart, and export behavior still depends on real producer outputs and accepted handoffs. Do not populate these interfaces with fabricated estimates.
 - **Status (2026-10-29):** A foundation-level local demo now includes API-backed capability status, an AOI GeoJSON preview, and structural date/geometry request validation. This is not completion of interactive scientific map layers or a data-connected dashboard; those remain dependent on real, reviewed producer outputs.
 - **Status (2026-10-31):** Added functional zoom-in, zoom-out, and fit-to-boundary controls for the locally uploaded AOI preview. This remains a geometry preview; basemap and producer-backed scientific layers are not connected.
+- **Status (2026-11-26):** Reviewed the dashboard copy against the configured pilot and readiness API, and corrected text that implied no pilot had been selected or that observations were already available. Responsive dashboard and API-backed readiness states are present. Interactive scientific layers remain blocked on reviewed producer outputs and handoffs; the current task is not fully accepted as a data-connected map dashboard.
 
 #### `T-P2-AP-003`: Temporal Analytics Charts & Tabular Export Module
 - **Objective:** Implement field analytics displaying available NDVI/EVI/SAR trajectories, estimated growth-stage transition markers, and downloadable CSV summary tables. Chart library and browser interaction patterns follow approved DEC-01 architecture.
@@ -362,6 +363,7 @@ Under the project owner's 2026-10-31 authorization, Rishav may proceed with soft
 - **Testing Requirements:** Check CSV generation and chart serialization using tools selected with the approved frontend.
 - **Blockers:** No producer endpoint or accepted data handoff is connected yet; chart/export integration with real outputs remains gated on upstream products and reviewed handoffs. The current reusable component and empty state satisfy the UI foundation only.
 - **Status (2026-10-31):** A provenance-aware chart/export component, empty state, local JSON import, and half-open date-range filtering are implemented. The selected interval filters series, stage transitions, and CSV export. Imported views stay in browser memory; no producer endpoint is connected, no scientific validity is inferred, and no product is bundled. Software tests use explicitly synthetic test-only fixtures.
+- **Status (2026-11-26):** Frontend software verification passes (12 tests; production TypeScript/Vite build). The local importer and filtering/export presentation foundation are implemented; producer-backed chart integration and task handoff remain open until reviewed temporal outputs are available.
 
 ---
 

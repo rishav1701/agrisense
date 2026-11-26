@@ -53,5 +53,5 @@ Each series must include provenance and quality metadata. The importer preserves
 ## Current limits
 
 - No producer-backed product API or automated product ingestion is connected.
-- No pilot AOI, validated crop/stage/stress product, or irrigation estimate is bundled.
+- The Jurala/Kharif 2021 pilot AOI is documented in `config/study_area.geojson`, but it is not loaded as an active query by the API. No validated crop/stage/stress product or irrigation estimate is bundled.
 - A structurally valid temporal JSON file is not proof of scientific correctness or permission to reuse its underlying data.
