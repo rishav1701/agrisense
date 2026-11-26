@@ -257,6 +257,12 @@ TGRAC's [website disclaimer](https://www.tgrac.telangana.gov.in/trac/disclaimer.
 
 The study period is **Kharif 2021**, aligned to the TGRAC SurveyCTO `today` field dates observed among points within the selected command: **2021-08-27 through 2021-10-22**. The selected period is the survey form's captured date window; it does not represent a season-wide field census.
 
+#### Follow-up geometry-area cross-check — 2026-11-26
+
+The configured polygon's vertices were projected to EPSG:32643 and its planar polygon area calculated with the shoelace formula. The result is approximately **728,912,001 m² (72,891.2 ha)**. This is close to the saved feature's separate `source_Area=72,629.7` value, but is **30,486 ha (71.9%) greater** than `Ayacut_ha=42,405`. The historical TGRAC report cited above corroborates the ayacut figure; it does not reconcile the polygon area. The polygon was selected by owner direction and remains unchanged, but these fields may describe different concepts or vintages. Ask the source owner/Member A and B to reconcile before reporting AOI acreage, aggregating area-based results, or treating the polygon as an authoritative command footprint.
+
+An owner-authorized Earth Search extraction retrieved 18 per-tile Sentinel-2 products across seven dates into ignored local cache. This is a technical acquisition only. It found partial valid source-mask coverage and, for one product, a high proportion of AOI cells classified as thin cirrus despite low scene-level cloud metadata. See `docs/STATUS.md` section 35 for counts and limits. No raster, index, or scientific result is stored in this audit or committed to the repository.
+
 ### Accepted crop-label source and limits (`DS-04`)
 
 The earlier Rabi 2023 monthly point layers are not the selected labels. The replacement is the public TGRAC [All Crops Survey CTO Records layer 8](https://tgrac.telangana.gov.in/arcgis/rest/services/Agri2/Agriculture2_CropAnalysis_Layers/MapServer/8). A read-only query of its `WANAPARTHY` records returned **673 rows**; spatial screening of the GPS attributes against the selected Jurala polygon found **226 records**, of which **159** have `a_status_1 = “Crop is present and clearly identifiable”` and a nonblank `purecrop_n` crop label. These 159 records include **158 unique GPS coordinate pairs**, span **4 mandals and 13 villages**, and cover the selected Kharif 2021 date window. The source geometry is rounded to three decimal places; the survey's explicit GPS coordinate attributes were used for the overlap, preserving six-decimal coordinates. GPS positional accuracy is not documented.
@@ -271,11 +277,11 @@ Raw label counts among the 159 accepted clear-label records are: `Paddy | వర
 
 ### Closure record
 
-- `DS-09`: **closed for the defined academic pilot** — TGRAC Jurala command feature selected, source snapshot retained, period set to Kharif 2021, and matching survey records spatially confirmed. Legal cadastral status remains outside the claim.
+- `DS-09`: **owner-selected polygon and period; area interpretation open** — TGRAC Jurala feature and Kharif 2021 period remain as directed, with matching survey records spatially confirmed. The new geometry-area calculation does not reconcile with `Ayacut_ha`; no authoritative acreage or area-based aggregation is accepted until source/member review. Legal cadastral status remains outside the claim.
 - `DS-04`: **closed for limited crop-mapping feasibility use** — an authorized public TGRAC survey layer with source research terms, capture-date field, crop-identifiability status, and GPS records is available; model performance validation remains explicitly out of scope because class support is imbalanced and positional uncertainty is undocumented.
 - Irrigation advice: **deferred from this pilot** — no irrigation recommendation or claim of validated moisture-stress detection is in scope until local field outcomes are collected.
 
-No raw label rows were persisted in the repository. The boundary file is a source-preserving geometry copy with attribution/terms metadata. The code checkout has no acquired Sentinel raster or ERA5-Land records; catalog access is demonstrated for the selected AOI and study window, but pixel masks and final feature suitability still require acquisition and QA before any scientific output.
+No raw label rows were persisted in the repository. The boundary file is a source-preserving geometry copy with attribution/terms metadata. Sentinel-2 rasters now exist only in the ignored local cache described in status section 35; they are not versioned. ERA5-Land records have not been acquired. Sentinel source-mask coverage is partial and SCL review did not clear the candidate dates for scientific use.
 
 Runnable trial commands (replace the GeoJSON path/dates with the project's verified inputs):
 
