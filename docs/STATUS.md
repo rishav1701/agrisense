@@ -344,14 +344,14 @@ See [`docs/WORK_STATUS.md`](WORK_STATUS.md), [`docs/AOI_DECISION.md`](AOI_DECISI
 
 - The project owner reports that all team members approved proceeding with the remaining work. This clears approval-only waits; it does not constitute individual signed review records or satisfy data-access, source-use, handoff, scientific-validation, or formal institutional requirements.
 - Refreshed remote tracking with `git fetch --prune origin`. `origin` currently contains only `main`; all previously tracked remote feature branches have been removed upstream. Every local feature-branch tip is an ancestor of `main`, including the local temporal-analytics review commit. No unmerged branch work was found. Local branches remain available as historical references.
-- At audit time the checkout was `main`, aligned with `origin/main`, with no branch-specific work awaiting integration. A separate feature branch has since been created for the software-only phenology candidate utility below.
+- At audit time the checkout was `main`, aligned with `origin/main`. The phenology/Sentinel and ETc software branches have since been reviewed, pushed, and integrated into `main`; real-data and scientific acceptance gates remain open.
 
 ## 32. Phenology software-only candidate extraction — 2026-11-26
 
 - Added `src/models/phenology.py` for irregular vegetation-index series. It requires explicit window, polynomial order, local support, maximum gap, and slope-floor inputs; it segments missing/long-gap intervals and emits only generic vegetation-index peak and slope candidates.
 - The utility does not fill gaps, assign crop stages, produce confidence values, or claim phenology accuracy. Synthetic tests verify feature behavior and input/gap handling only; no study observations were used.
 - `T-P2-SC-003` remains incomplete pending source-backed crop-stage definitions, study data, and independent validation. Published crop phenology work uses locally optimized settings and reference observations; no such threshold transfer to Jurala is assumed. `T-P2-SC-004` stress validation remains deferred under `DEC-14`.
-- The work is isolated on `feat/T-P2-SC-003-phenology-candidates`; it is a software prototype branch and has not been merged into `main`.
+- The software prototype was developed and pushed on `feat/T-P2-SC-003-phenology-candidates` and is now integrated into `main`; task acceptance remains open pending evidence and validation.
 
 ## 33. Public Sentinel catalog screen and AOI loader repair — 2026-11-26
 
@@ -376,3 +376,9 @@ See [`docs/WORK_STATUS.md`](WORK_STATUS.md), [`docs/AOI_DECISION.md`](AOI_DECISI
 - Pixel-level SCL review demonstrates why scene cloud metadata is insufficient: on 2021-10-13, tile `43PGT` had 6.09% scene cloud metadata, while 5,966 of 6,685 masked AOI SCL cells were code 10 (`THIN_CIRRUS`) under the 2021 ESA product specification. No SCL exclusion rule was applied and no vegetation indices were computed. See [ESA Sentinel-2 Product Specification Document, issue 14.6](https://sentinels.copernicus.eu/documents/247904/685211/Sentinel-2-Products-Specification-Document.pdf/fb1fc4dc-12ca-4674-8f78-b06efa871ab9).
 - Area review found the configured polygon has a planar area of about 72,891 ha in EPSG:32643; the source feature also carries `source_Area=72,629.7` and `Ayacut_ha=42,405`. The distinction is not resolved by the historic report, which supports the ayacut figure, not the geometry's full area. Keep `DEC-14`'s owner-selected polygon intact, but withhold authoritative area claims and request source-owner/member review before a scientific handoff.
 - `T-P2-DE-002` is still incomplete: only seven dates pass the product cloud metadata filter in the study window, total valid source-mask coverage is partial, one date mixes UTM zones, and no agreed analysis grid, cloud/SCL rule, resampling, temporal aggregation, or independent suitability review has been completed. Sentinel-1, weather, model evaluation, producer handoffs, and downstream integration remain open.
+
+## 36. Parameter-driven crop-ET software kernel — 2026-11-26
+
+- Added `src/models/water_balance.py` to compute `ETc = Kc × ET0` from caller-supplied interval inputs. It requires provenance for supplied coefficients and ET0, preserves compatible depth units, and reports missing Kc/ET0/precipitation fields with reasons.
+- The kernel does not choose local coefficients, stage mappings, effective rainfall, soil storage, or a field water-balance method. Test values are explicitly synthetic software fixtures and do not constitute agronomic evidence.
+- Verification passes at implementation checkpoint: focused ETc tests (6), full Python suite (82 tests and 12 subtests), Ruff, isort, and Ruff formatting. The change was developed and pushed on `feat/T-P2-SC-005-etc-kernel` and is now integrated into `main`; full task acceptance remains open pending source-backed inputs and method/handoff decisions.
