@@ -85,7 +85,7 @@ def validate_aoi_geometry(geometry: dict[str, Any]) -> None:
 
 
 def load_aoi_geometry(path: Path) -> dict[str, Any]:
-    """Read one GeoJSON geometry or Feature from disk.
+    """Read one GeoJSON geometry, Feature, or single-feature collection.
 
     Args:
         path: GeoJSON file path.
@@ -94,12 +94,17 @@ def load_aoi_geometry(path: Path) -> dict[str, Any]:
         The polygon geometry in longitude/latitude.
 
     Raises:
-        ValueError: If the file is malformed or does not contain one polygon.
+        ValueError: If the file is malformed or does not contain exactly one polygon.
     """
     try:
         document = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, json.JSONDecodeError) as exc:
         raise ValueError(f"Could not read AOI GeoJSON: {exc}") from exc
+    if isinstance(document, dict) and document.get("type") == "FeatureCollection":
+        features = document.get("features")
+        if not isinstance(features, list) or len(features) != 1:
+            raise ValueError("AOI FeatureCollection must contain exactly one feature")
+        document = features[0]
     if isinstance(document, dict) and document.get("type") == "Feature":
         geometry = document.get("geometry")
     else:

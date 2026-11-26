@@ -1,6 +1,9 @@
 """Software-only checks for Sentinel STAC asset extraction helpers."""
 
+import json
+import tempfile
 import unittest
+from pathlib import Path
 from types import SimpleNamespace
 
 from src.data.sentinel1_rtc import _select_latest
@@ -8,6 +11,7 @@ from src.data.sentinel_stac_assets import (
     _full_coverage_pixel_window,
     _select_scene,
     _validate_item_id,
+    load_aoi_geometry,
     validate_aoi_geometry,
 )
 
@@ -18,6 +22,23 @@ class SentinelStacAssetTests(unittest.TestCase):
     def test_rejects_non_polygon_aoi(self):
         with self.assertRaisesRegex(ValueError, "Invalid AOI geometry"):
             validate_aoi_geometry({"type": "Point", "coordinates": [79.2, 18.2]})
+
+    def test_loads_configured_single_feature_collection(self):
+        geometry = load_aoi_geometry(
+            Path(__file__).resolve().parents[2] / "config" / "study_area.geojson"
+        )
+
+        self.assertEqual(geometry["type"], "Polygon")
+
+    def test_rejects_feature_collection_with_multiple_features(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "multi.geojson"
+            path.write_text(
+                json.dumps({"type": "FeatureCollection", "features": [{}, {}]}),
+                encoding="utf-8",
+            )
+            with self.assertRaisesRegex(ValueError, "exactly one feature"):
+                load_aoi_geometry(path)
 
     def test_selects_least_cloudy_scene_and_newest_on_tie(self):
         items = [
