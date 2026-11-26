@@ -344,4 +344,18 @@ See [`docs/WORK_STATUS.md`](WORK_STATUS.md), [`docs/AOI_DECISION.md`](AOI_DECISI
 
 - The project owner reports that all team members approved proceeding with the remaining work. This clears approval-only waits; it does not constitute individual signed review records or satisfy data-access, source-use, handoff, scientific-validation, or formal institutional requirements.
 - Refreshed remote tracking with `git fetch --prune origin`. `origin` currently contains only `main`; all previously tracked remote feature branches have been removed upstream. Every local feature-branch tip is an ancestor of `main`, including the local temporal-analytics review commit. No unmerged branch work was found. Local branches remain available as historical references.
-- Current branch is `main`, aligned with `origin/main`; no branch-specific changes are awaiting integration. Producer-backed Member C integration, end-to-end wiring, and P4–P6 work remain dependent on upstream artifacts and evidence described above.
+- At audit time the checkout was `main`, aligned with `origin/main`, with no branch-specific work awaiting integration. A separate feature branch has since been created for the software-only phenology candidate utility below.
+
+## 32. Phenology software-only candidate extraction — 2026-11-26
+
+- Added `src/models/phenology.py` for irregular vegetation-index series. It requires explicit window, polynomial order, local support, maximum gap, and slope-floor inputs; it segments missing/long-gap intervals and emits only generic vegetation-index peak and slope candidates.
+- The utility does not fill gaps, assign crop stages, produce confidence values, or claim phenology accuracy. Synthetic tests verify feature behavior and input/gap handling only; no study observations were used.
+- `T-P2-SC-003` remains incomplete pending source-backed crop-stage definitions, study data, and independent validation. Published crop phenology work uses locally optimized settings and reference observations; no such threshold transfer to Jurala is assumed. `T-P2-SC-004` stress validation remains deferred under `DEC-14`.
+- The work is isolated on `feat/T-P2-SC-003-phenology-candidates`; it is a software prototype branch and has not been merged into `main`.
+
+## 33. Public Sentinel catalog screen and AOI loader repair — 2026-11-26
+
+- Fixed `load_aoi_geometry` to accept a GeoJSON `FeatureCollection` only when it contains exactly one feature, matching the configured pilot file and avoiding silent geometry unions. Added regression coverage for the configured AOI and multi-feature rejection.
+- Queried public catalogs for the configured Jurala AOI and the selected survey-date interval (2021-08-27 inclusive through 2021-10-22 exclusive). Earth Search returned 206 Sentinel-2 L2A item records across 22 distinct acquisition dates; 31 item records had scene-level cloud metadata below 30%. Planetary Computer returned four Sentinel-1 RTC items.
+- These are metadata counts only. Records overlap across tiles/product versions, scene-level cloud percentage does not establish pixel-level AOI coverage, and no assets or masks were downloaded/inspected. No acquisition convention or scientific feature suitability is inferred.
+- Verification after the software changes: Python suite passes (89 tests and 12 subtests); Ruff, isort, Ruff formatting checks for touched files, and `git diff --check` pass. A targeted Black check did not complete in the execution window; Black status for the new files remains unverified.

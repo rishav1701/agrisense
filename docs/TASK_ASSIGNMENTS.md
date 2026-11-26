@@ -198,7 +198,8 @@ Under the project owner's 2026-10-31 authorization, Rishav may proceed with soft
 - **Contract Dependencies:** `CON-01`, `CON-02`.
 - **Acceptance Criteria:** Cloud pixels masked out; invalid values replaced with NaN/mask flags; optical indices match mathematical definitions.
 - **Testing Requirements:** Unit tests using mocked GEE responses and synthetic raster arrays.
-- **Blockers:** Study area boundaries must be defined in `config/study_area.geojson`.
+- **Blockers:** The pilot AOI is defined. Full acceptance still requires reviewed source/provider use, pixel-level quality/coverage inspection, and agreed masking/resampling choices; scene-level cloud metadata alone is insufficient.
+- **Status (2026-11-26):** Metadata-only Earth Search discovery works with the configured single-feature AOI after fixing `load_aoi_geometry`. The selected date interval returned 206 item records across 22 acquisition dates; overlapping tile/product records are not unique AOI observations. Scene-level cloud metadata is not a pixel mask. No seasonal assets or AOI pixel-coverage results are available, so task acceptance remains open.
 
 #### `T-P2-DE-003`: Sentinel-1 SAR GRD Ingestion & Preprocessing
 - **Objective:** Ingest Sentinel-1 GRD IW backscatter (VV, VH), filter orbit paths, apply speckle filtering, and compute cross-ratio ($VH/VV$).
@@ -212,6 +213,7 @@ Under the project owner's 2026-10-31 authorization, Rishav may proceed with soft
 - **Acceptance Criteria:** Correct polarization selection; ratio band properly computed; radar dB values within physical bounds.
 - **Testing Requirements:** Unit tests on speckle filter logic and backscatter ratio calculations.
 - **Blockers:** Confirm radar orbit preference (ascending vs. descending).
+- **Status (2026-11-26):** Public Sentinel-1 RTC metadata discovery returned four items in the selected AOI/date interval. This is catalog availability only; no asset was extracted, multi-date orbit strategy selected, or SAR preprocessing/handoff completed.
 
 #### `T-P2-DE-005`: Satellite Feature and Time-Series Stack
 - **Objective:** Prepare Sentinel-1 and Sentinel-2 features/time series on the approved grid and temporal convention, preserving modality provenance.
@@ -287,6 +289,7 @@ Under the project owner's 2026-10-31 authorization, Rishav may proceed with soft
 - **Acceptance Criteria:** Handles irregular observations and gaps; reports uncertainty when observations are sparse; any crop-stage interpretation is validated against a documented crop calendar or independent reference.
 - **Testing Requirements:** Unit tests against ideal synthetic double-logistic curves and noisy time series.
 - **Blockers:** Region-specific crop calendar calibration (`DS-06`).
+- **Status (2026-11-26):** Added a method-neutral software utility that segments irregular series and returns generic local-polynomial slope/peak candidates only. Parameters are caller-supplied; it does not gap-fill, assign crop stages, or report confidence. Synthetic software tests pass. Full task acceptance remains open pending source-data handoff and locally supported crop-stage calibration/validation.
 
 #### `T-P2-SC-004`: Growth-Stage-Aware Moisture-Stress Detector
 - **Objective:** Evaluate dynamic, growth-stage-conditioned VCI/NDWI rules as candidate indicators; distinguish vegetation anomalies from confirmed crop-water stress.
@@ -299,7 +302,7 @@ Under the project owner's 2026-10-31 authorization, Rishav may proceed with soft
 - **Contract Dependencies:** `CON-03`, `CON-05`, `CON-06`.
 - **Acceptance Criteria:** Implements only a documented, approved candidate rule; reports uncertain cases and does not present vegetation-index anomalies as confirmed moisture stress without independent evidence.
 - **Testing Requirements:** Synthetic scenario tests comparing static VCI vs. dynamic VCI on flowering vs. senescing pixels.
-- **Blockers:** None.
+- **Blockers:** No locally accepted stress method, stage-specific thresholds, or independent moisture-stress reference data. Moisture-stress validation is deferred from the selected pilot under `DEC-14`; do not emit a confirmed stress label or advisory.
 
 #### Stage 4 — Member A (Peter): Water Balance and Canal Geospatial Outputs
 
