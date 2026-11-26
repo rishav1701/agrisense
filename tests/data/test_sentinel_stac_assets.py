@@ -8,10 +8,12 @@ from types import SimpleNamespace
 
 from src.data.sentinel1_rtc import _select_latest
 from src.data.sentinel_stac_assets import (
+    _clipped_pixel_window,
     _full_coverage_pixel_window,
     _select_scene,
     _validate_item_id,
     load_aoi_geometry,
+    select_sentinel2_granules_by_tile,
     validate_aoi_geometry,
 )
 
@@ -111,6 +113,101 @@ class SentinelStacAssetTests(unittest.TestCase):
                 raster_width=10,
                 raster_height=10,
                 asset_name="B04",
+            )
+
+    def test_partial_pixel_window_clips_to_granule_and_reports_coverage(self):
+        window, fully_covered = _clipped_pixel_window(
+            SimpleNamespace(col_off=-1.2, row_off=2.2, width=5.5, height=5.1),
+            raster_width=5,
+            raster_height=6,
+            asset_name="B04",
+        )
+
+        self.assertEqual(window, (0, 2, 5, 4))
+        self.assertFalse(fully_covered)
+
+    def test_partial_pixel_window_rejects_non_overlapping_granule(self):
+        with self.assertRaisesRegex(RuntimeError, "does not overlap"):
+            _clipped_pixel_window(
+                SimpleNamespace(col_off=20, row_off=20, width=2, height=2),
+                raster_width=5,
+                raster_height=6,
+                asset_name="B04",
+            )
+
+    def test_selects_least_cloudy_item_per_mgrs_tile(self):
+        items = [
+            {
+                "id": "tile-a-cloudy",
+                "properties": {
+                    "datetime": "2021-10-13T05:00:00Z",
+                    "s2:mgrs_tile": "43PHT",
+                    "eo:cloud_cover": 15,
+                },
+            },
+            {
+                "id": "tile-a-clear",
+                "properties": {
+                    "datetime": "2021-10-13T05:00:00Z",
+                    "s2:mgrs_tile": "43PHT",
+                    "eo:cloud_cover": 5,
+                },
+            },
+            {
+                "id": "tile-b",
+                "properties": {
+                    "datetime": "2021-10-13T05:02:00Z",
+                    "s2:mgrs_tile": "43PGT",
+                    "eo:cloud_cover": 25,
+                },
+            },
+        ]
+
+        selected = select_sentinel2_granules_by_tile(
+            items, acquisition_date="2021-10-13"
+        )
+
+        self.assertEqual(set(selected), {"43PHT", "43PGT"})
+        self.assertEqual(selected["43PHT"]["id"], "tile-a-clear")
+
+    def test_tile_selection_rejects_items_from_another_date(self):
+        with self.assertRaisesRegex(ValueError, "requested acquisition date"):
+            select_sentinel2_granules_by_tile(
+                [
+                    {
+                        "id": "wrong-date",
+                        "properties": {
+                            "datetime": "2021-10-12T05:00:00Z",
+                            "s2:mgrs_tile": "43PHT",
+                        },
+                    }
+                ],
+                acquisition_date="2021-10-13",
+            )
+
+    def test_tile_selection_reads_tile_from_earth_search_item_id(self):
+        selected = select_sentinel2_granules_by_tile(
+            [
+                {
+                    "id": "S2A_43PHT_20211013_0_L2A",
+                    "properties": {"datetime": "2021-10-13T05:00:00Z"},
+                }
+            ],
+            acquisition_date="2021-10-13",
+        )
+
+        self.assertEqual(set(selected), {"43PHT"})
+
+    def test_tile_selection_rejects_unrecognized_provider_id(self):
+        with self.assertRaisesRegex(ValueError, "recognized Earth Search ID"):
+            select_sentinel2_granules_by_tile(
+                [
+                    {
+                        "id": "provider-specific-item",
+                        "properties": {"datetime": "2021-10-13T05:00:00Z"},
+                    }
+                ],
+                acquisition_date="2021-10-13",
             )
 
     def test_item_id_must_be_safe_as_a_filename(self):

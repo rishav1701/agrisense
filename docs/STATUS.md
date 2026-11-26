@@ -360,3 +360,10 @@ See [`docs/WORK_STATUS.md`](WORK_STATUS.md), [`docs/AOI_DECISION.md`](AOI_DECISI
 - The first Sentinel-2 AOI extraction attempt selected the least-cloudy matching granule but stopped at the full-coverage check: its B02 tile does not cover the whole command area. No raster outputs were written. Multi-granule handling and a common-grid decision are needed before acquiring an AOI-complete series.
 - Catalog counts remain metadata only: records overlap across tiles/product versions, and scene-level cloud percentage does not establish pixel-level AOI coverage. No masks were inspected and no scientific feature suitability is inferred.
 - Verification after the software changes: Python suite passes (89 tests and 12 subtests); Ruff, isort, Ruff formatting checks for touched files, and `git diff --check` pass. A targeted Black check did not complete in the execution window; Black status for the new files remains unverified.
+
+## 34. Multi-tile extraction software path — 2026-11-26
+
+- Added a one-date CLI that selects one least-cloudy product per MGRS tile and writes separate native-grid AOI clips. Partial clips are explicitly marked and the parent manifest states that total AOI coverage is not assessed and no mosaic is created.
+- Earth Search's observed item IDs encode the tile in a strict, validated format; the selector falls back to this format only when the STAC tile property is absent, and rejects unrecognized provider IDs. Focused software tests pass (15 tests); Ruff, formatting, isort, and `git diff --check` pass.
+- No live multi-tile raster acquisition has been completed or verified. The next catalog query was blocked by automatic review because it would send the configured Jurala AOI geometry to a third-party catalog. No AOI geometry or raster was sent by that blocked attempt. Do not treat these software tests as satellite validation.
+- `T-P2-DE-002` remains incomplete: external query authorization, asset acquisition, per-pixel quality checks, total AOI coverage assessment, and a reviewed common-grid decision are outstanding. Downstream feature, classifier, and dashboard acceptance remains gated by those real producer handoffs.

@@ -9,7 +9,8 @@ from __future__ import annotations
 
 import json
 import math
-from datetime import datetime, timezone
+import re
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
@@ -50,6 +51,46 @@ def _full_coverage_pixel_window(
     ):
         raise RuntimeError(f"{asset_name} asset does not fully cover the requested AOI")
     return col_start, row_start, col_stop - col_start, row_stop - row_start
+
+
+def _clipped_pixel_window(
+    requested: Any,
+    *,
+    raster_width: int,
+    raster_height: int,
+    asset_name: str,
+) -> tuple[tuple[int, int, int, int], bool]:
+    """Clip an AOI window to one granule and report whether it covers all bounds."""
+    try:
+        col_start = math.floor(float(requested.col_off))
+        row_start = math.floor(float(requested.row_off))
+        col_stop = math.ceil(float(requested.col_off + requested.width))
+        row_stop = math.ceil(float(requested.row_off + requested.height))
+    except (AttributeError, TypeError, ValueError, OverflowError) as exc:
+        raise ValueError(f"{asset_name} AOI pixel window is invalid") from exc
+    if col_stop <= col_start or row_stop <= row_start:
+        raise ValueError(f"{asset_name} AOI pixel window is empty")
+    clipped_start = max(col_start, 0)
+    clipped_row_start = max(row_start, 0)
+    clipped_stop = min(col_stop, raster_width)
+    clipped_row_stop = min(row_stop, raster_height)
+    if clipped_stop <= clipped_start or clipped_row_stop <= clipped_row_start:
+        raise RuntimeError(f"{asset_name} granule does not overlap the AOI")
+    fully_covered = (
+        col_start >= 0
+        and row_start >= 0
+        and col_stop <= raster_width
+        and row_stop <= raster_height
+    )
+    return (
+        (
+            clipped_start,
+            clipped_row_start,
+            clipped_stop - clipped_start,
+            clipped_row_stop - clipped_row_start,
+        ),
+        fully_covered,
+    )
 
 
 def _validate_item_id(item_id: Any) -> str:
@@ -140,6 +181,71 @@ def _select_scene(items: list[dict[str, Any]]) -> dict[str, Any]:
     return min(items, key=rank)
 
 
+def select_sentinel2_granules_by_tile(
+    items: list[dict[str, Any]], *, acquisition_date: str
+) -> dict[str, dict[str, Any]]:
+    """Select the least-cloudy item for each MGRS tile on one UTC date.
+
+    Args:
+        items: STAC items returned for the target AOI and single-day interval.
+        acquisition_date: Required UTC calendar date in ``YYYY-MM-DD`` form.
+
+    Returns:
+        A tile-keyed mapping of selected STAC items. Tile products remain
+        separate; this function does not assert a common timestamp or grid.
+
+    Raises:
+        ValueError: If the date or any item's acquisition date/tile is invalid,
+            or no matching items are present.
+    """
+    try:
+        requested_date = date.fromisoformat(acquisition_date)
+    except (TypeError, ValueError) as exc:
+        raise ValueError("acquisition_date must be a valid ISO date") from exc
+    if requested_date.isoformat() != acquisition_date:
+        raise ValueError("acquisition_date must use YYYY-MM-DD format")
+    if not items:
+        raise ValueError("No Sentinel-2 items were found for the requested date")
+
+    grouped: dict[str, list[dict[str, Any]]] = {}
+    for item in items:
+        properties = item.get("properties")
+        if not isinstance(properties, dict):
+            raise ValueError("Sentinel-2 STAC item has no properties object")
+        tile = properties.get("s2:mgrs_tile")
+        if not isinstance(tile, str) or not tile.strip():
+            # Earth Search's observed Sentinel-2 L2A IDs encode the MGRS tile
+            # as the second underscore-delimited field. Keep this fallback
+            # strict so unrelated provider ID formats are never guessed.
+            item_id = item.get("id")
+            match = (
+                re.fullmatch(r"S2[AB]_(\d{2}[A-Z]{3})_\d{8}_\d+_L2A", item_id)
+                if isinstance(item_id, str)
+                else None
+            )
+            tile = match.group(1) if match else None
+        if not isinstance(tile, str) or not tile.strip():
+            raise ValueError(
+                "Sentinel-2 STAC item has no MGRS tile property or recognized Earth Search ID"
+            )
+        try:
+            acquired = datetime.fromisoformat(
+                str(properties["datetime"]).replace("Z", "+00:00")
+            )
+        except (KeyError, TypeError, ValueError) as exc:
+            raise ValueError(
+                "Sentinel-2 item has no valid acquisition datetime"
+            ) from exc
+        if acquired.tzinfo is None or acquired.utcoffset() != timezone.utc.utcoffset(
+            acquired
+        ):
+            raise ValueError("Sentinel-2 acquisition datetime must specify UTC")
+        if acquired.date() != requested_date:
+            raise ValueError("STAC items must match the requested acquisition date")
+        grouped.setdefault(tile, []).append(item)
+    return {tile: _select_scene(group) for tile, group in sorted(grouped.items())}
+
+
 def search_and_select_sentinel2(
     *,
     aoi_geometry: dict[str, Any],
@@ -177,6 +283,7 @@ def extract_sentinel2_assets(
     item: dict[str, Any],
     aoi_geometry: dict[str, Any],
     output_dir: Path,
+    allow_partial_coverage: bool = False,
 ) -> dict[str, Any]:
     """Read and save B02, B04, B08, and SCL clipped to one AOI polygon.
 
@@ -188,6 +295,10 @@ def extract_sentinel2_assets(
         item: STAC Item with Earth Search COG assets.
         aoi_geometry: AOI polygon in WGS84 longitude/latitude.
         output_dir: Directory for four GeoTIFF assets and a provenance manifest.
+        allow_partial_coverage: Permit this granule's clipped output to cover
+            only part of the AOI. The manifest records per-band coverage; this
+            option does not mosaic neighboring granules or establish total AOI
+            coverage.
 
     Returns:
         A provenance manifest describing the extracted source windows.
@@ -255,14 +366,22 @@ def extract_sentinel2_assets(
                 )
                 bounds = rasterio.features.bounds(projected_geometry)
                 requested = from_bounds(*bounds, transform=source.transform)
-                window = Window(
-                    *_full_coverage_pixel_window(
+                if allow_partial_coverage:
+                    window_values, covers_full_aoi = _clipped_pixel_window(
                         requested,
                         raster_width=source.width,
                         raster_height=source.height,
                         asset_name=band_name,
                     )
-                )
+                else:
+                    window_values = _full_coverage_pixel_window(
+                        requested,
+                        raster_width=source.width,
+                        raster_height=source.height,
+                        asset_name=band_name,
+                    )
+                    covers_full_aoi = True
+                window = Window(*window_values)
                 if window.width <= 0 or window.height <= 0:
                     raise RuntimeError(f"{band_name} asset does not overlap the AOI")
 
@@ -311,6 +430,7 @@ def extract_sentinel2_assets(
                     "scale": list(source_scales),
                     "offset": list(source_offsets),
                     "valid_pixels_inside_aoi": int(valid_mask.sum()),
+                    "granule_covers_full_aoi_bounds": covers_full_aoi,
                     "nodata": source.nodata,
                 }
 
@@ -330,6 +450,9 @@ def extract_sentinel2_assets(
         "aoi_geometry": aoi_geometry,
         "aoi_crs": "EPSG:4326",
         "assets": extracted,
+        "granule_covers_full_aoi_bounds": all(
+            item["granule_covers_full_aoi_bounds"] for item in extracted.values()
+        ),
         "provider": "Element 84 Earth Search on AWS Open Data",
         "source_terms": SENTINEL_TERMS_URL,
         "attribution": f"{SENTINEL_ATTRIBUTION} {acquired_year}",
@@ -340,6 +463,10 @@ def extract_sentinel2_assets(
             "No resampling, atmospheric correction, index calculation, or scientific inference is performed.",
         ],
     }
+    if not manifest["granule_covers_full_aoi_bounds"]:
+        manifest["limitations"].append(
+            "This granule covers only part of the AOI; neighboring granules and a coverage assessment are required before area-wide analysis."
+        )
     (output_dir / f"{item_id}_manifest.json").write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
@@ -364,3 +491,76 @@ def acquire_sentinel2_aoi(
     return extract_sentinel2_assets(
         item=item, aoi_geometry=aoi_geometry, output_dir=output_dir
     )
+
+
+def acquire_sentinel2_aoi_date_tiles(
+    *,
+    aoi_geometry: dict[str, Any],
+    acquisition_date: str,
+    max_cloud_cover_percent: float,
+    output_dir: Path,
+) -> dict[str, Any]:
+    """Extract separate native-grid Sentinel-2 granules for one UTC date.
+
+    Every intersecting MGRS tile is selected independently and clipped to the
+    AOI. Outputs are intentionally not mosaicked or reprojected. The resulting
+    manifest preserves tile-specific acquisition times and states that total
+    AOI coverage has not been assessed.
+
+    Args:
+        aoi_geometry: Polygon or MultiPolygon in longitude/latitude.
+        acquisition_date: UTC date in ``YYYY-MM-DD`` format.
+        max_cloud_cover_percent: Explicit product-level catalog filter.
+        output_dir: Directory for per-tile rasters and the summary manifest.
+
+    Returns:
+        A summary manifest linking independently extracted tile products.
+
+    Raises:
+        ValueError: If no matching granules are found or the date is invalid.
+        ImportError: If Rasterio is not installed.
+        RuntimeError: If a selected tile does not overlap the AOI.
+    """
+    try:
+        parsed_date = date.fromisoformat(acquisition_date)
+    except (TypeError, ValueError) as exc:
+        raise ValueError("acquisition_date must be a valid ISO date") from exc
+    if parsed_date.isoformat() != acquisition_date:
+        raise ValueError("acquisition_date must use YYYY-MM-DD format")
+    end_date = (parsed_date + timedelta(days=1)).isoformat()
+    items = search_sentinel2_l2a(
+        aoi_geometry=aoi_geometry,
+        start_date=acquisition_date,
+        end_date=end_date,
+        max_cloud_cover_percent=max_cloud_cover_percent,
+        max_items=500,
+        stac_url=STAC_URL,
+    )
+    granules = select_sentinel2_granules_by_tile(
+        items, acquisition_date=acquisition_date
+    )
+    output_dir.mkdir(parents=True, exist_ok=True)
+    tile_manifests: dict[str, Any] = {}
+    for tile, item in granules.items():
+        tile_manifests[tile] = extract_sentinel2_assets(
+            item=item,
+            aoi_geometry=aoi_geometry,
+            output_dir=output_dir / tile,
+            allow_partial_coverage=True,
+        )
+    manifest = {
+        "acquisition_date_requested": acquisition_date,
+        "granules": tile_manifests,
+        "aoi_coverage_state": "not_assessed",
+        "mosaic_created": False,
+        "limitations": [
+            "Granules are retained separately on their native grids; no reprojection, resampling, or mosaic is performed.",
+            "Per-granule masks do not establish complete AOI coverage when combined.",
+            "Tile acquisition timestamps are retained individually and are not assumed simultaneous.",
+            "Scene cloud percentages do not replace pixel-level quality review.",
+        ],
+    }
+    (output_dir / f"sentinel2_{acquisition_date}_granules_manifest.json").write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+    return manifest
