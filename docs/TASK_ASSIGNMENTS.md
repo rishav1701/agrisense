@@ -315,6 +315,7 @@ Under the project owner's 2026-10-31 authorization, Rishav may proceed with soft
 - **Acceptance Criteria:** The selected Kc source and stage mapping are traceable; depth units, assumptions, time window, missing inputs, and limitations are explicit. Quantify uncertainty only with a documented method. Scientific validation is reported separately from software tests.
 - **Testing Requirements:** Validate water-balance numerical outputs against FAO-56 manual calculation examples.
 - **Blockers:** A sourced and approved water-balance method and required soil/initial-storage inputs (`DS-08`); no regional default is assumed.
+- **Status (2026-11-26):** Added a pure `ETc = Kc × ET0` kernel that requires caller-supplied values, input provenance, interval, units, and quality state. It preserves missing inputs as null with reasons and does not select local Kc values or calculate field water balance. Synthetic software tests pass; scientific/task acceptance remains open pending reviewed Kc/ET0 inputs, crop-stage handoff, and approved balance method/soil inputs.
 
 ---
 

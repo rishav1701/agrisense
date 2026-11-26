@@ -344,4 +344,10 @@ See [`docs/WORK_STATUS.md`](WORK_STATUS.md), [`docs/AOI_DECISION.md`](AOI_DECISI
 
 - The project owner reports that all team members approved proceeding with the remaining work. This clears approval-only waits; it does not constitute individual signed review records or satisfy data-access, source-use, handoff, scientific-validation, or formal institutional requirements.
 - Refreshed remote tracking with `git fetch --prune origin`. `origin` currently contains only `main`; all previously tracked remote feature branches have been removed upstream. Every local feature-branch tip is an ancestor of `main`, including the local temporal-analytics review commit. No unmerged branch work was found. Local branches remain available as historical references.
-- Current branch is `main`, aligned with `origin/main`; no branch-specific changes are awaiting integration. Producer-backed Member C integration, end-to-end wiring, and P4–P6 work remain dependent on upstream artifacts and evidence described above.
+- At audit time the checkout was `main`, aligned with `origin/main`; no branch-specific changes were awaiting integration. The software-only crop-ET work below is isolated on a new feature branch.
+
+## 32. Parameter-driven crop-ET software kernel — 2026-11-26
+
+- Added `src/models/water_balance.py` to compute `ETc = Kc × ET0` from caller-supplied interval inputs. It requires provenance for supplied coefficients and ET0, preserves compatible depth units, and reports missing Kc/ET0/precipitation fields with reasons.
+- The kernel does not choose local coefficients, stage mappings, effective rainfall, soil storage, or a field water-balance method. Test values are explicitly synthetic software fixtures and do not constitute agronomic evidence.
+- Verification passes: focused ETc tests (6), full Python suite (82 tests and 12 subtests), Ruff, isort, and Ruff formatting. The change is isolated on `feat/T-P2-SC-005-etc-kernel`; full task acceptance remains open pending source-backed inputs and method/handoff decisions.
