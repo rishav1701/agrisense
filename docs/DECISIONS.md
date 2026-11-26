@@ -179,6 +179,7 @@ On 2026-10-31, the project owner explicitly approved proceeding with all remaini
   - *Pros:* Tracks per-pixel seasonal shifts dynamically; robust against mild noise; purely Python-based.
   - *Risks:* Cloud gaps and sparse temporal observations can distort curve fitting; SAR backscatter is not a direct substitute for optical indices.
 - **Evidence / Source:** `IDP_Review_1_AgriSense (1).pdf` p. 4, 23; Zeng et al. (2020) [Ref 11].
+- **Evidence update (2026-11-26):** Crop phenometrics studies optimize smoothing and stage thresholds against local crop/field observations; their numerical settings are study-specific. See [Htitiou et al. (2024)](https://www.mdpi.com/2072-4292/16/17/3183) and [Xu et al. (2017)](https://www.mdpi.com/2072-4292/9/3/254). These findings do not validate parameters for Jurala; keep stage mapping and calibration open.
 - **Required Approver Role:** Member B.
 
 ---
